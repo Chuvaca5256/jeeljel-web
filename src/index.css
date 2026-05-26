@@ -8,13 +8,13 @@
 html { scroll-behavior: smooth; }
 
 body {
-  margin: 0;
   background-color: #0a0508;
-  background-image:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M30 6 L54 30 L30 54 L6 30 Z' fill='none' stroke='rgba%28123%2C45%2C139%2C0.03%29' stroke-width='0.5'/%3E%3C/svg%3E"),
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none' stroke='rgba%28201%2C168%2C76%2C0.04%29' stroke-width='1'%3E%3Cpolyline points='0,0 30,0 30,15 15,15 15,30 0,30'/%3E%3Cpolyline points='60,0 30,0 30,15 45,15 45,30 60,30'/%3E%3Cpolyline points='0,60 30,60 30,45 15,45 15,30 0,30'/%3E%3Cpolyline points='60,60 30,60 30,45 45,45 45,30 60,30'/%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Crect width='80' height='80' fill='none'/%3E%3Cpath d='M0 20h20v-20h-20zM20 0v20h20v-20zM40 20h20v-20h-20zM60 0v20h20v-20zM0 60h20v-20h-20zM20 40v20h20v-20zM40 60h20v-20h-20zM60 40v20h20v-20zM10 30h60v-2h-60zM10 52h60v-2h-60zM30 10v60h-2v-60zM52 10v60h-2v-60z' fill='%23c9a84c' fill-opacity='0.06'/%3E%3C/svg%3E");
+  background-size: 80px 80px;
   background-repeat: repeat;
-  background-size: 60px 60px;
+  background-attachment: fixed;
+  min-height: 100vh;
+  margin: 0;
   color: #f5f0e8;
   font-family: 'DM Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
