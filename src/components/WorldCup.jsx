@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 // LOGO HUB: src/assets/Logo_JeelJel_con_balon.png ✓
 import logoBalon from '../assets/Logo_JeelJel_con_balon.png'
 
@@ -150,15 +151,32 @@ export default function WorldCup() {
             className="flex-shrink-0 flex items-center justify-center"
             style={{ width: 'clamp(200px, 30vw, 320px)' }}
           >
-            <img
-              src={logoBalon}
-              alt="Hub Biónico Deportivo — Logo con balón"
+            <Link
+              to="/hub-bionico"
+              aria-label="Ir a Hub Biónico"
+              className="flex items-center justify-center rounded-full no-underline transition-transform duration-200"
               style={{
-                width: '100%',
-                maxWidth: '280px',
-                filter: 'drop-shadow(0 0 40px rgba(0, 168, 107, 0.25))',
+                width: 'clamp(200px, 28vw, 280px)',
+                height: 'clamp(200px, 28vw, 280px)',
+                cursor: 'pointer',
               }}
-            />
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = 'scale(1.05)'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = 'scale(1)'
+              }}
+            >
+              <img
+                src={logoBalon}
+                alt="Hub Biónico Deportivo — Logo con balón"
+                style={{
+                  width: '100%',
+                  maxWidth: '280px',
+                  filter: 'drop-shadow(0 0 40px rgba(0, 168, 107, 0.25))',
+                }}
+              />
+            </Link>
           </div>
 
         </div>
