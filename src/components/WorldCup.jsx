@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 // LOGO HUB: src/assets/Logo_JeelJel_con_balon.png ✓
 import logoBalon from '../assets/Logo_JeelJel_con_balon.png'
+import QuetzalDivider from './QuetzalDivider'
 
 // Deadline: 11 junio 2026, 17:00 UTC-6 = 23:00 UTC
 const TARGET = new Date('2026-06-11T23:00:00.000Z')
@@ -57,11 +58,9 @@ export default function WorldCup() {
   return (
     <section
       className="py-24 px-6 md:px-12"
-      style={{
-        backgroundColor: 'transparent',
-        borderTop: '1px solid var(--color-separador)',
-      }}
+      style={{ backgroundColor: 'transparent' }}
     >
+      <QuetzalDivider />
       <div className="max-w-6xl mx-auto">
         <div className="flex flex-col md:flex-row items-center gap-12 md:gap-16">
 

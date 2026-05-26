@@ -1,3 +1,5 @@
+import QuetzalDivider from './QuetzalDivider'
+
 const STATS = [
   { numero: '5',   etiqueta: 'Plataformas'   },
   { numero: '30+', etiqueta: 'Agentes IA'    },
@@ -7,13 +9,11 @@ const STATS = [
 
 export default function Stats() {
   return (
+    <>
+    <QuetzalDivider />
     <section
       className="py-10 px-6"
-      style={{
-        backgroundColor: 'transparent',
-        borderTop: '1px solid var(--color-separador)',
-        borderBottom: '1px solid var(--color-separador)',
-      }}
+      style={{ backgroundColor: 'transparent' }}
     >
       <div className="max-w-5xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0">
@@ -42,5 +42,7 @@ export default function Stats() {
         </div>
       </div>
     </section>
+    <QuetzalDivider />
+    </>
   )
 }

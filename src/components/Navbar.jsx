@@ -1,6 +1,7 @@
 // NAVBAR — logo estático en src/assets/Logo_JeelJel_sin_fondo.png
 import { Link, NavLink } from 'react-router-dom'
 import logoStatic from '../assets/Logo_JeelJel_sin_fondo.png'
+import QuetzalDivider from './QuetzalDivider'
 
 const NAV_LINKS = [
   { label: 'APPS', to: '/apps' },
@@ -18,14 +19,16 @@ const linkStyle = {
 
 export default function Navbar() {
   return (
+    <header
+      className="sticky top-0 left-0 right-0"
+      style={{ zIndex: 100 }}
+    >
     <nav
-      className="sticky top-0 left-0 right-0 flex items-center justify-between px-6 md:px-12 py-4"
+      className="flex items-center justify-between px-6 md:px-12 py-4"
       style={{
         background: 'rgba(10, 5, 8, 0.92)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
-        borderBottom: '1px solid var(--color-separador)',
-        zIndex: 100,
       }}
     >
       <Link to="/" className="flex items-center gap-3 no-underline">
@@ -62,5 +65,7 @@ export default function Navbar() {
         ))}
       </div>
     </nav>
+    <QuetzalDivider />
+    </header>
   )
 }

@@ -1,3 +1,5 @@
+import QuetzalDivider from './QuetzalDivider'
+
 /*
  * ORGANIZACIONES ADMIRADAS
  * Nota: los logos reales de UNICEF, Cruz Roja, WWF y PETA se agregarán
@@ -36,11 +38,9 @@ export default function Organizations() {
   return (
     <section
       className="py-20 px-6 md:px-12"
-      style={{
-        backgroundColor: 'transparent',
-        borderTop: '1px solid var(--color-separador)',
-      }}
+      style={{ backgroundColor: 'transparent' }}
     >
+      <QuetzalDivider />
       <div className="max-w-5xl mx-auto">
 
         {/* Encabezado */}

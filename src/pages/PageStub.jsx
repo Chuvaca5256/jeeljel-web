@@ -1,3 +1,5 @@
+import QuetzalDivider from '../components/QuetzalDivider'
+
 export default function PageStub({ title }) {
   return (
     <section
@@ -10,7 +12,7 @@ export default function PageStub({ title }) {
       >
         {title}
       </h1>
-      <div className="mt-4 h-px w-24 separador-gradiente" />
+      <QuetzalDivider />
     </section>
   )
 }

@@ -1,16 +1,15 @@
 // FOOTER — logo estático en src/assets/Logo_JeelJel_sin_fondo.png
 import logoStatic from '../assets/Logo_JeelJel_sin_fondo.png'
+import QuetzalDivider from './QuetzalDivider'
 
 export default function Footer() {
   return (
     <footer
       id="footer"
       className="py-12 px-6 md:px-12"
-      style={{
-        backgroundColor: 'transparent',
-        borderTop: '1px solid var(--color-separador)',
-      }}
+      style={{ backgroundColor: 'transparent' }}
     >
+      <QuetzalDivider />
       <div className="max-w-5xl mx-auto flex flex-col items-center gap-6 text-center">
         {/* Logo + nombre */}
         <div className="flex items-center gap-3">
@@ -43,8 +42,7 @@ export default function Footer() {
           ))}
         </div>
 
-        {/* Separador */}
-        <div className="w-24 h-px separador-gradiente" />
+        <QuetzalDivider />
 
         {/* Copyright */}
         <p className="font-dm text-xs" style={{ color: '#ffffff' }}>
