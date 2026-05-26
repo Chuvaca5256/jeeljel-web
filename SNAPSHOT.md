@@ -26,6 +26,12 @@
 | **Ikan Naat** | Puerto 10000 — `proxy_pass http://localhost:10000` |
 | **GitHub** | https://github.com/Chuvaca5256/jeeljel-web |
 
+### Acceso VPS
+
+- **Usuario:** `root`
+- **Autenticación:** contraseña (sin llave SSH por ahora)
+- **IP:** `187.77.196.169`
+
 ## ⚠️ ARQUITECTURA CRÍTICA — LEER ANTES DE TOCAR NGINX
 
 El servidor tiene **DOS sitios** corriendo simultáneamente:

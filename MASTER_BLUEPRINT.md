@@ -11,6 +11,14 @@
 - ✅ SSL instalado con Certbot para `jeeljel.com`
 - ✅ jeeljel.com en línea con HTTPS
 
+## Infraestructura
+
+### Acceso VPS
+
+- **Usuario:** `root`
+- **Autenticación:** contraseña (sin llave SSH por ahora)
+- **IP:** `187.77.196.169`
+
 ## Pendientes próxima sesión
 
 - [ ] 🔴 **URGENTE** Hub Biónico Deportivo — deadline 11 junio 2026 — ver SNAPSHOT para detalle completo
