@@ -13,6 +13,11 @@
 
 ## Pendientes próxima sesión
 
+- [ ] 🔴 **URGENTE** Hub Biónico Deportivo — deadline 11 junio 2026 — ver SNAPSHOT para detalle completo
+- [ ] Registrarse en API-Football Ultra y obtener API key
+- [ ] Registrarse en afiliados: 1xBet Partners, Bet365 Affiliates
+- [ ] Crear ruta `/mundial-2026` en React dentro de jeeljel-web
+- [ ] Mejorar diseño sitio principal (parece landing, necesita pestañas y navegación real)
 - [ ] Configurar deploy automático desde GitHub al VPS
 - [ ] Mejorar diseño páginas internas
 - [ ] Agregar logos reales de cada app
