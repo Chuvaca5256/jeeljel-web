@@ -17,9 +17,12 @@
 | Recurso | Detalle |
 |---------|---------|
 | **Servidor** | VPS Hostinger — IP `187.77.196.169` |
-| **Dominio** | `jeeljel.com` (DNS propagando) |
+| **jeeljel.com** | EN LÍNEA y funcionando ✅ |
+| **Nginx** | Configurado con archivo `jeeljel-landing` en `sites-enabled` apuntando a `/var/www/jeeljel-web/dist` |
+| **SSL** | Pendiente (HTTP por ahora) |
 | **Deploy** | `/var/www/jeeljel-web/dist` servido por Nginx |
 | **GitHub** | https://github.com/Chuvaca5256/jeeljel-web |
+| **ikannaat.jeeljel.com** | Intacto en puerto 10000 ✅ |
 
 ## Paleta — Obsidiana Imperial
 

@@ -1,16 +1,19 @@
 # MASTER BLUEPRINT — Próximos pasos pendientes
 
-## Infraestructura y deploy
+## Completado hoy
 
-- [ ] **Instalar SSL con Certbot** para `jeeljel.com` (HTTPS)
-- [ ] **Deploy automático:** cuando se hace push a GitHub, el servidor se actualiza solo
+- ✅ Sitio construido con React + Vite + React Router
+- ✅ Multi-página: Home, Apps, Mundial, Misión, Organizaciones
+- ✅ Subido a GitHub
+- ✅ Desplegado en VPS con Nginx
+- ✅ DNS configurado y propagado
+- ✅ jeeljel.com en línea
 
-## Diseño y contenido
+## Pendientes próxima sesión
 
-- [ ] **Mejorar páginas** para que se vean como sitio web real, no landing
-- [ ] **Agregar logos reales** de cada app en sus secciones
-
-## Producto / branding
-
-- [ ] **Pendiente:** nombre latinoamericano para Virtyou
-- [ ] **Pendiente:** rebrandear Izydra OS bajo JeelJel Kaanab
+- [ ] Instalar SSL con Certbot para `jeeljel.com`
+- [ ] Configurar deploy automático desde GitHub al VPS
+- [ ] Mejorar diseño páginas internas (Apps, Mundial, Misión, Organizaciones)
+- [ ] Agregar logos reales de cada app
+- [ ] Nombre latinoamericano para Virtyou
+- [ ] Rebrandear Izydra OS bajo JeelJel Kaanab
