@@ -56,8 +56,8 @@ function AppCard({ app }) {
     <div
       className="relative flex flex-col h-full p-5 rounded-xl transition-transform duration-200 cursor-pointer"
       style={{
-        backgroundColor: 'rgba(17, 10, 14, 0.85)',
-        border: '0.5px solid #2a1a2a',
+        background: 'rgba(10, 5, 8, 0.82)',
+        border: '1px solid rgba(201, 168, 76, 0.25)',
         borderRadius: '12px',
       }}
       onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-4px)')}
@@ -113,14 +113,14 @@ function AppCard({ app }) {
 
       <p
         className="font-dm text-sm mt-auto"
-        style={{ color: '#9a7a9a', lineHeight: '1.6' }}
+        style={{ color: '#f5f0e8', lineHeight: '1.6' }}
       >
         {app.desc}
       </p>
 
       {/* Nota discreta para Inkógnito */}
       {app.nota && (
-        <p className="font-dm text-xs mt-2" style={{ color: '#6a3a3a' }}>
+        <p className="font-dm text-xs mt-2" style={{ color: '#f5f0e8' }}>
           {app.nota}
         </p>
       )}
@@ -172,8 +172,8 @@ export default function AppsGrid() {
         <div
           className="flex items-center justify-center p-5 rounded-xl"
           style={{
-            backgroundColor: 'rgba(17, 10, 14, 0.85)',
-            border: '0.5px dashed #3a1a3a',
+            background: 'rgba(10, 5, 8, 0.82)',
+            border: '1px solid rgba(201, 168, 76, 0.25)',
             borderRadius: '12px',
             minHeight: '120px',
           }}

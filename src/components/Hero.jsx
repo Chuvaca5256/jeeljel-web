@@ -89,7 +89,7 @@ export default function Hero() {
         <p
           className="font-dm"
           style={{
-            color: '#9a7a9a',
+            color: '#f5f0e8',
             maxWidth: '480px',
             lineHeight: '1.7',
             fontSize: 'clamp(14px, 2vw, 17px)',

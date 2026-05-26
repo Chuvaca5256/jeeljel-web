@@ -40,7 +40,7 @@ function CountdownBox({ value, label }) {
       </div>
       <span
         className="font-dm text-xs mt-2 uppercase tracking-widest"
-        style={{ color: '#9a7a9a', letterSpacing: '0.12em' }}
+        style={{ color: '#f5f0e8', letterSpacing: '0.12em' }}
       >
         {label}
       </span>
@@ -102,7 +102,7 @@ export default function WorldCup() {
             <p
               className="font-dm mb-8"
               style={{
-                color: '#9a7a9a',
+                color: '#f5f0e8',
                 fontSize: 'clamp(14px, 1.8vw, 17px)',
                 lineHeight: '1.7',
                 maxWidth: '500px',

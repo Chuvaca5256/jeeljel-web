@@ -51,7 +51,7 @@ export default function Organizations() {
         </div>
         <p
           className="font-dm text-center mb-12 text-sm"
-          style={{ color: '#6a4a6a' }}
+          style={{ color: '#f5f0e8' }}
         >
           No son socios ni aliados — son causas que creemos merecen existir.
         </p>
@@ -63,12 +63,12 @@ export default function Organizations() {
               key={org.nombre}
               className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 rounded-xl transition-all duration-200"
               style={{
-                backgroundColor: 'rgba(17, 10, 14, 0.85)',
-                border: '0.5px solid #1e0e1e',
+                background: 'rgba(10, 5, 8, 0.82)',
+                border: '1px solid rgba(201, 168, 76, 0.25)',
                 borderRadius: '12px',
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#2a1a2a')}
-              onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#1e0e1e')}
+              onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'rgba(201, 168, 76, 0.45)')}
+              onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'rgba(201, 168, 76, 0.25)')}
             >
               {/* Nombre */}
               <div className="flex-shrink-0" style={{ minWidth: '180px' }}>
@@ -83,7 +83,7 @@ export default function Organizations() {
               {/* Descripción */}
               <p
                 className="font-dm text-sm flex-1"
-                style={{ color: '#7a5a7a', lineHeight: '1.6' }}
+                style={{ color: '#f5f0e8', lineHeight: '1.6' }}
               >
                 {org.desc}
               </p>

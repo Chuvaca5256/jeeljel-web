@@ -107,7 +107,7 @@ export default function Mission() {
               >
                 {p.titulo}
               </h3>
-              <p className="font-dm text-sm" style={{ color: '#9a7a9a', lineHeight: '1.7' }}>
+              <p className="font-dm text-sm" style={{ color: '#f5f0e8', lineHeight: '1.7' }}>
                 {p.desc}
               </p>
             </div>
