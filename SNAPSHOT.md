@@ -24,12 +24,11 @@
 - Secciones grandes transparentes para que el fondo se vea en toda la página
 - `public/bg-maya.svg` existe pero **no se usa**
 
-## Divisor Quetzalcóatl
+## Divisor
 
-- **Archivo:** `Imagen_Quetzalcoatl_liea_divisora.png` en `public/` — usado como línea divisora entre secciones
-- **Componente:** `src/components/QuetzalDivider.jsx` — instancia única entre secciones en `Home.jsx` y antes del footer
-- **Estilo:** `width: 100%`, `height: 40px`, `objectFit: fill`, `padding: 0 80px`, `opacity: 0.75`, `margin: 0.3rem 0`
-- **Bordes tarjetas pendiente:** bajar opacidad verde brillante a `rgba(0, 168, 107, 0.25)`
+- **Componente:** `src/components/Divider.jsx` — franja con patrón de grecas doradas en SVG `repeat-x`, altura 12px, color `#c9a84c`
+- **Uso:** entre secciones en `Home.jsx` y antes del contenido en `Footer.jsx`
+- **Bordes tarjetas:** clase `.tarjeta` — `1px solid rgba(0, 168, 107, 0.25)`
 
 ## Infraestructura
 
@@ -87,7 +86,7 @@ El servidor tiene **DOS sitios** corriendo simultáneamente:
 |-------|-----|
 | `#4ecdc4` | Turquesa — títulos principales |
 | `#00e5a0` | Jade brillante — títulos secundarios y separadores |
-| `#00c986` | Jade medio — bordes de tarjetas |
+| `rgba(0,168,107,0.25)` | Bordes de tarjetas (ecosistema) |
 | `#ffffff` | Blanco puro — textos de párrafo |
 | `#c9a84c` | Dorado — navbar y «CREAR IMPERIOS» (sin cambiar) |
 | `#0a0508` | Fondo base del body |
