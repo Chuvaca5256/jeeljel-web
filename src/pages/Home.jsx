@@ -4,21 +4,21 @@ import AppsGrid from '../components/AppsGrid'
 import WorldCup from '../components/WorldCup'
 import Mission from '../components/Mission'
 import Organizations from '../components/Organizations'
-import QuetzalDivider from '../components/QuetzalDivider'
+import Divider from '../components/Divider'
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <QuetzalDivider />
+      <Divider />
       <Stats />
-      <QuetzalDivider />
+      <Divider />
       <AppsGrid />
-      <QuetzalDivider />
+      <Divider />
       <WorldCup />
-      <QuetzalDivider />
+      <Divider />
       <Mission />
-      <QuetzalDivider />
+      <Divider />
       <Organizations />
     </>
   )
