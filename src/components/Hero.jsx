@@ -1,6 +1,5 @@
-// HERO — video del ajolote en src/assets/ajolote_final.webm
-// mix-blend-mode: screen hace desaparecer el fondo negro del video
-import ajoloteWebm from '../assets/ajolote_final.webm'
+// HERO — logo ajolote con balón (sin fondo)
+import logoAjoloteBalon from '../assets/Logo_JeelJel_Kanaabcon_balon_sin_fondo.png'
 
 export default function Hero() {
   const handleScroll = (id) => (e) => {
@@ -43,23 +42,17 @@ export default function Hero() {
         </div>
 
         <div className="relative" style={{ width: '220px', height: '220px' }}>
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
+          <img
+            src={logoAjoloteBalon}
+            alt="JeelJel Kaanab — ajolote con balón"
             style={{
               width: '220px',
               height: '220px',
               objectFit: 'contain',
-              mixBlendMode: 'screen',
               display: 'block',
               margin: '0 auto',
             }}
-          >
-            <source src={ajoloteWebm} type="video/webm" />
-            Tu navegador no soporta video HTML5.
-          </video>
+          />
         </div>
 
         <h1
