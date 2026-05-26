@@ -6,11 +6,22 @@
 
 ## Páginas
 
-- Home
-- Apps
-- Mundial
-- Misión
-- Organizaciones
+| Ruta | Estado |
+|------|--------|
+| `/` | Home (landing completa) |
+| `/apps` | Stub — pendiente contenido |
+| `/hub-bionico` | Stub — pendiente contenido |
+| `/mision` | Stub — pendiente contenido |
+| `/organizaciones` | Stub — pendiente contenido |
+| `/contacto` | Stub — pendiente contenido |
+
+**Navbar:** APPS · HUB BIÓNICO · MISIÓN · ORGANIZACIONES · CONTACTO
+
+## Fondo global
+
+- Patrón maya greca-rombo en `body` vía **data URI** en `src/index.css` (200×200 px)
+- `public/bg-maya.svg` existe pero **no se usa en producción** (el externo no funcionó; data URI sí)
+- Secciones grandes transparentes para que el patrón se vea en toda la página
 
 ## Infraestructura
 
@@ -42,6 +53,7 @@ El servidor tiene **DOS sitios** corriendo simultáneamente:
 
 - Archivo Nginx: `/etc/nginx/sites-enabled/jeeljel-landing`
 - Apunta a: `/var/www/jeeljel-web/dist` (React build)
+- SPA: `try_files $uri $uri/ /index.html;` en `location /`
 - SSL: `/etc/letsencrypt/live/jeeljel.com/`
 - Redirige HTTP → HTTPS automáticamente
 
