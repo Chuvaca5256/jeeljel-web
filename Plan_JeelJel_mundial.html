@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hub Biónico Deportivo — Plan Maestro | Jeeljel</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c10;
+    --surface: #0e1420;
+    --surface2: #141c2a;
+    --border: #1e2d42;
+    --accent: #00e5ff;
+    --accent2: #ff6b2b;
+    --accent3: #7fff5a;
+    --text: #c8d8e8;
+    --text-dim: #5a7a94;
+    --white: #f0f8ff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    padding: 60px 0 40px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(0,229,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .logo-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .logo-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 12px var(--accent);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  .logo-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px;
+    letter-spacing: 4px;
+    color: var(--text-dim);
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(42px, 8vw, 80px);
+    line-height: 0.95;
+    color: var(--white);
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .subtitle {
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 24px;
+  }
+
+  .badge-row {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+  }
+
+  .badge {
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .badge-blue { background: rgba(0,229,255,0.12); border: 1px solid rgba(0,229,255,0.3); color: var(--accent); }
+  .badge-orange { background: rgba(255,107,43,0.12); border: 1px solid rgba(255,107,43,0.3); color: var(--accent2); }
+  .badge-green { background: rgba(127,255,90,0.12); border: 1px solid rgba(127,255,90,0.3); color: var(--accent3); }
+
+  .meta-line {
+    font-size: 12px;
+    color: var(--text-dim);
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* CONTAINER */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 48px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: rgba(0,229,255,0.08);
+    border: 1px solid rgba(0,229,255,0.2);
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+
+  h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    color: var(--white);
+    letter-spacing: 1px;
+  }
+
+  h3 {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 10px;
+    margin-top: 24px;
+  }
+
+  p { margin-bottom: 14px; color: var(--text); }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .card:hover { border-color: rgba(0,229,255,0.3); }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), transparent);
+  }
+
+  .card.orange::before { background: linear-gradient(90deg, var(--accent2), transparent); }
+  .card.green::before { background: linear-gradient(90deg, var(--accent3), transparent); }
+
+  .card-icon {
+    font-size: 24px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .card h4 {
+    font-weight: 600;
+    color: var(--white);
+    font-size: 15px;
+    margin-bottom: 8px;
+  }
+
+  .card p { font-size: 13px; color: var(--text-dim); margin: 0; }
+
+  /* TABLE */
+  .table-wrap { overflow-x: auto; margin-top: 16px; }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+
+  thead tr {
+    background: var(--surface2);
+  }
+
+  th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+  }
+
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid rgba(30,45,66,0.5);
+    color: var(--text);
+    vertical-align: top;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .yes { color: var(--accent3); font-weight: 500; }
+  .warn { color: #ffd166; }
+  .no { color: #ff5566; }
+  .highlight-row td { background: rgba(0,229,255,0.04); }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    color: var(--text-dim);
+    margin: 16px 0;
+    overflow-x: auto;
+  }
+
+  .code-block .c-cyan { color: var(--accent); }
+  .code-block .c-orange { color: var(--accent2); }
+  .code-block .c-green { color: var(--accent3); }
+  .code-block .c-dim { color: #3a5269; }
+  .code-block .c-white { color: var(--white); }
+
+  /* TIMELINE */
+  .timeline { margin-top: 16px; }
+
+  .tl-item {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 20px;
+    margin-bottom: 4px;
+    position: relative;
+  }
+
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: 100px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: var(--border);
+    z-index: 0;
+  }
+
+  .tl-day {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    padding-top: 12px;
+    text-align: right;
+  }
+
+  .tl-content {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-left: 20px;
+    position: relative;
+  }
+
+  .tl-content::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 16px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 8px var(--accent);
+  }
+
+  .tl-content h4 { font-size: 13px; font-weight: 600; color: var(--white); margin-bottom: 4px; }
+  .tl-content p { font-size: 12px; color: var(--text-dim); margin: 0; }
+
+  /* SPONSOR TABLE */
+  .sponsor-row { display: flex; align-items: center; gap: 10px; }
+  .sponsor-name { font-weight: 600; color: var(--white); }
+  .money { color: var(--accent3); font-family: 'DM Mono', monospace; font-weight: 500; }
+
+  /* ALERT */
+  .alert {
+    background: rgba(255,107,43,0.08);
+    border: 1px solid rgba(255,107,43,0.25);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .alert strong { color: var(--accent2); }
+
+  .info-box {
+    background: rgba(0,229,255,0.06);
+    border: 1px solid rgba(0,229,255,0.2);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+
+  .info-box strong { color: var(--accent); }
+
+  /* LAYOUT DIAGRAM */
+  .layout-diagram {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    margin: 16px 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    line-height: 1.6;
+    color: var(--text-dim);
+  }
+
+  .layout-zone {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 500;
+  }
+
+  .zone-a { background: rgba(0,229,255,0.15); color: var(--accent); }
+  .zone-b { background: rgba(255,107,43,0.15); color: var(--accent2); }
+  .zone-c { background: rgba(127,255,90,0.15); color: var(--accent3); }
+  .zone-d { background: rgba(255,209,102,0.15); color: #ffd166; }
+  .zone-ad { background: rgba(200,100,255,0.15); color: #c864ff; }
+
+  /* INFRA */
+  .arch-box {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .arch-node {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 12px;
+    text-align: center;
+    min-width: 120px;
+  }
+
+  .arch-node .node-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+
+  .arch-node .node-val { color: var(--white); font-weight: 600; font-size: 13px; }
+
+  /* FOOTER */
+  footer {
+    padding: 40px 0;
+    text-align: center;
+  }
+
+  footer p { font-size: 12px; color: var(--text-dim); }
+  footer .doc-id { font-family: 'DM Mono', monospace; color: rgba(0,229,255,0.4); margin-top: 6px; }
+
+  /* PRINT */
+  @media print {
+    body { background: white; color: #111; }
+    header::before { display: none; }
+    .card, .tl-content, .code-block, .layout-diagram { background: #f5f5f5; border-color: #ddd; }
+    :root { --accent: #006699; --text: #333; --white: #000; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="container">
+    <div class="logo-bar">
+      <div class="logo-dot"></div>
+      <div class="logo-text">JEELJEL · PLAN MAESTRO</div>
+      <div class="logo-dot"></div>
+    </div>
+    <h1>HUB BIÓNICO<br><span>DEPORTIVO</span></h1>
+    <p class="subtitle">Dashboard de Inmersión Deportiva — Mundial 2026</p>
+    <div class="badge-row">
+      <span class="badge badge-blue">Fútbol MVP</span>
+      <span class="badge badge-orange">Mundial 2026</span>
+      <span class="badge badge-green">Monetización Real</span>
+      <span class="badge badge-blue">Ikan Naat Integrado</span>
+    </div>
+    <p class="meta-line">Versión 1.0 · Mayo 22, 2026 · Carlos + Claude</p>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- 01 VISIÓN -->
+  <section>
+    <div class="section-label">
+      <span class="section-num">01</span>
+      <h2>La Visión</h2>
+    </div>
+    <p>Una web app dentro de <strong style="color:var(--white)">jeeljel.com/mundial-2026</strong> donde cualquier persona puede ver un partido de fútbol en tiempo real a través de una <strong style="color:var(--accent)">representación 2D isométrica del campo</strong> — sin video, sin derechos de autor. El partido lo narran usuarios reales con micrófono, hay chat en vivo, estadísticas granulares del partido y de cada jugador, y un modo especial para apostadores. Al terminar el partido, todo queda archivado para consultarlo.</p>
+    <p>El objetivo es claro: <strong style="color:var(--white)">jeeljel.com/mundial-2026</strong> arriba y funcionando antes del 11 de junio, con miles de personas usándolo durante todo el torneo.</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <span class="card-icon">🎙️</span>
+        <h4>Narrador Comunitario</h4>
+        <p>Cualquiera puede narrar con micrófono. Sistema de rating. El mejor narrador sube al top del partido. Es marketing viral gratuito.</p>
+      </div>
+      <div class="card orange">
+        <span class="card-icon">📊</span>
+        <h4>Modo Apostador</h4>
+        <p>Vista toggle con probabilidades calculadas desde los datos en vivo: posesión, corners, tiros. Estadísticas por jugador: pases, faltas, tarjetas, goles.</p>
+      </div>
+      <div class="card green">
+        <span class="card-icon">🤖</span>
+        <h4>IA Analista (Ikan Naat)</h4>
+        <p>Chat de IA conectado a los datos del partido en tiempo real. "¿Cuántos corners lleva el equipo X?" La mejor demo posible de Ikan Naat.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">📁</span>
+        <h4>Archivo Post-Partido</h4>
+        <p>Al acabar, clic en el partido y ves timeline de eventos, stats finales del partido y de cada jugador. Permanente, consultable siempre.</p>
+      </div>
+      <div class="card orange">
+        <span class="card-icon">🌐</span>
+        <h4>Multiidioma</h4>
+        <p>Español + Inglés en el MVP. Portugués en V2. React i18n, no es problema técnico. Narrador puede elegir idioma al iniciar.</p>
+      </div>
+      <div class="card green">
+        <span class="card-icon">📡</span>
+        <h4>Sin Video, Sin Problemas</h4>
+        <p>El campo 2D en PixiJS evita copyright. En pausas: animación de stats del primer tiempo + narrador en vivo. 100% legal.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 API DE DATOS -->
+  <section>
+    <div class="section-label">
+      <span class="section-num">02</span>
+      <h2>API de Datos Deportivos</h2>
+    </div>
+    <p><strong style="color:var(--white)">Decisión: API-Football Ultra ($29/mes)</strong> — la opción correcta para el Mundial 2026.</p>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Criterio</th>
+            <th>API-Football ★</th>
+            <th>Sportmonks</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="highlight-row">
+            <td>Precio ideal para ti</td>
+            <td class="money">$29/mes (Ultra)</td>
+            <td class="warn">$79–99/mes</td>
+          </tr>
+          <tr>
+            <td>Requests / día</td>
+            <td class="yes">75,000</td>
+            <td>Por liga seleccionada</td>
+          </tr>
+          <tr>
+            <td>Stats por jugador</td>
+            <td class="yes">✓ Pases, goles, faltas, tarjetas, tiros, asistencias</td>
+            <td class="yes">✓ + xG, presión, dribbles</td>
+          </tr>
+          <tr>
+            <td>Lineups en vivo</td>
+            <td class="yes">✓</td>
+            <td class="yes">✓</td>
+          </tr>
+          <tr>
+            <td>Odds en tiempo real</td>
+            <td class="yes">✓ Incluido</td>
+            <td class="yes">✓ Incluido</td>
+          </tr>
+          <tr>
+            <td>Mundial 2026</td>
+            <td class="yes">✓</td>
+            <td class="yes">✓</td>
+          </tr>
+          <tr>
+            <td>Historial post-partido</td>
+            <td class="yes">✓</td>
+            <td class="yes">✓</td>
+          </tr>
+          <tr>
+            <td>Latencia eventos en vivo</td>
+            <td class="warn">~30–60 seg</td>
+            <td class="warn">~15–30 seg</td>
+          </tr>
+          <tr>
+            <td>Free plan para probar</td>
+            <td class="yes">✓ 100 req/día</td>
+            <td class="warn">Solo 2 ligas menores</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-box">
+      <strong>⚡ Dato clave de arquitectura:</strong> La API no se consulta por cada usuario. Tu servidor hace polling cada 30 segundos → guarda en Redis → todos los usuarios reciben el mismo estado desde caché. 75,000 requests/día equivale a una consulta cada 1.2 segundos, más que suficiente.
+    </div>
+
+    <h3>Stats de Jugador Disponibles (por partido)</h3>
+    <div class="code-block">
+<span class="c-cyan">Ataque:</span>  <span class="c-white">Goles · Tiros totales · Tiros a puerta · Asistencias · Offside</span>
+<span class="c-orange">Defensa:</span> <span class="c-white">Tackles · Intercepciones · Despejes · Bloqueos</span>
+<span class="c-green">Pases:</span>   <span class="c-white">Pases totales · Pases precisos · % precisión · Pases clave · Centros</span>
+<span class="c-cyan">Duelos:</span>  <span class="c-white">Duelos totales · Duelos ganados · Duelos aéreos</span>
+<span class="c-orange">Faltas:</span>  <span class="c-white">Faltas cometidas · Faltas recibidas · Tarjetas amarillas · Tarjetas rojas</span>
+<span class="c-green">Portero:</span> <span class="c-white">Atajadas · Goles concedidos · Salidas · Pases con mano</span>
+<span class="c-dim">← Todo esto se puede mostrar al hacer clic en un jugador del campo 2D</span>
+    </div>
+  </section>
+
+  <!-- 03 LAYOUT -->
+  <section>
+    <div class="section-label">
+      <span class="section-num">03</span>
+      <h2>Layout & Zonas</h2>
+    </div>
+
+    <div class="layout-diagram">
+<span style="color:var(--white)">┌──────────────────────────────────────────────────────────────────┐</span>
+<span style="color:var(--white)">│  JEELJEL DEPORTES  │  Mundial 2026  │  [Partidos ▾]  [🤖 IA]   │</span>
+<span style="color:var(--white)">├────────────────┬────────────────────────────────┬───────────────┤</span>
+<span style="color:var(--white)">│                │                                │               │</span>
+<span style="color:var(--white)">│  </span><span class="layout-zone zone-c">ZONA C: CHAT</span><span style="color:var(--white)"> │      </span><span class="layout-zone zone-a">ZONA A: CAMPO 2D</span><span style="color:var(--white)">        │ </span><span class="layout-zone zone-ad">AD BANNER</span><span style="color:var(--white)">     │</span>
+<span style="color:var(--white)">│  En vivo       │   PixiJS isométrico            │  (Bet365 /    │</span>
+<span style="color:var(--white)">│  [mensajes]    │   Balón · Jugadores · Eventos  │   1xBet)      │</span>
+<span style="color:var(--white)">│                │                                │               │</span>
+<span style="color:var(--white)">│  [input msg]   ├────────────────────────────────┤ </span><span class="layout-zone zone-ad">AD BANNER</span><span style="color:var(--white)">     │</span>
+<span style="color:var(--white)">│                │  </span><span class="layout-zone zone-d">ZONA D: STATS EN TIEMPO REAL</span><span style="color:var(--white)">  │  (Rotativo)   │</span>
+<span style="color:var(--white)">│                │  Posesión · Corners · Tiros    │               │</span>
+<span style="color:var(--white)">├────────────────┴────────────────────────────────┴───────────────┤</span>
+<span style="color:var(--white)">│  </span><span class="layout-zone zone-b">ZONA B: NARRADOR</span><span style="color:var(--white)">  [🎙 Play] Vol: ━━●━━  Rating: ★★★★☆  [+]    │</span>
+<span style="color:var(--white)">├──────────────────────────────────────────────────────────────────┤</span>
+<span style="color:var(--white)">│  </span><span class="layout-zone zone-ad">BANNER INFERIOR — ANUNCIO ROTATIVO HORIZONTAL (sin overlay)</span><span style="color:var(--white)">      │</span>
+<span style="color:var(--white)">└──────────────────────────────────────────────────────────────────┘</span>
+
+<span class="c-dim">EN PAUSA: ZONA A → Animación de resumen del 1er tiempo con stats.
+EN MÓVIL: Tabs → Tab 1: Campo · Tab 2: Stats · Tab 3: Chat
+          Narrador siempre fijo abajo. Ads entre secciones, nunca overlay.</span>
+    </div>
+
+    <div class="alert">
+      <strong>Regla de oro:</strong> Los anuncios nunca se superponen al chat, al campo 2D ni al narrador. Están en los márgenes laterales (desktop) o entre secciones (mobile). El usuario decide cuándo verlos. Esto protege la experiencia y el tiempo de permanencia.
+    </div>
+  </section>
+
+  <!-- 04 MONETIZACIÓN -->
+  <section>
+    <div class="section-label">
+      <span class="section-num">04</span>
+      <h2>Monetización</h2>
+    </div>
+    <p>La estrategia combina <strong style="color:var(--white)">impresiones (CPM)</strong> para volumen de tráfico + <strong style="color:var(--white)">afiliados (CPA/RevShare)</strong> para conversiones. Los dos modelos juntos maximizan ingresos.</p>
+
+    <h3>Capa 1: Publicidad por Impresiones (CPM)</h3>
+    <p>Esto es lo que buscas: te pagan por cuánta gente ve el anuncio, no solo por quién se registra.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Red</th><th>Cómo funciona</th><th>CPM estimado para audiencia deportiva/apuestas</th><th>Acción</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong style="color:var(--white)">Google AdSense</strong></td>
+            <td>Banners automáticos por audiencia</td>
+            <td class="money">$3–12 CPM</td>
+            <td>Aplica hoy</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--white)">Media.net</strong></td>
+            <td>Contextual, alta calidad</td>
+            <td class="money">$2–8 CPM</td>
+            <td>Alternativa a AdSense</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--white)">Ezoic</strong></td>
+            <td>IA optimiza ubicación de ads</td>
+            <td class="money">$4–15 CPM</td>
+            <td>Requiere 10k visitas/mes</td>
+          </tr>
+          <tr class="highlight-row">
+            <td><strong style="color:var(--white)">Directo a casas de apuestas</strong></td>
+            <td>Tú negocias banners fijos con Betsson/Codere</td>
+            <td class="money">$500–2,000/mes fijo</td>
+            <td>Contactar semana 2</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Capa 2: Afiliados de Apuestas (CPA + RevShare)</h3>
+    <p>Complementario al CPM. Un banner de afiliado puede ser impresión Y conversión al mismo tiempo.</p>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Programa</th><th>Modelo</th><th>Comisión</th><th>Por qué es prioritario</th></tr></thead>
+        <tbody>
+          <tr class="highlight-row">
+            <td><strong style="color:var(--white)">1xBet Partners</strong></td>
+            <td>RevShare / CPA / Hybrid</td>
+            <td class="money">Hasta 40% RevShare</td>
+            <td>Pago semanal, 62+ países, soporte ES</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--white)">Bet365 Affiliates</strong></td>
+            <td>RevShare</td>
+            <td class="money">30% + cookie 45 días</td>
+            <td>Marca más confiable, conversión altísima</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--white)">Betway</strong></td>
+            <td>RevShare / CPA</td>
+            <td class="money">Hasta 40% RevShare</td>
+            <td>Muy activo en Latinoamérica</td>
+          </tr>
+          <tr>
+            <td><strong style="color:var(--white)">Parimatch</strong></td>
+            <td>RevShare / Hybrid</td>
+            <td class="money">Hasta 45% RevShare</td>
+            <td>Pago cada 2 semanas, fácil de aprobar</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="info-box">
+      <strong>Proyección conservadora Mundial (30 días):</strong><br><br>
+      100,000 páginas vistas × $5 CPM = <strong style="color:var(--accent3)">$500 en impresiones</strong><br>
+      500 clics afiliados × 5% conversión × $80 CPA promedio = <strong style="color:var(--accent3)">$2,000 en afiliados</strong><br>
+      Patrocinio directo casa de apuestas = <strong style="color:var(--accent3)">$500–1,000</strong><br><br>
+      <strong style="color:var(--white)">Total estimado conservador: $3,000–3,500 USD en el Mundial</strong><br>
+      <span style="font-size:12px;color:var(--text-dim)">Con viralidad moderada puede multiplicarse × 5–10.</span>
+    </div>
+
+    <h3>Capa 3: Patrocinio Directo (contactar semana 2)</h3>
+    <p>Una vez que el sitio esté funcional aunque sea en beta, puedes mandar un deck de una página a:</p>
+    <div class="code-block">
+<span class="c-cyan">Objetivos de contacto directo:</span>
+<span class="c-white">• Betsson México / Betsson Latinoamérica — sports@betsson.com</span>
+<span class="c-white">• Codere México — tienen programa de afiliados propio</span>
+<span class="c-white">• Sportium — activo en mercado hispanohablante</span>
+<span class="c-white">• Marcas de bebidas energéticas (Red Bull, Monster) — target = hombre 18-35</span>
+<span class="c-dim">Propuesta: Banner fijo durante todo el Mundial + mención del narrador en arranque</span>
+    </div>
+  </section>
+
+  <!-- 05 VIDEOS EN PAUSAS -->
+  <section>
+    <div class="section-label">
+      <span class="section-num">05</span>
+      <h2>Contenido en Pausas (Sin Copyright)</h2>
+    </div>
+
+    <div class="alert">
+      <strong>Realidad legal:</strong> Los highlights del Mundial son de FIFA y los broadcasters. No se pueden embeber ni reproducir sin licencia. Usar video de partido = riesgo legal inmediato.
+    </div>
+
+    <p>La solución es mejor de lo que parece: <strong style="color:var(--white)">el descanso es tu momento de mayor engagement de datos</strong>. Esto es lo que muestra en ZONA A durante el medio tiempo y pausas:</p>
+
+    <div class="card-grid">
+      <div class="card">
+        <span class="card-icon">📈</span>
+        <h4>Resumen Animado del 1er Tiempo</h4>
+        <p>Gráficas animadas con los datos de la API: posesión minuto a minuto, mapa de tiros, corners por período. 100% tuyos, visualmente poderosos.</p>
+      </div>
+      <div class="card orange">
+        <span class="card-icon">🏆</span>
+        <h4>Top Jugadores del Partido</h4>
+        <p>Ranking automático con los mejores del primer tiempo por categoría (pases, duelos, tiros). Ideal para apostadores a MVP.</p>
+      </div>
+      <div class="card green">
+        <span class="card-icon">🎙️</span>
+        <h4>Narrador en Pantalla Completa</h4>
+        <p>El narrador toma el centro. Audio + su cara si quiere activar cámara (opcional). El chat explota en medio tiempo.</p>
+      </div>
+      <div class="card">
+        <span class="card-icon">🤖</span>
+        <h4>Predicciones de la IA</h4>
+        <p>Ikan Naat analiza los datos del primer tiempo y genera predicciones para el segundo. "Alta probabilidad de corner en próximos 15 min."</p>
+      </div>
+      <div class="card orange">
+        <span class="card-icon">▶️</span>
+        <h4>YouTube Embed Oficial (cuando disponible)</h4>
+        <p>Si FIFA o Univision publica highlights oficiales en YouTube, puedes embeber ese video específico. Ellos activan/desactivan el embed.</p>
+      </div>
+      <div class="card green">
+        <span class="card-icon">📰</span>
+        <h4>Análisis Pre-Generado</h4>
+        <p>La IA genera un artículo breve "¿Qué pasó en el primer tiempo?" usando los datos. Aparece como feed de texto en ZONA D.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 IKAN NAAT -->
+  <section>
+    <div class="section-label">
+      <span class="section-num">06</span>
+      <h2>Integración Ikan Naat — La IA Analista</h2>
+    </div>
+    <p>Este es el diferenciador que ningún competidor tiene. Un botón <strong style="color:var(--accent)">🤖 Analista IA</strong> disponible en todo momento abre un panel lateral con una IA conectada en tiempo real a los datos del partido.</p>
+
+    <h3>Ejemplos de conversación durante el partido</h3>
+    <div class="code-block">
+<span class="c-dim">Usuario →</span> <span class="c-white">"¿Cuántos corners lleva cada equipo?"</span>
+<span class="c-cyan">IA →</span>     <span class="c-white">"México lleva 6 corners, Argentina 3. En los últimos 10 minutos México ha tenido 4 corners consecutivos, lo que históricamente indica presión sostenida."</span>
+
+<span class="c-dim">Usuario →</span> <span class="c-white">"Si apuesto a que habrá gol en los próximos 15 minutos, cómo van los datos?"</span>
+<span class="c-cyan">IA →</span>     <span class="c-white">"México tiene 8 tiros totales con 4 a puerta. La posesión en los últimos 5 min es 68% México. El historial de este equipo muestra gol en el 65% de partidos con este patrón."</span>
+
+<span class="c-dim">Usuario →</span> <span class="c-white">"¿Cuál es el jugador con más faltas cometidas hoy?"</span>
+<span class="c-cyan">IA →</span>     <span class="c-white">"#8 Herrera lleva 4 faltas cometidas. Está en zona de tarjeta amarilla. El árbitro ha mostrado 3 amarillas en el partido."</span>
+    </div>
+
+    <div class="info-box">
+      <strong>💡 Por qué esto es oro para Jeeljel:</strong> Miles de personas durante el Mundial van a usar la IA deportiva. Eso es el mejor portafolio posible para vender Ikan Naat a empresas y medios deportivos. La IA demuestra capacidad con datos reales en vivo, no en un demo controlado.
+    </div>
+  </section>
+
+  <!-- 07 INFRAESTRUCTURA -->
+  <section>
+    <div class="section-label">
+      <span class="section-num">07</span>
+      <h2>Infraestructura: Aguantar Miles de Usuarios</h2>
+    </div>
+
+    <div class="arch-box">
+      <div class="arch-node">
+        <div class="node-label">CDN / Shield</div>
+        <div class="node-val" style="color:var(--accent)">Cloudflare</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:4px">Gratis · DDoS · Cache</div>
+      </div>
+      <div class="arch-node" style="border-color:rgba(0,229,255,0.3)">
+        <div class="node-label">Reverse Proxy</div>
+        <div class="node-val">Nginx</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:4px">Tu VPS KVM 2</div>
+      </div>
+      <div class="arch-node">
+        <div class="node-label">Frontend</div>
+        <div class="node-val">React + Vite</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:4px">Estático en CDN</div>
+      </div>
+      <div class="arch-node">
+        <div class="node-label">Backend</div>
+        <div class="node-val">Node.js</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:4px">Docker en VPS</div>
+      </div>
+      <div class="arch-node" style="border-color:rgba(127,255,90,0.3)">
+        <div class="node-label">Cache / Estado</div>
+        <div class="node-val" style="color:var(--accent3)">Redis</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:4px">RAM, VPS</div>
+      </div>
+      <div class="arch-node">
+        <div class="node-label">Chat Realtime</div>
+        <div class="node-val">Supabase</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:4px">Ya tienes cuenta</div>
+      </div>
+      <div class="arch-node" style="border-color:rgba(255,107,43,0.3)">
+        <div class="node-label">Datos Deportivos</div>
+        <div class="node-val" style="color:var(--accent2)">API-Football</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:4px">$29/mes Ultra</div>
+      </div>
+      <div class="arch-node">
+        <div class="node-label">Campo 2D</div>
+        <div class="node-val">PixiJS</div>
+        <div style="font-size:10px;color:var(--text-dim);margin-top:4px">WebGL render</div>
+      </div>
+    </div>
+
+    <div class="code-block" style="margin-top:20px">
+<span class="c-dim">FLUJO DE DATOS (no es 1 request por usuario, es 1 por servidor):</span>
+
+<span class="c-orange">API-Football</span> <span class="c-dim">→ polling cada 30s →</span> <span class="c-green">Redis</span> <span class="c-dim">(estado del partido en RAM)</span>
+     <span class="c-dim">↓</span>
+<span class="c-green">Redis</span> <span class="c-dim">→ broadcast →</span> <span class="c-white">Socket.io</span> <span class="c-dim">→ todos los usuarios simultáneamente</span>
+     <span class="c-dim">↓</span>
+<span class="c-cyan">Cloudflare</span> <span class="c-dim">sirve el frontend estático (sin tocar el VPS)</span>
+<span class="c-cyan">Supabase</span>  <span class="c-dim">maneja el chat (sin tocar el VPS)</span>
+
+<span class="c-dim">Resultado: Tu VPS solo procesa lógica. Aguanta 5,000–10,000 usuarios.</span>
+<span class="c-dim">Si se vuelve viral → upgrade del VPS en Hostinger en 5 minutos.</span>
+    </div>
+
+    <h3>Stack Frontend: Decisión Final</h3>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Tecnología</th><th>Para qué</th><th>Por qué</th></tr></thead>
+        <tbody>
+          <tr><td><strong style="color:var(--white)">React + Vite</strong></td><td>Framework principal</td><td>Modular, rápido, ya conocido del ecosistema Ikan Naat</td></tr>
+          <tr><td><strong style="color:var(--white)">Tailwind CSS</strong></td><td>Estilos</td><td>UI rápida, responsiva, sin pelear con CSS</td></tr>
+          <tr><td><strong style="color:var(--white)">PixiJS</strong></td><td>Campo 2D isométrico</td><td>WebGL, el más rápido para animación en tiempo real</td></tr>
+          <tr><td><strong style="color:var(--white)">Socket.io client</strong></td><td>Datos en tiempo real</td><td>Conecta con tu backend Node.js</td></tr>
+          <tr><td><strong style="color:var(--white)">Supabase Realtime</strong></td><td>Chat en vivo</td><td>Ya tienes la cuenta y el conocimiento de Ikan Naat</td></tr>
+          <tr><td><strong style="color:var(--white)">React i18n</strong></td><td>Español + Inglés</td><td>Un archivo de traducciones, trivial de mantener</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 08 ROADMAP -->
+  <section>
+    <div class="section-label">
+      <span class="section-num">08</span>
+      <h2>Roadmap 3 Semanas (2 Computadoras)</h2>
+    </div>
+    <p>Con 12–16 horas diarias y dos máquinas en paralelo, el roadmap de 4.5 semanas se convierte en ~2.5 semanas reales. El Mundial arranca aprox. el <strong style="color:var(--white)">11 de junio</strong>. Tenemos tiempo justo.</p>
+
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-day">HOY<br>22 MAY</div>
+        <div class="tl-content">
+          <h4>🔑 Setup y Registro</h4>
+          <p>Registrarte en 1xBet Partners + Bet365 Affiliates + Parimatch. Aplicar a Google AdSense. Comprar API-Football Ultra. Obtener API key y testear endpoint.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-day">DÍA 1–2<br>23–24 MAY</div>
+        <div class="tl-content">
+          <h4>🏗️ Arquitectura Base (Sesión con Claude)</h4>
+          <p>Definir arquitectura completa. Generar prompt maestro para Claude Code. Mac A: Claude Code genera backend Node.js + Redis + Docker. Mac B: Cursor monta estructura React + Vite + Tailwind.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-day">DÍA 3–4<br>25–26 MAY</div>
+        <div class="tl-content">
+          <h4>⚡ Datos en Tiempo Real</h4>
+          <p>Mac A: Integración API-Football → Redis → Socket.io. Mac B: Componente ZONA D (panel de stats en tiempo real). Primer dato real en pantalla.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-day">DÍA 5–6<br>27–28 MAY</div>
+        <div class="tl-content">
+          <h4>⚽ Campo 2D + Chat</h4>
+          <p>Mac A: Claude Code construye el motor PixiJS del campo 2D con movimiento de balón. Mac B: Chat en vivo con Supabase Realtime.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-day">DÍA 7–8<br>29–30 MAY</div>
+        <div class="tl-content">
+          <h4>🎙️ Narrador + Modo Apostador</h4>
+          <p>Sistema de audio streaming para narradores. Toggle de Modo Apostador con overlay de probabilidades. Click en jugador → stats individuales.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-day">DÍA 9–10<br>31 MAY–1 JUN</div>
+        <div class="tl-content">
+          <h4>🤖 Integración Ikan Naat + Archivo</h4>
+          <p>Panel lateral de IA conectado a datos en vivo. Sistema de archivo post-partido con timeline de eventos y stats completas.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-day">DÍA 11–12<br>2–3 JUN</div>
+        <div class="tl-content">
+          <h4>💰 Ads + Monetización</h4>
+          <p>Integrar banners de afiliados aprobados. Zonas de AdSense configuradas. Links de afiliado en CTAs estratégicos. Prueba de todos los flows.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-day">DÍA 13–14<br>4–5 JUN</div>
+        <div class="tl-content">
+          <h4>🚀 Cloudflare + Pruebas de Carga</h4>
+          <p>Configurar Cloudflare frente al VPS. Nginx como reverse proxy. Pruebas de estrés. Deploy en jeeljel.com/mundial-2026. Beta pública con partido de prueba.</p>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-day">DÍA 15–20<br>6–10 JUN</div>
+        <div class="tl-content">
+          <h4>🔧 Afinación + Marketing Pre-Mundial</h4>
+          <p>Ajustes basados en feedback de beta. Posts en redes. Contacto directo con casas de apuestas para patrocinio. Todo listo para el 11 de junio.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 09 RESUMEN EJECUTIVO -->
+  <section>
+    <div class="section-label">
+      <span class="section-num">09</span>
+      <h2>Resumen Ejecutivo</h2>
+    </div>
+
+    <div class="code-block">
+<span class="c-cyan">PROYECTO:</span>   <span class="c-white">Hub Biónico Deportivo — jeeljel.com/mundial-2026</span>
+<span class="c-cyan">OBJETIVO:</span>   <span class="c-white">Posicionar Jeeljel ante millones de personas durante el Mundial 2026</span>
+<span class="c-cyan">TIEMPO:</span>     <span class="c-white">~14 días de desarrollo. Listo antes del 11 de junio.</span>
+<span class="c-cyan">INVERSIÓN:</span>  <span class="c-white">$29/mes API-Football + hosting existente = ~$30 total</span>
+
+<span class="c-orange">DIFERENCIADORES:</span>
+  <span class="c-white">1. Campo 2D isométrico en tiempo real (sin video, sin copyright)</span>
+  <span class="c-white">2. Narrador comunitario con rating (viral por diseño)</span>
+  <span class="c-white">3. Modo Apostador con datos granulares de jugador</span>
+  <span class="c-white">4. IA Analista (Ikan Naat) conectada a datos del partido en vivo</span>
+  <span class="c-white">5. Archivo post-partido con timeline interactivo</span>
+
+<span class="c-green">MONETIZACIÓN:</span>
+  <span class="c-white">• CPM (impresiones): AdSense + Media.net + patrocinio directo</span>
+  <span class="c-white">• Afiliados: 1xBet (40%) + Bet365 (30%) + Betway + Parimatch</span>
+  <span class="c-white">• Estimado conservador Mundial: $3,000–3,500 USD</span>
+
+<span class="c-orange">STACK:</span>
+  <span class="c-white">React + Vite + Tailwind + PixiJS + Socket.io</span>
+  <span class="c-white">Node.js + Redis + Docker + Nginx + Cloudflare</span>
+  <span class="c-white">Supabase Realtime (chat) + API-Football Ultra ($29/mes)</span>
+
+<span class="c-green">PRÓXIMO PASO INMEDIATO:</span>
+  <span class="c-white">Sesión de arquitectura → prompt maestro → Claude Code + Cursor en paralelo</span>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="container">
+    <p>Jeeljel · Hub Biónico Deportivo · Plan Maestro v1.0</p>
+    <p class="doc-id">DOC-JEL-2026-001 · Carlos + Claude · Mayo 22, 2026</p>
+  </div>
+</footer>
+
+</body>
+</html>

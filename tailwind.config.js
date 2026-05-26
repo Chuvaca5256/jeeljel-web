@@ -9,11 +9,12 @@ export default {
       colors: {
         'bg-principal': '#0a0508',
         'dorado': '#c9a84c',
-        'purpura': '#7b2d8b',
-        'fuego': '#e85d26',
-        'texto': '#f5f0e8',
-        'surface': '#130a13',
-        'border-custom': '#2a1a2a',
+        'titulo': '#4ecdc4',
+        'titulo-secundario': '#00a86b',
+        'texto': '#ffffff',
+        'tarjeta-borde': '#2d6a4f',
+        'boton-primario': '#00a86b',
+        'boton-secundario': '#4ecdc4',
       },
       fontFamily: {
         cinzel: ['Cinzel', 'serif'],

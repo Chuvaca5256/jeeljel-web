@@ -15,6 +15,8 @@
 - ✅ Navegación actualizada: Apps, Hub Biónico, Misión, Organizaciones, Contacto
 - ✅ Fix Nginx SPA routing (`try_files`)
 - ✅ Fondo global oscuro en toda la página
+- ✅ Fondo prehispánico con dioses mayas/andinos implementado
+- ✅ Paleta Jade & Turquesa Maya aplicada en todo el sitio
 
 ## Infraestructura
 
@@ -30,7 +32,6 @@
 - [ ] Registrarse en API-Football Ultra y obtener API key
 - [ ] Registrarse en afiliados: 1xBet Partners, Bet365 Affiliates
 - [ ] Crear ruta `/mundial-2026` en React dentro de jeeljel-web
-- [ ] Fondo maya definitivo — el SVG externo no funcionó, el data URI sí. Probar con patrón más elaborado
 - [ ] Página Apps con logos reales de cada aplicación
 - [ ] Página Hub Biónico completa con features y CTA
 - [ ] Página Misión con contenido real

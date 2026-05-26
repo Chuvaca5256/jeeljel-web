@@ -19,9 +19,10 @@
 
 ## Fondo global
 
-- Patrón maya greca-rombo en `body` vía **data URI** en `src/index.css` (200×200 px)
-- `public/bg-maya.svg` existe pero **no se usa en producción** (el externo no funcionó; data URI sí)
-- Secciones grandes transparentes para que el patrón se vea en toda la página
+- **Fondo actual:** `fondo_pagina_web1.png` y `fondo_pagina_web2.png` en `public/` — mosaico de dioses prehispánicos (Kukulkán, Tláloc, Inti, Viracocha, Pachamama, Bochica, Mama Killa, Bachué) generados con Gemini
+- **Overlay:** `rgba(10,5,8,0.35)` vía `body::after`
+- Secciones grandes transparentes para que el fondo se vea en toda la página
+- `public/bg-maya.svg` existe pero **no se usa**
 
 ## Infraestructura
 
@@ -73,15 +74,16 @@ El servidor tiene **DOS sitios** corriendo simultáneamente:
 - Para ver el sitio después de cambios: `systemctl reload nginx` + limpiar caché del navegador
 - Siempre verificar con: `curl -I https://jeeljel.com --resolve jeeljel.com:443:127.0.0.1 -k`
 
-## Paleta — Obsidiana Imperial
+## Paleta — Jade & Turquesa Maya
 
 | Color | Uso |
 |-------|-----|
-| `#0a0508` | Fondo base |
-| `#c9a84c` | Dorado |
-| `#7b2d8b` | Púrpura |
-| `#e85d26` | Naranja |
-| `#f5f0e8` | Texto claro |
+| `#4ecdc4` | Turquesa — títulos principales |
+| `#00e5a0` | Jade brillante — títulos secundarios y separadores |
+| `#00c986` | Jade medio — bordes de tarjetas |
+| `#ffffff` | Blanco puro — textos de párrafo |
+| `#c9a84c` | Dorado — navbar y «CREAR IMPERIOS» (sin cambiar) |
+| `#0a0508` | Fondo base del body |
 
 ## 🏟️ HUB BIÓNICO DEPORTIVO — DOC-JEL-2026-001
 
