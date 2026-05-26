@@ -56,7 +56,7 @@ function AppCard({ app }) {
     <div
       className="relative flex flex-col h-full p-5 rounded-xl transition-transform duration-200 cursor-pointer"
       style={{
-        backgroundColor: '#130a13',
+        backgroundColor: 'rgba(17, 10, 14, 0.85)',
         border: '0.5px solid #2a1a2a',
         borderRadius: '12px',
       }}
@@ -172,7 +172,7 @@ export default function AppsGrid() {
         <div
           className="flex items-center justify-center p-5 rounded-xl"
           style={{
-            backgroundColor: '#130a13',
+            backgroundColor: 'rgba(17, 10, 14, 0.85)',
             border: '0.5px dashed #3a1a3a',
             borderRadius: '12px',
             minHeight: '120px',

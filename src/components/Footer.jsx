@@ -7,7 +7,7 @@ export default function Footer() {
       id="footer"
       className="py-12 px-6 md:px-12"
       style={{
-        backgroundColor: '#0a0508',
+        backgroundColor: 'transparent',
         borderTop: '1px solid #1e0e1e',
       }}
     >

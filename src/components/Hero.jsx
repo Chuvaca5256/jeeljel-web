@@ -23,12 +23,12 @@ export default function Hero() {
         }}
       />
 
-      {/* Segundo gradiente más oscuro en la base */}
+      {/* Gradiente sutil en la base — sin tapar el patrón del body */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse 50% 40% at 50% 85%, rgba(10,5,8,0.8) 0%, transparent 70%)',
+            'radial-gradient(ellipse 50% 40% at 50% 85%, rgba(10,5,8,0.15) 0%, transparent 70%)',
         }}
       />
 

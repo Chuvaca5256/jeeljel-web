@@ -36,7 +36,7 @@ export default function Organizations() {
   return (
     <section
       className="py-20 px-6 md:px-12"
-      style={{ backgroundColor: '#08040a', borderTop: '1px solid #150a15' }}
+      style={{ backgroundColor: 'transparent', borderTop: '1px solid #150a15' }}
     >
       <div className="max-w-5xl mx-auto">
 
@@ -63,7 +63,7 @@ export default function Organizations() {
               key={org.nombre}
               className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 rounded-xl transition-all duration-200"
               style={{
-                backgroundColor: '#0d060d',
+                backgroundColor: 'rgba(17, 10, 14, 0.85)',
                 border: '0.5px solid #1e0e1e',
                 borderRadius: '12px',
               }}

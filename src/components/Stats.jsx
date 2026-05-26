@@ -9,7 +9,7 @@ export default function Stats() {
   return (
     <section
       className="py-10 px-6"
-      style={{ backgroundColor: '#0d060d', borderTop: '1px solid #1a0a1a', borderBottom: '1px solid #1a0a1a' }}
+      style={{ backgroundColor: 'transparent', borderTop: '1px solid #1a0a1a', borderBottom: '1px solid #1a0a1a' }}
     >
       <div className="max-w-5xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0">

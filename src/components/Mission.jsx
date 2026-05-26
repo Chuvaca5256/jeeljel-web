@@ -71,7 +71,7 @@ export default function Mission() {
     <section
       id="mision"
       className="py-24 px-6 md:px-12"
-      style={{ backgroundColor: '#0e070e' }}
+      style={{ backgroundColor: 'transparent' }}
     >
       <div className="max-w-5xl mx-auto">
         {/* Cita principal */}

@@ -26,7 +26,7 @@ function CountdownBox({ value, label }) {
       <div
         className="font-cinzel font-bold text-center rounded-lg flex items-center justify-center"
         style={{
-          backgroundColor: '#1a0505',
+          backgroundColor: 'rgba(17, 10, 14, 0.85)',
           color: '#e85d26',
           fontSize: 'clamp(28px, 4vw, 44px)',
           width: 'clamp(70px, 10vw, 90px)',
@@ -59,7 +59,7 @@ export default function WorldCup() {
   return (
     <section
       className="py-24 px-6 md:px-12"
-      style={{ backgroundColor: '#0e060a', borderTop: '1px solid #2a0a0a' }}
+      style={{ backgroundColor: 'transparent', borderTop: '1px solid #2a0a0a' }}
     >
       <div className="max-w-6xl mx-auto">
         {/* Layout: texto izquierda + logo derecha en desktop */}
