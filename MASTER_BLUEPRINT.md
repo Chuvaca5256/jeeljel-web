@@ -10,6 +10,7 @@
 - ✅ jeeljel.com en línea
 - ✅ SSL instalado con Certbot para `jeeljel.com`
 - ✅ jeeljel.com en línea con HTTPS
+- ✅ Configurar deploy automático desde GitHub al VPS
 
 ## Infraestructura
 
@@ -26,7 +27,6 @@
 - [ ] Registrarse en afiliados: 1xBet Partners, Bet365 Affiliates
 - [ ] Crear ruta `/mundial-2026` en React dentro de jeeljel-web
 - [ ] Mejorar diseño sitio principal (parece landing, necesita pestañas y navegación real)
-- [ ] Configurar deploy automático desde GitHub al VPS
 - [ ] Mejorar diseño páginas internas
 - [ ] Agregar logos reales de cada app
 - [ ] Nombre latinoamericano para Virtyou

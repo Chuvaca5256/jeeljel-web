@@ -25,6 +25,8 @@
 | **Deploy jeeljel.com** | `/var/www/jeeljel-web/dist` |
 | **Ikan Naat** | Puerto 10000 — `proxy_pass http://localhost:10000` |
 | **GitHub** | https://github.com/Chuvaca5256/jeeljel-web |
+| **Deploy automático** | GitHub Actions — `.github/workflows/deploy.yml` — se activa en cada push a `main` |
+| **Secret GitHub** | `VPS_SSH_KEY` — llave SSH ed25519 para deploy |
 
 ### Acceso VPS
 
