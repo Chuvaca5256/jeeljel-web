@@ -81,7 +81,7 @@ function AppCard({ app }) {
         ) : (
           <span
             className="font-cinzel font-bold text-base leading-tight"
-            style={{ color: '#f5f0e8', maxWidth: '72%' }}
+            style={{ color: '#ffffff', maxWidth: '72%' }}
           >
             {app.nombre}
           </span>
@@ -105,7 +105,7 @@ function AppCard({ app }) {
       {app.logo && (
         <span
           className="font-cinzel font-bold text-sm leading-tight mb-1"
-          style={{ color: '#f5f0e8' }}
+          style={{ color: '#ffffff' }}
         >
           {app.nombre}
         </span>
@@ -113,14 +113,14 @@ function AppCard({ app }) {
 
       <p
         className="font-dm text-sm mt-auto"
-        style={{ color: '#f5f0e8', lineHeight: '1.6' }}
+        style={{ color: '#ffffff', lineHeight: '1.6' }}
       >
         {app.desc}
       </p>
 
       {/* Nota discreta para Inkógnito */}
       {app.nota && (
-        <p className="font-dm text-xs mt-2" style={{ color: '#f5f0e8' }}>
+        <p className="font-dm text-xs mt-2" style={{ color: '#ffffff' }}>
           {app.nota}
         </p>
       )}
@@ -180,7 +180,7 @@ export default function AppsGrid() {
         >
           <p
             className="font-dm text-sm text-center"
-            style={{ color: '#3a1a3a' }}
+            style={{ color: '#ffffff' }}
           >
             Más aplicaciones<br />en camino...
           </p>

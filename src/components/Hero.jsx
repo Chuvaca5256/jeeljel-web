@@ -39,7 +39,7 @@ export default function Hero() {
           style={{
             background: 'rgba(123, 45, 139, 0.15)',
             border: '1px solid rgba(123, 45, 139, 0.4)',
-            color: '#c090d0',
+            color: '#ffffff',
             letterSpacing: '0.2em',
           }}
         >
@@ -77,7 +77,7 @@ export default function Hero() {
             letterSpacing: '6px',
           }}
         >
-          <span style={{ color: '#f5f0e8', display: 'block' }}>
+          <span style={{ color: '#ffffff', display: 'block' }}>
             NACIMOS PARA
           </span>
           <span style={{ color: '#c9a84c', display: 'block' }}>
@@ -89,7 +89,7 @@ export default function Hero() {
         <p
           className="font-dm"
           style={{
-            color: '#f5f0e8',
+            color: '#ffffff',
             maxWidth: '480px',
             lineHeight: '1.7',
             fontSize: 'clamp(14px, 2vw, 17px)',
@@ -122,7 +122,7 @@ export default function Hero() {
             className="font-dm font-medium text-sm tracking-widest px-8 py-3 rounded-lg transition-all duration-200 no-underline"
             style={{
               border: '1px solid #7b2d8b',
-              color: '#c090d0',
+              color: '#ffffff',
               background: 'transparent',
               letterSpacing: '0.12em',
             }}

@@ -29,7 +29,7 @@ export default function Stats() {
               </span>
               <span
                 className="font-dm mt-2 text-xs tracking-widest uppercase"
-                style={{ color: '#f5f0e8', letterSpacing: '0.15em' }}
+                style={{ color: '#ffffff', letterSpacing: '0.15em' }}
               >
                 {etiqueta}
               </span>

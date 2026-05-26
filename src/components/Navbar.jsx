@@ -11,7 +11,7 @@ const NAV_LINKS = [
 ]
 
 const linkStyle = {
-  color: '#f5f0e8',
+  color: '#ffffff',
   letterSpacing: '0.15em',
   transition: 'color 0.2s ease',
 }
@@ -54,7 +54,7 @@ export default function Navbar() {
             }}
             onMouseLeave={(e) => {
               const isActive = e.currentTarget.getAttribute('aria-current') === 'page'
-              e.currentTarget.style.color = isActive ? '#c9a84c' : '#f5f0e8'
+              e.currentTarget.style.color = isActive ? '#c9a84c' : '#ffffff'
             }}
           >
             {label}

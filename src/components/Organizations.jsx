@@ -51,7 +51,7 @@ export default function Organizations() {
         </div>
         <p
           className="font-dm text-center mb-12 text-sm"
-          style={{ color: '#f5f0e8' }}
+          style={{ color: '#ffffff' }}
         >
           No son socios ni aliados — son causas que creemos merecen existir.
         </p>
@@ -74,7 +74,7 @@ export default function Organizations() {
               <div className="flex-shrink-0" style={{ minWidth: '180px' }}>
                 <span
                   className="font-cinzel font-bold"
-                  style={{ color: '#f5f0e8', fontSize: '14px', letterSpacing: '1px' }}
+                  style={{ color: '#ffffff', fontSize: '14px', letterSpacing: '1px' }}
                 >
                   {org.nombre}
                 </span>
@@ -83,7 +83,7 @@ export default function Organizations() {
               {/* Descripción */}
               <p
                 className="font-dm text-sm flex-1"
-                style={{ color: '#f5f0e8', lineHeight: '1.6' }}
+                style={{ color: '#ffffff', lineHeight: '1.6' }}
               >
                 {org.desc}
               </p>

@@ -103,11 +103,11 @@ export default function Mission() {
               </div>
               <h3
                 className="font-cinzel font-bold mb-3"
-                style={{ color: '#f5f0e8', fontSize: '15px', letterSpacing: '1px' }}
+                style={{ color: '#ffffff', fontSize: '15px', letterSpacing: '1px' }}
               >
                 {p.titulo}
               </h3>
-              <p className="font-dm text-sm" style={{ color: '#f5f0e8', lineHeight: '1.7' }}>
+              <p className="font-dm text-sm" style={{ color: '#ffffff', lineHeight: '1.7' }}>
                 {p.desc}
               </p>
             </div>

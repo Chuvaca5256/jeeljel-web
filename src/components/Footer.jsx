@@ -34,9 +34,9 @@ export default function Footer() {
               key={label}
               href={href}
               className="font-dm text-sm transition-colors duration-200 no-underline"
-              style={{ color: '#f5f0e8' }}
+              style={{ color: '#ffffff' }}
               onMouseEnter={(e) => (e.target.style.color = '#c9a84c')}
-              onMouseLeave={(e) => (e.target.style.color = '#f5f0e8')}
+              onMouseLeave={(e) => (e.target.style.color = '#ffffff')}
             >
               {label}
             </a>
@@ -50,7 +50,7 @@ export default function Footer() {
         />
 
         {/* Copyright */}
-        <p className="font-dm text-xs" style={{ color: '#f5f0e8' }}>
+        <p className="font-dm text-xs" style={{ color: '#ffffff' }}>
           © 2026 JeelJel Kaanab — Todos los derechos reservados
         </p>
 
