@@ -11,7 +11,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative flex flex-col items-center justify-start min-h-screen text-center px-6 overflow-hidden pt-14 pb-12 md:pt-20 md:pb-16 lg:pt-24"
+      className="relative flex flex-col items-center justify-start min-h-0 text-center px-6 overflow-hidden pt-10 pb-6 sm:pt-12 sm:pb-8 md:min-h-screen md:pt-20 md:pb-16 lg:pt-24"
     >
       <div
         className="absolute inset-0 pointer-events-none"
@@ -29,7 +29,7 @@ export default function Hero() {
         }}
       />
 
-      <div className="relative z-10 flex flex-col items-center gap-4 md:gap-6 max-w-3xl mx-auto w-full">
+      <div className="relative z-10 flex flex-col items-center gap-3 sm:gap-4 md:gap-6 max-w-3xl mx-auto w-full">
         <div
           className="font-dm text-xs tracking-widest px-4 py-2 rounded-full etiqueta-secundaria"
           style={{
@@ -41,7 +41,7 @@ export default function Hero() {
           LATINOAMÉRICA · TECNOLOGÍA · IDENTIDAD
         </div>
 
-        <div className="relative w-[220px] h-[220px] md:-mt-6 lg:-mt-8">
+        <div className="relative w-[200px] h-[200px] sm:w-[220px] sm:h-[220px]">
           <video
             autoPlay
             loop
