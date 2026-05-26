@@ -24,7 +24,7 @@ export default function Navbar() {
         background: 'rgba(10, 5, 8, 0.92)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
-        borderBottom: '1px solid rgba(201, 168, 76, 0.2)',
+        borderBottom: '1px solid var(--color-separador)',
         zIndex: 100,
       }}
     >

@@ -9,7 +9,11 @@ export default function Stats() {
   return (
     <section
       className="py-10 px-6"
-      style={{ backgroundColor: 'transparent', borderTop: '1px solid #1a0a1a', borderBottom: '1px solid #1a0a1a' }}
+      style={{
+        backgroundColor: 'transparent',
+        borderTop: '1px solid var(--color-separador)',
+        borderBottom: '1px solid var(--color-separador)',
+      }}
     >
       <div className="max-w-5xl mx-auto">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0">
@@ -18,18 +22,18 @@ export default function Stats() {
               key={etiqueta}
               className="flex flex-col items-center text-center py-4"
               style={{
-                borderRight: i < 3 ? '1px solid #2a1a2a' : 'none',
+                borderRight: i < 3 ? '1px solid var(--color-separador)' : 'none',
               }}
             >
               <span
                 className="font-cinzel font-bold"
-                style={{ color: '#c9a84c', fontSize: 'clamp(32px, 5vw, 52px)', lineHeight: 1 }}
+                style={{ color: 'var(--color-titulo)', fontSize: 'clamp(32px, 5vw, 52px)', lineHeight: 1 }}
               >
                 {numero}
               </span>
               <span
-                className="font-dm mt-2 text-xs tracking-widest uppercase"
-                style={{ color: '#ffffff', letterSpacing: '0.15em' }}
+                className="font-dm mt-2 text-xs tracking-widest uppercase etiqueta-secundaria"
+                style={{ letterSpacing: '0.15em' }}
               >
                 {etiqueta}
               </span>

@@ -14,16 +14,14 @@ export default function Hero() {
       className="relative flex flex-col items-center justify-center min-h-screen text-center px-6 overflow-hidden"
       style={{ paddingTop: '80px' }}
     >
-      {/* Radial gradient sutil de púrpura para dar profundidad */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            'radial-gradient(ellipse 70% 60% at 50% 30%, rgba(123,45,139,0.18) 0%, transparent 70%)',
+            'radial-gradient(ellipse 70% 60% at 50% 30%, rgba(0, 168, 107, 0.15) 0%, transparent 70%)',
         }}
       />
 
-      {/* Gradiente sutil en la base — sin tapar el patrón del body */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -33,20 +31,17 @@ export default function Hero() {
       />
 
       <div className="relative z-10 flex flex-col items-center gap-6 max-w-3xl mx-auto">
-        {/* Badge pill */}
         <div
-          className="font-dm text-xs tracking-widest px-4 py-2 rounded-full"
+          className="font-dm text-xs tracking-widest px-4 py-2 rounded-full etiqueta-secundaria"
           style={{
-            background: 'rgba(123, 45, 139, 0.15)',
-            border: '1px solid rgba(123, 45, 139, 0.4)',
-            color: '#ffffff',
+            background: 'rgba(0, 168, 107, 0.15)',
+            border: '1px solid var(--color-separador)',
             letterSpacing: '0.2em',
           }}
         >
           LATINOAMÉRICA · TECNOLOGÍA · IDENTIDAD
         </div>
 
-        {/* Video del ajolote — mix-blend-mode: screen elimina el fondo negro */}
         <div className="relative" style={{ width: '220px', height: '220px' }}>
           <video
             autoPlay
@@ -63,13 +58,10 @@ export default function Hero() {
             }}
           >
             <source src={ajoloteWebm} type="video/webm" />
-            {/* Fallback MP4 — coloca ajolote_final.mp4 en src/assets/ si lo tienes */}
-            {/* <source src={ajoloteMp4} type="video/mp4" /> */}
             Tu navegador no soporta video HTML5.
           </video>
         </div>
 
-        {/* Título en dos líneas */}
         <h1
           className="font-cinzel font-bold leading-tight m-0"
           style={{
@@ -77,19 +69,17 @@ export default function Hero() {
             letterSpacing: '6px',
           }}
         >
-          <span style={{ color: '#ffffff', display: 'block' }}>
+          <span style={{ color: 'var(--color-titulo)', display: 'block' }}>
             NACIMOS PARA
           </span>
-          <span style={{ color: '#c9a84c', display: 'block' }}>
+          <span className="hero-dorado" style={{ color: '#c9a84c', display: 'block' }}>
             CREAR IMPERIOS
           </span>
         </h1>
 
-        {/* Subtítulo */}
         <p
           className="font-dm"
           style={{
-            color: '#ffffff',
             maxWidth: '480px',
             lineHeight: '1.7',
             fontSize: 'clamp(14px, 2vw, 17px)',
@@ -100,17 +90,12 @@ export default function Hero() {
           Cinco plataformas. Una misión.
         </p>
 
-        {/* Botones CTA */}
         <div className="flex flex-col sm:flex-row gap-4 mt-2">
           <a
             href="#apps"
             onClick={handleScroll('apps')}
-            className="font-dm font-medium text-sm tracking-widest px-8 py-3 rounded-lg transition-all duration-200 no-underline"
-            style={{
-              backgroundColor: '#e85d26',
-              color: '#ffffff',
-              letterSpacing: '0.12em',
-            }}
+            className="boton-primario font-dm font-medium text-sm tracking-widest px-8 py-3 rounded-lg transition-all duration-200 no-underline"
+            style={{ letterSpacing: '0.12em' }}
             onMouseEnter={(e) => (e.target.style.opacity = '0.88')}
             onMouseLeave={(e) => (e.target.style.opacity = '1')}
           >
@@ -119,20 +104,13 @@ export default function Hero() {
           <a
             href="#mision"
             onClick={handleScroll('mision')}
-            className="font-dm font-medium text-sm tracking-widest px-8 py-3 rounded-lg transition-all duration-200 no-underline"
-            style={{
-              border: '1px solid #7b2d8b',
-              color: '#ffffff',
-              background: 'transparent',
-              letterSpacing: '0.12em',
-            }}
+            className="boton-secundario font-dm font-medium text-sm tracking-widest px-8 py-3 rounded-lg transition-all duration-200 no-underline"
+            style={{ letterSpacing: '0.12em' }}
             onMouseEnter={(e) => {
-              e.target.style.background = 'rgba(123,45,139,0.15)'
-              e.target.style.borderColor = '#c090d0'
+              e.target.style.background = 'rgba(78, 205, 196, 0.12)'
             }}
             onMouseLeave={(e) => {
               e.target.style.background = 'transparent'
-              e.target.style.borderColor = '#7b2d8b'
             }}
           >
             NUESTRA MISIÓN
@@ -140,16 +118,8 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Separador ornamental con diamante dorado al centro */}
       <div className="relative w-full max-w-2xl mt-20 flex items-center justify-center">
-        <div
-          className="flex-1 h-px"
-          style={{
-            background:
-              'linear-gradient(to right, transparent, #7b2d8b, transparent)',
-          }}
-        />
-        {/* Rombo dorado */}
+        <div className="flex-1 h-px separador-gradiente" />
         <div
           className="flex-shrink-0 mx-4"
           style={{
@@ -160,13 +130,7 @@ export default function Hero() {
             boxShadow: '0 0 8px rgba(201,168,76,0.5)',
           }}
         />
-        <div
-          className="flex-1 h-px"
-          style={{
-            background:
-              'linear-gradient(to left, transparent, #7b2d8b, transparent)',
-          }}
-        />
+        <div className="flex-1 h-px separador-gradiente" />
       </div>
     </section>
   )

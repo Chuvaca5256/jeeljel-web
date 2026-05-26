@@ -54,19 +54,15 @@ const APPS = [
 function AppCard({ app }) {
   const content = (
     <div
-      className="relative flex flex-col h-full p-5 rounded-xl transition-transform duration-200 cursor-pointer"
-      style={{
-        background: 'rgba(10, 5, 8, 0.82)',
-        border: '1px solid rgba(201, 168, 76, 0.25)',
-        borderRadius: '12px',
-      }}
+      className="tarjeta relative flex flex-col h-full p-5 rounded-xl transition-transform duration-200 cursor-pointer"
+      style={{ borderRadius: '12px' }}
       onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-4px)')}
       onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
     >
       {/* Borde superior de acento */}
       <div
         className="absolute top-0 left-0 right-0 rounded-t-xl"
-        style={{ height: '2px', backgroundColor: app.acento }}
+        style={{ height: '2px', backgroundColor: 'var(--color-titulo-secundario)' }}
       />
 
       <div className="flex items-start justify-between mb-3 mt-1">
@@ -81,7 +77,7 @@ function AppCard({ app }) {
         ) : (
           <span
             className="font-cinzel font-bold text-base leading-tight"
-            style={{ color: '#ffffff', maxWidth: '72%' }}
+            style={{ color: 'var(--color-titulo)', maxWidth: '72%' }}
           >
             {app.nombre}
           </span>
@@ -90,10 +86,10 @@ function AppCard({ app }) {
         {/* Badge de estado */}
         <span
           className="font-dm text-xs px-2 py-0.5 rounded font-medium flex-shrink-0"
+          className="etiqueta-secundaria"
           style={{
-            backgroundColor: `${app.badgeColor}22`,
-            color: app.badgeColor,
-            border: `1px solid ${app.badgeColor}55`,
+            backgroundColor: 'rgba(0, 168, 107, 0.15)',
+            border: '1px solid var(--color-separador)',
             letterSpacing: '0.08em',
           }}
         >
@@ -105,7 +101,7 @@ function AppCard({ app }) {
       {app.logo && (
         <span
           className="font-cinzel font-bold text-sm leading-tight mb-1"
-          style={{ color: '#ffffff' }}
+          style={{ color: 'var(--color-titulo)' }}
         >
           {app.nombre}
         </span>
@@ -113,14 +109,14 @@ function AppCard({ app }) {
 
       <p
         className="font-dm text-sm mt-auto"
-        style={{ color: '#ffffff', lineHeight: '1.6' }}
+        style={{ lineHeight: '1.6' }}
       >
         {app.desc}
       </p>
 
       {/* Nota discreta para Inkógnito */}
       {app.nota && (
-        <p className="font-dm text-xs mt-2" style={{ color: '#ffffff' }}>
+        <p className="font-dm text-xs mt-2">
           {app.nota}
         </p>
       )}
@@ -148,15 +144,12 @@ export default function AppsGrid() {
       {/* Título — todo en mayúsculas, más impacto */}
       <div className="text-center mb-14">
         <h2
-          className="font-cinzel font-bold text-dorado uppercase"
+          className="font-cinzel font-bold uppercase"
           style={{ fontSize: 'clamp(22px, 4vw, 40px)', letterSpacing: '6px' }}
         >
           EL ECOSISTEMA
         </h2>
-        <div
-          className="mt-3 h-px w-24 mx-auto"
-          style={{ background: 'linear-gradient(to right, transparent, #c9a84c, transparent)' }}
-        />
+        <div className="mt-3 h-px w-24 mx-auto separador-gradiente" />
       </div>
 
       {/* Grid de apps */}
@@ -170,18 +163,10 @@ export default function AppsGrid() {
 
         {/* Celda "más apps" */}
         <div
-          className="flex items-center justify-center p-5 rounded-xl"
-          style={{
-            background: 'rgba(10, 5, 8, 0.82)',
-            border: '1px solid rgba(201, 168, 76, 0.25)',
-            borderRadius: '12px',
-            minHeight: '120px',
-          }}
+          className="tarjeta flex items-center justify-center p-5 rounded-xl"
+          style={{ borderRadius: '12px', minHeight: '120px' }}
         >
-          <p
-            className="font-dm text-sm text-center"
-            style={{ color: '#ffffff' }}
-          >
+          <p className="font-dm text-sm text-center">
             Más aplicaciones<br />en camino...
           </p>
         </div>

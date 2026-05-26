@@ -8,7 +8,7 @@ export default function Footer() {
       className="py-12 px-6 md:px-12"
       style={{
         backgroundColor: 'transparent',
-        borderTop: '1px solid #1e0e1e',
+        borderTop: '1px solid var(--color-separador)',
       }}
     >
       <div className="max-w-5xl mx-auto flex flex-col items-center gap-6 text-center">
@@ -34,9 +34,9 @@ export default function Footer() {
               key={label}
               href={href}
               className="font-dm text-sm transition-colors duration-200 no-underline"
-              style={{ color: '#ffffff' }}
-              onMouseEnter={(e) => (e.target.style.color = '#c9a84c')}
-              onMouseLeave={(e) => (e.target.style.color = '#ffffff')}
+              style={{ color: 'var(--color-boton-secundario)' }}
+              onMouseEnter={(e) => (e.target.style.color = 'var(--color-titulo)')}
+              onMouseLeave={(e) => (e.target.style.color = 'var(--color-boton-secundario)')}
             >
               {label}
             </a>
@@ -44,10 +44,7 @@ export default function Footer() {
         </div>
 
         {/* Separador */}
-        <div
-          className="w-24 h-px"
-          style={{ background: 'linear-gradient(to right, transparent, #2a1a2a, transparent)' }}
-        />
+        <div className="w-24 h-px separador-gradiente" />
 
         {/* Copyright */}
         <p className="font-dm text-xs" style={{ color: '#ffffff' }}>
@@ -56,8 +53,8 @@ export default function Footer() {
 
         {/* Frase final */}
         <p
-          className="font-cinzel text-xs tracking-widest"
-          style={{ color: '#c9a84c', opacity: 0.7, letterSpacing: '0.2em' }}
+          className="font-cinzel text-xs tracking-widest etiqueta-secundaria"
+          style={{ opacity: 0.85, letterSpacing: '0.2em' }}
         >
           "Nacimos para crear imperios"
         </p>

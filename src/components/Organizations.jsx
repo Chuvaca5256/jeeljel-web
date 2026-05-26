@@ -36,23 +36,23 @@ export default function Organizations() {
   return (
     <section
       className="py-20 px-6 md:px-12"
-      style={{ backgroundColor: 'transparent', borderTop: '1px solid #150a15' }}
+      style={{
+        backgroundColor: 'transparent',
+        borderTop: '1px solid var(--color-separador)',
+      }}
     >
       <div className="max-w-5xl mx-auto">
 
         {/* Encabezado */}
         <div className="text-center mb-3">
           <h2
-            className="font-cinzel font-bold text-dorado"
+            className="font-cinzel font-bold"
             style={{ fontSize: 'clamp(18px, 3vw, 30px)', letterSpacing: '3px' }}
           >
             Organizaciones que admiramos
           </h2>
         </div>
-        <p
-          className="font-dm text-center mb-12 text-sm"
-          style={{ color: '#ffffff' }}
-        >
+        <p className="font-dm text-center mb-12 text-sm">
           No son socios ni aliados — son causas que creemos merecen existir.
         </p>
 
@@ -61,30 +61,27 @@ export default function Organizations() {
           {ORGS.map((org) => (
             <div
               key={org.nombre}
-              className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 rounded-xl transition-all duration-200"
-              style={{
-                background: 'rgba(10, 5, 8, 0.82)',
-                border: '1px solid rgba(201, 168, 76, 0.25)',
-                borderRadius: '12px',
+              className="tarjeta flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 rounded-xl transition-all duration-200"
+              style={{ borderRadius: '12px' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = 'var(--color-titulo-secundario)'
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'rgba(201, 168, 76, 0.45)')}
-              onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'rgba(201, 168, 76, 0.25)')}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'var(--color-tarjeta-borde)'
+              }}
             >
               {/* Nombre */}
               <div className="flex-shrink-0" style={{ minWidth: '180px' }}>
                 <span
-                  className="font-cinzel font-bold"
-                  style={{ color: '#ffffff', fontSize: '14px', letterSpacing: '1px' }}
+                  className="font-cinzel font-bold etiqueta-secundaria"
+                  style={{ fontSize: '14px', letterSpacing: '1px' }}
                 >
                   {org.nombre}
                 </span>
               </div>
 
               {/* Descripción */}
-              <p
-                className="font-dm text-sm flex-1"
-                style={{ color: '#ffffff', lineHeight: '1.6' }}
-              >
+              <p className="font-dm text-sm flex-1" style={{ lineHeight: '1.6' }}>
                 {org.desc}
               </p>
 

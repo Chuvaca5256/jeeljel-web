@@ -2,6 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --color-titulo: #4ecdc4;
+  --color-titulo-secundario: #00e5a0;
+  --color-texto: #ffffff;
+  --color-separador: rgba(0, 168, 107, 0.6);
+  --color-tarjeta-bg: rgba(5, 2, 8, 0.88);
+  --color-tarjeta-borde: #00c986;
+  --color-boton-primario: #00e5a0;
+  --color-boton-secundario: #4ecdc4;
+  --color-dorado: #c9a84c;
+}
+
 /* ─── Reset global ─────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; }
 
@@ -16,7 +28,7 @@ body {
   background-attachment: fixed;
   min-height: 100vh;
   margin: 0;
-  color: #ffffff;
+  color: var(--color-texto);
   font-family: 'DM Sans', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -41,28 +53,65 @@ body::after {
   min-height: 100vh;
 }
 
-p {
-  color: #ffffff;
+/* ─── Tipografía global ─────────────────────────────────── */
+h1, h2, h3, h4 {
+  font-family: 'Cinzel', serif;
+  color: var(--color-titulo);
 }
 
-/* ─── Tipografía global ─────────────────────────────────── */
-h1, h2, h3 { font-family: 'Cinzel', serif; }
+p,
+span:not(.text-dorado):not(.hero-dorado) {
+  color: var(--color-texto);
+}
 
 h1, h2, h3, h4, p, span, a {
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95), 0 1px 2px rgba(0, 0, 0, 1);
 }
 
+.etiqueta-secundaria {
+  color: var(--color-titulo-secundario);
+}
+
+.separador-linea {
+  border-color: var(--color-separador);
+}
+
+.separador-gradiente {
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--color-separador),
+    transparent
+  );
+}
+
+.tarjeta {
+  background: var(--color-tarjeta-bg);
+  border: 1px solid var(--color-tarjeta-borde);
+}
+
+.boton-primario {
+  background: var(--color-boton-primario);
+  color: var(--color-texto);
+}
+
+.boton-secundario {
+  border: 1px solid var(--color-boton-secundario);
+  color: var(--color-boton-secundario);
+  background: transparent;
+}
+
 /* ─── Badge parpadeante para Mundial ───────────────────── */
-@keyframes pulse-red {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(232, 93, 38, 0.5); }
-  50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(232, 93, 38, 0); }
+@keyframes pulse-hub {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(0, 168, 107, 0.5); }
+  50% { opacity: 0.8; box-shadow: 0 0 0 6px rgba(0, 168, 107, 0); }
 }
 .badge-pulse {
-  animation: pulse-red 2s ease-in-out infinite;
+  animation: pulse-hub 2s ease-in-out infinite;
 }
 
 /* ─── Scrollbar discreta ────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #0a0508; }
-::-webkit-scrollbar-thumb { background: #2a1a2a; border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: #7b2d8b; }
+::-webkit-scrollbar-thumb { background: var(--color-tarjeta-borde); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-titulo-secundario); }
