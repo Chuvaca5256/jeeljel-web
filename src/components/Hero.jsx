@@ -1,7 +1,6 @@
 // HERO — video del ajolote en src/assets/ajolote_final.webm
 // mix-blend-mode: screen hace desaparecer el fondo negro del video
 import ajoloteWebm from '../assets/ajolote_final.webm'
-import QuetzalDivider from './QuetzalDivider'
 
 export default function Hero() {
   const handleScroll = (id) => (e) => {
@@ -117,10 +116,6 @@ export default function Hero() {
             NUESTRA MISIÓN
           </a>
         </div>
-      </div>
-
-      <div className="relative w-full max-w-2xl mt-20">
-        <QuetzalDivider />
       </div>
     </section>
   )

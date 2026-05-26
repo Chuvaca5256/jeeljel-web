@@ -3,7 +3,6 @@
 // - Ikan Naat: coloca Logo_con_letras_Ikan_Naat_sin_fondo.png en src/assets/ y descomenta:
 // import logoIkanNaat from '../assets/Logo_con_letras_Ikan_Naat_sin_fondo.png'
 import logoConBalon from '../assets/Logo_JeelJel_con_balon.png'
-import QuetzalDivider from './QuetzalDivider'
 
 // Cuando tengas el archivo del logo de Ikan Naat, descomenta la línea de arriba
 // y reemplaza `null` en la primera app por `logoIkanNaat`
@@ -150,7 +149,6 @@ export default function AppsGrid() {
         >
           EL ECOSISTEMA
         </h2>
-        <QuetzalDivider />
       </div>
 
       {/* Grid de apps */}

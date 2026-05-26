@@ -42,8 +42,6 @@ export default function Footer() {
           ))}
         </div>
 
-        <QuetzalDivider />
-
         {/* Copyright */}
         <p className="font-dm text-xs" style={{ color: '#ffffff' }}>
           © 2026 JeelJel Kaanab — Todos los derechos reservados

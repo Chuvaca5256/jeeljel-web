@@ -1,5 +1,3 @@
-import QuetzalDivider from './QuetzalDivider'
-
 /* ─── Iconos SVG precolombinos ─────────────────────────── */
 const PiramideIcon = () => (
   <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
@@ -90,7 +88,6 @@ export default function Mission() {
           >
             &ldquo;Latinoamérica puede crear tecnología de clase mundial&rdquo;
           </p>
-          <QuetzalDivider />
         </div>
 
         {/* Tres pilares — 3 columnas en desktop, 1 en móvil */}

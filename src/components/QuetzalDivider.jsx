@@ -3,7 +3,14 @@ export default function QuetzalDivider() {
     <img
       src="/Imagen_Quetzalcoatl_liea_divisora.png"
       alt=""
-      style={{ width: '100%', height: 'auto', opacity: 0.85, margin: '1rem 0' }}
+      style={{
+        width: '100%',
+        height: '30px',
+        objectFit: 'fill',
+        opacity: 0.7,
+        margin: '0.3rem 0',
+        display: 'block',
+      }}
     />
   )
 }

@@ -1,5 +1,3 @@
-import QuetzalDivider from '../components/QuetzalDivider'
-
 export default function PageStub({ title }) {
   return (
     <section
@@ -12,7 +10,6 @@ export default function PageStub({ title }) {
       >
         {title}
       </h1>
-      <QuetzalDivider />
     </section>
   )
 }
