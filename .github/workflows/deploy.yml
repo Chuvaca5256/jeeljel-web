@@ -16,7 +16,7 @@ jobs:
       - name: Instalar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Instalar dependencias
@@ -26,21 +26,43 @@ jobs:
         run: npm run build
 
       - name: Configurar SSH
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.VPS_SSH_KEY }}
         run: |
+          set -euo pipefail
+          if [ -z "${SSH_PRIVATE_KEY}" ]; then
+            echo "::error::El secret VPS_SSH_KEY no está configurado en el repositorio."
+            exit 1
+          fi
           mkdir -p ~/.ssh
-          echo "${{ secrets.VPS_SSH_KEY }}" > ~/.ssh/deploy_key
+          printf '%s\n' "${SSH_PRIVATE_KEY}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H 187.77.196.169 >> ~/.ssh/known_hosts
+          if ! ssh-keygen -y -f ~/.ssh/deploy_key >/dev/null 2>&1; then
+            echo "::error::VPS_SSH_KEY no es una llave privada SSH válida."
+            exit 1
+          fi
+          echo "Llave SSH configurada correctamente."
 
       - name: Deploy al VPS
         run: |
-          rsync -avz --delete \
-            -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
-            ./dist/ \
-            root@187.77.196.169:/var/www/jeeljel-web/dist/
+          set -euo pipefail
+          SSH_OPTS="-i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=30"
+          for attempt in 1 2 3; do
+            echo "Deploy intento ${attempt}/3..."
+            if rsync -avz --delete -e "ssh ${SSH_OPTS}" ./dist/ root@187.77.196.169:/var/www/jeeljel-web/dist/; then
+              echo "Deploy exitoso."
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::Deploy falló después de 3 intentos."
+          exit 1
 
       - name: Reload Nginx
         run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+          ssh -i ~/.ssh/deploy_key \
+            -o StrictHostKeyChecking=no \
+            -o UserKnownHostsFile=/dev/null \
+            -o ConnectTimeout=30 \
             root@187.77.196.169 \
             "systemctl reload nginx"
