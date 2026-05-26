@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-// LOGO HUB: src/assets/Logo_JeelJel_con_balon.png ✓
-import logoBalon from '../assets/Logo_JeelJel_con_balon.png'
+// LOGO HUB: src/assets/Logo_JeelJel_Kanaabcon_balon_sin_fondo.png ✓
+import logoBalon from '../assets/Logo_JeelJel_Kanaabcon_balon_sin_fondo.png'
 
 // Deadline: 11 junio 2026, 17:00 UTC-6 = 23:00 UTC
 const TARGET = new Date('2026-06-11T23:00:00.000Z')
