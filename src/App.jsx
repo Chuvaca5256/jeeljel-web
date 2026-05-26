@@ -1,36 +1,30 @@
-import Navbar       from './components/Navbar'
-import Hero         from './components/Hero'
-import Stats        from './components/Stats'
-import AppsGrid     from './components/AppsGrid'
-import WorldCup     from './components/WorldCup'
-import Mission      from './components/Mission'
-import Organizations from './components/Organizations'
-import Footer       from './components/Footer'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Navbar from './components/Navbar'
+import ScrollToTop from './components/ScrollToTop'
+import Footer from './components/Footer'
+import Home from './pages/Home'
+import Apps from './pages/Apps'
+import HubBionico from './pages/HubBionico'
+import Mision from './pages/Mision'
+import Organizaciones from './pages/Organizaciones'
+import Contacto from './pages/Contacto'
 
 export default function App() {
   return (
-    <>
+    <BrowserRouter>
+      <ScrollToTop />
       <Navbar />
       <main>
-        {/* 1 — Hero con ajolote */}
-        <Hero />
-
-        {/* 2 — Franja de estadísticas */}
-        <Stats />
-
-        {/* 3 — Grid de 5 apps */}
-        <AppsGrid />
-
-        {/* 4 — Sección destacada del Mundial 2026 con contador */}
-        <WorldCup />
-
-        {/* 5 — Misión y pilares */}
-        <Mission />
-
-        {/* 6 — Organizaciones admiradas */}
-        <Organizations />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/apps" element={<Apps />} />
+          <Route path="/hub-bionico" element={<HubBionico />} />
+          <Route path="/mision" element={<Mision />} />
+          <Route path="/organizaciones" element={<Organizaciones />} />
+          <Route path="/contacto" element={<Contacto />} />
+        </Routes>
       </main>
       <Footer />
-    </>
+    </BrowserRouter>
   )
 }
