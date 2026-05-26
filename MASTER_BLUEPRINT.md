@@ -8,12 +8,13 @@
 - ✅ Desplegado en VPS con Nginx
 - ✅ DNS configurado y propagado
 - ✅ jeeljel.com en línea
+- ✅ SSL instalado con Certbot para `jeeljel.com`
+- ✅ jeeljel.com en línea con HTTPS
 
 ## Pendientes próxima sesión
 
-- [ ] Instalar SSL con Certbot para `jeeljel.com`
 - [ ] Configurar deploy automático desde GitHub al VPS
-- [ ] Mejorar diseño páginas internas (Apps, Mundial, Misión, Organizaciones)
+- [ ] Mejorar diseño páginas internas
 - [ ] Agregar logos reales de cada app
 - [ ] Nombre latinoamericano para Virtyou
 - [ ] Rebrandear Izydra OS bajo JeelJel Kaanab
