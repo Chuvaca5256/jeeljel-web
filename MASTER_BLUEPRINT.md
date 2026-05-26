@@ -17,6 +17,7 @@
 - ✅ Fondo global oscuro en toda la página
 - ✅ Fondo prehispánico con dioses mayas/andinos implementado
 - ✅ Paleta Jade & Turquesa Maya aplicada en todo el sitio
+- ✅ Divisor Quetzalcóatl implementado en todas las secciones
 
 ## Infraestructura
 
@@ -28,6 +29,7 @@
 
 ## Pendientes próxima sesión
 
+- [ ] Bajar opacidad bordes verdes de tarjetas del ecosistema
 - [ ] 🔴 **URGENTE** Hub Biónico Deportivo — deadline 11 junio 2026 — ver SNAPSHOT para detalle completo
 - [ ] Registrarse en API-Football Ultra y obtener API key
 - [ ] Registrarse en afiliados: 1xBet Partners, Bet365 Affiliates

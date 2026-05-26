@@ -8,7 +8,7 @@
   --color-texto: #ffffff;
   --color-separador: rgba(0, 168, 107, 0.6);
   --color-tarjeta-bg: rgba(5, 2, 8, 0.88);
-  --color-tarjeta-borde: #00c986;
+  --color-tarjeta-borde: rgba(0, 168, 107, 0.25);
   --color-boton-primario: #00e5a0;
   --color-boton-secundario: #4ecdc4;
   --color-dorado: #c9a84c;
@@ -87,7 +87,7 @@ h1, h2, h3, h4, p, span, a {
 
 .tarjeta {
   background: var(--color-tarjeta-bg);
-  border: 1px solid var(--color-tarjeta-borde);
+  border: 1px solid rgba(0, 168, 107, 0.25);
 }
 
 .boton-primario {

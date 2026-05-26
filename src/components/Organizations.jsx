@@ -61,10 +61,10 @@ export default function Organizations() {
               className="tarjeta flex flex-col sm:flex-row items-start sm:items-center gap-4 p-5 rounded-xl transition-all duration-200"
               style={{ borderRadius: '12px' }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'var(--color-titulo-secundario)'
+                e.currentTarget.style.borderColor = 'rgba(0, 168, 107, 0.25)'
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'var(--color-tarjeta-borde)'
+                e.currentTarget.style.borderColor = 'rgba(0, 168, 107, 0.25)'
               }}
             >
               {/* Nombre */}

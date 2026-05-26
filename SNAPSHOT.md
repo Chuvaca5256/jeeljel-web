@@ -24,6 +24,13 @@
 - Secciones grandes transparentes para que el fondo se vea en toda la página
 - `public/bg-maya.svg` existe pero **no se usa**
 
+## Divisor Quetzalcóatl
+
+- **Archivo:** `Imagen_Quetzalcoatl_liea_divisora.png` en `public/` — usado como línea divisora entre secciones
+- **Componente:** `src/components/QuetzalDivider.jsx` — instancia única entre secciones en `Home.jsx` y antes del footer
+- **Estilo:** `width: 100%`, `height: 40px`, `objectFit: fill`, `padding: 0 80px`, `opacity: 0.75`, `margin: 0.3rem 0`
+- **Bordes tarjetas pendiente:** bajar opacidad verde brillante a `rgba(0, 168, 107, 0.25)`
+
 ## Infraestructura
 
 | Recurso | Detalle |
