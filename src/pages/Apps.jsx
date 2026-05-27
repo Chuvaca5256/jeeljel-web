@@ -111,24 +111,28 @@ export default function Apps() {
                 <div className="apps-row-grid">
                   <div className="apps-row-left">
                     <span className="apps-row-index">{indexLabel}</span>
-                    <img
-                      src={app.logo}
-                      alt=""
-                      className="apps-row-logo"
-                      width={48}
-                      height={48}
-                    />
-                    <h2 className="apps-row-name" style={{ color: app.accent }}>
-                      {app.name}
-                    </h2>
-                    <p className="apps-row-subtitle">{app.subtitle}</p>
+                    <div className="apps-row-left-body">
+                      <img
+                        src={app.logo}
+                        alt=""
+                        className="apps-row-logo"
+                        width={40}
+                        height={40}
+                      />
+                      <div className="apps-row-left-text">
+                        <h2 className="apps-row-name" style={{ color: app.accent }}>
+                          {app.name}
+                        </h2>
+                        <p className="apps-row-subtitle">{app.subtitle}</p>
+                      </div>
+                    </div>
                     <span className="apps-row-toggle" aria-hidden>
                       +
                     </span>
                   </div>
 
                   <div className="apps-row-right">
-                    <p className="apps-row-preview">{app.preview}</p>
+                    <p className="apps-row-preview cell-preview">{app.preview}</p>
 
                     <div className="apps-row-desc" onClick={stopInnerClick}>
                       {app.comingSoon ? (
