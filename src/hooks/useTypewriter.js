@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 
-export function useTypewriter(text, speed = 55) {
+export function useTypewriter(text, speed = 41) {
   const ref = useRef(null)
   const played = useRef(false)
 
