@@ -55,26 +55,6 @@ const STATS = [
 const TOTAL = 5
 
 const S = {
-  grid: {
-    position: 'fixed',
-    inset: 0,
-    backgroundImage: `repeating-linear-gradient(
-        0deg,
-        rgba(201, 168, 76, 0.05) 0px,
-        rgba(201, 168, 76, 0.05) 1px,
-        transparent 1px,
-        transparent 48px
-      ),
-      repeating-linear-gradient(
-        90deg,
-        rgba(201, 168, 76, 0.05) 0px,
-        rgba(201, 168, 76, 0.05) 1px,
-        transparent 1px,
-        transparent 48px
-      )`,
-    pointerEvents: 'none',
-    zIndex: 0,
-  },
   slider: {
     position: 'relative',
     width: '100%',
@@ -913,8 +893,6 @@ export default function Mision() {
         }}
       />
       <div style={{ position: 'relative', zIndex: 1 }}>
-        <div style={S.grid} />
-
         <div style={S.slider}>
           <div style={S.header}>
             <h1 style={S.headerTitle}>Misión</h1>
