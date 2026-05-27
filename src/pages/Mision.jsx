@@ -159,6 +159,8 @@ const S = {
     opacity: 0.85,
   },
   chip: {
+    display: 'inline-flex',
+    alignItems: 'center',
     fontFamily: "'DM Sans', sans-serif",
     fontSize: '14px',
     padding: '10px 16px',
@@ -170,10 +172,12 @@ const S = {
     opacity: 0,
     transform: 'scale(0.8)',
   },
-  chipCode: {
-    color: '#4ecdc4',
-    fontWeight: 700,
-    marginRight: '4px',
+  flagImg: {
+    width: '24px',
+    height: '18px',
+    borderRadius: '2px',
+    marginRight: '6px',
+    flexShrink: 0,
   },
   chipsWrap: {
     display: 'flex',
@@ -591,7 +595,12 @@ export default function Mision() {
             <div style={S.chipsWrap}>
               {PAIS_CHIPS.map((pais) => (
                 <span key={pais.code} className="m-chip" style={S.chip}>
-                  <span style={S.chipCode}>{pais.code}</span>
+                  <img
+                    src={`https://flagcdn.com/24x18/${pais.code.toLowerCase()}.png`}
+                    alt={`Bandera ${pais.name}`}
+                    style={S.flagImg}
+                    loading="lazy"
+                  />
                   {pais.name}
                 </span>
               ))}
