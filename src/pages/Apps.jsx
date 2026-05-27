@@ -88,25 +88,6 @@ const APPS = [
     comingSoon: true,
   },
   {
-    id: 'companeros',
-    name: 'Compañeros Virtuales',
-    logo: logoIkanNaat,
-    accent: '#ec4899',
-    subtitle: 'Siempre contigo',
-    preview: 'Luna, Sofía, Mateo y más — compañía inteligente disponible 24/7',
-    description:
-      'Los compañeros virtuales de Ikan Naat IA son presencias inteligentes diseñadas para acompañarte. Conversación natural, memoria de tus preferencias, personalidades únicas y disponibles en cualquier momento.',
-    capabilities: [
-      'Luna, Sofía, Mateo y más',
-      'Conversación natural profunda',
-      'Memoria de preferencias',
-      'Personalidades únicas',
-      'Disponibles 24/7',
-    ],
-    cta: { label: 'Conocer compañeros →', href: 'https://ikannaat.jeeljel.com' },
-    comingSoon: false,
-  },
-  {
     id: 'inkognito',
     name: 'Inkógnito',
     logo: logoInkognito,
