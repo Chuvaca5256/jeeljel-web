@@ -21,7 +21,7 @@ export default function Mision() {
           inset: 0,
           backgroundImage: `url(${Tlaloc})`,
           backgroundRepeat: 'repeat',
-          backgroundSize: '80px 80px',
+          backgroundSize: '120px 120px',
           opacity: 0.08,
           pointerEvents: 'none',
           zIndex: 0,
