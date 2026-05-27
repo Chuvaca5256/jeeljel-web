@@ -5,7 +5,7 @@ import Divider from './Divider'
 export default function Footer() {
   return (
     <footer
-      id="footer"
+      id="contacto"
       className="pt-2 pb-12 px-6 md:px-12"
       style={{ backgroundColor: 'transparent' }}
     >

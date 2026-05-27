@@ -1,41 +1,48 @@
-const STATS = [
-  { numero: '5',   etiqueta: 'Plataformas'   },
-  { numero: '30+', etiqueta: 'Agentes IA'    },
-  { numero: '10+', etiqueta: 'Países LATAM'  },
-  { numero: '1',   etiqueta: 'Misión'        },
-]
+function scrollToContacto() {
+  document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' })
+}
 
 export default function Stats() {
   return (
     <section
-      className="py-10 px-6"
+      className="py-12 px-6 md:px-12"
       style={{ backgroundColor: 'transparent' }}
     >
-      <div className="max-w-5xl mx-auto">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0">
-          {STATS.map(({ numero, etiqueta }, i) => (
-            <div
-              key={etiqueta}
-              className="flex flex-col items-center text-center py-4"
-              style={{
-                borderRight: i < 3 ? '1px solid var(--color-separador)' : 'none',
-              }}
-            >
-              <span
-                className="font-cinzel font-bold"
-                style={{ color: 'var(--color-titulo)', fontSize: 'clamp(32px, 5vw, 52px)', lineHeight: 1 }}
-              >
-                {numero}
-              </span>
-              <span
-                className="font-dm mt-2 text-xs tracking-widest uppercase etiqueta-secundaria"
-                style={{ letterSpacing: '0.15em' }}
-              >
-                {etiqueta}
-              </span>
-            </div>
-          ))}
-        </div>
+      <div className="max-w-3xl mx-auto text-center">
+        <p
+          className="font-dm mb-6"
+          style={{
+            fontSize: 'clamp(15px, 2vw, 18px)',
+            lineHeight: 1.75,
+          }}
+        >
+          JeelJel Kaanab es un ecosistema de tecnología 100% latinoamericano.
+          Cinco plataformas activas y creciendo — también apoyamos a emprendedores
+          e independientes a hacer realidad sus proyectos.
+        </p>
+        <p
+          className="font-dm mb-6"
+          style={{
+            fontSize: 'clamp(15px, 2vw, 18px)',
+            lineHeight: 1.75,
+          }}
+        >
+          ¿Tienes una idea?
+        </p>
+        <button
+          type="button"
+          onClick={scrollToContacto}
+          className="boton-secundario font-dm font-medium text-sm tracking-widest px-8 py-3 rounded-lg transition-all duration-200"
+          style={{ letterSpacing: '0.15em', cursor: 'pointer' }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.background = 'rgba(78, 205, 196, 0.12)'
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.background = 'transparent'
+          }}
+        >
+          Contáctanos
+        </button>
       </div>
     </section>
   )
