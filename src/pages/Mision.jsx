@@ -58,7 +58,7 @@ const S = {
   page: {
     position: 'relative',
     minHeight: 'auto',
-    backgroundColor: '#1a0400',
+    background: '#1a0400',
     color: '#ffffff',
     fontFamily: "'DM Sans', sans-serif",
   },

@@ -125,3 +125,19 @@ body.page-ollin-deportes::before {
 body.page-mision::before {
   display: none;
 }
+
+body.page-mision {
+  position: relative;
+}
+
+body.page-mision::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url('./assets/mosaicos/Tlaloc.png');
+  background-repeat: repeat;
+  background-size: 80px 80px;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+}
