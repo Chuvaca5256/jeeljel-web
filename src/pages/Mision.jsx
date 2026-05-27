@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
+import { animate, stagger } from 'animejs'
 import Tlaloc from '../assets/mosaicos/Tlaloc.png'
 
 const PAIS_CHIPS = [
@@ -16,362 +17,690 @@ const PAIS_CHIPS = [
 ]
 
 const PILARES = [
-  { num: '01', titulo: 'Demostrar' },
-  { num: '02', titulo: 'Unir' },
-  { num: '03', titulo: 'Empoderar' },
+  {
+    num: '01',
+    titulo: 'Demostrar',
+    desc: 'Que la tecnología latinoamericana compite al más alto nivel global.',
+  },
+  {
+    num: '02',
+    titulo: 'Unir',
+    desc: 'Un ecosistema que conecta talento, ideas y territorios sin fronteras.',
+  },
+  {
+    num: '03',
+    titulo: 'Empoderar',
+    desc: 'Herramientas para que cada creador construya su propio imperio.',
+  },
 ]
 
-const CONTADORES = [
-  { valor: 5, etiqueta: 'Plataformas' },
-  { valor: 18, etiqueta: 'Países objetivo' },
-  { valor: 30, etiqueta: 'Agentes IA', sufijo: '+' },
+const STATS = [
+  { target: 5, label: 'Plataformas', suffix: '' },
+  { target: 18, label: 'Países objetivo', suffix: '' },
+  { target: 30, label: 'Agentes IA', suffix: '+' },
 ]
 
-const TOTAL_ESCENAS = 5
+const TOTAL = 5
 
-function useCountUp(target, active, duration = 1400) {
-  const [count, setCount] = useState(0)
-
-  useEffect(() => {
-    if (!active) {
-      setCount(0)
-      return
-    }
-    let start = null
-    let frame
-    const step = (ts) => {
-      if (!start) start = ts
-      const progress = Math.min((ts - start) / duration, 1)
-      const eased = 1 - (1 - progress) ** 3
-      setCount(Math.round(eased * target))
-      if (progress < 1) frame = requestAnimationFrame(step)
-    }
-    frame = requestAnimationFrame(step)
-    return () => cancelAnimationFrame(frame)
-  }, [active, target, duration])
-
-  return count
+const S = {
+  page: {
+    position: 'relative',
+    minHeight: '100vh',
+    backgroundColor: '#1a0400',
+    color: '#ffffff',
+    fontFamily: "'DM Sans', sans-serif",
+  },
+  grid: {
+    position: 'fixed',
+    inset: 0,
+    backgroundImage: `repeating-linear-gradient(
+        0deg,
+        rgba(201, 168, 76, 0.05) 0px,
+        rgba(201, 168, 76, 0.05) 1px,
+        transparent 1px,
+        transparent 48px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        rgba(201, 168, 76, 0.05) 0px,
+        rgba(201, 168, 76, 0.05) 1px,
+        transparent 1px,
+        transparent 48px
+      )`,
+    pointerEvents: 'none',
+    zIndex: 0,
+  },
+  mosaico: {
+    position: 'fixed',
+    inset: 0,
+    backgroundRepeat: 'repeat',
+    backgroundSize: '80px 80px',
+    opacity: 0.08,
+    pointerEvents: 'none',
+    zIndex: 0,
+  },
+  main: {
+    position: 'relative',
+    zIndex: 1,
+    minHeight: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
+    paddingTop: '100px',
+    paddingBottom: '130px',
+    paddingLeft: '24px',
+    paddingRight: '24px',
+  },
+  content: {
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+    maxWidth: '920px',
+    margin: '0 auto',
+  },
+  eyebrow: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: '11px',
+    letterSpacing: '0.28em',
+    textTransform: 'uppercase',
+    color: '#00e5a0',
+    marginBottom: '20px',
+    opacity: 0,
+  },
+  titleTurquesa: {
+    fontFamily: "'Cinzel', serif",
+    fontWeight: 700,
+    fontSize: 'clamp(22px, 4vw, 40px)',
+    color: '#4ecdc4',
+    letterSpacing: '2px',
+    lineHeight: 1.25,
+    margin: 0,
+  },
+  titleBlanco: {
+    fontFamily: "'Cinzel', serif",
+    fontWeight: 700,
+    fontSize: 'clamp(22px, 4vw, 40px)',
+    color: '#ffffff',
+    letterSpacing: '2px',
+    lineHeight: 1.25,
+    margin: 0,
+  },
+  titleDorado: {
+    fontFamily: "'Cinzel', serif",
+    fontWeight: 700,
+    fontSize: 'clamp(22px, 4vw, 40px)',
+    color: '#c9a84c',
+    letterSpacing: '2px',
+    lineHeight: 1.25,
+    margin: 0,
+  },
+  subtitle: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: 'clamp(15px, 2vw, 18px)',
+    lineHeight: 1.75,
+    color: '#ffffff',
+    opacity: 0,
+    marginTop: '24px',
+    maxWidth: '640px',
+  },
+  goldLine: {
+    width: 0,
+    height: '2px',
+    backgroundColor: '#c9a84c',
+    margin: '28px auto 0',
+    opacity: 0.85,
+  },
+  chip: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: '14px',
+    padding: '10px 16px',
+    borderRadius: '999px',
+    border: '1px solid rgba(0, 168, 107, 0.25)',
+    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+    backdropFilter: 'blur(4px)',
+    color: '#00e5a0',
+    opacity: 0,
+    transform: 'scale(0.8)',
+  },
+  chipsWrap: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: '10px',
+    marginTop: '32px',
+  },
+  pillarCard: {
+    padding: '24px',
+    borderRadius: '12px',
+    border: '1px solid rgba(0, 168, 107, 0.25)',
+    backgroundColor: 'rgba(0, 0, 0, 0.45)',
+    backdropFilter: 'blur(4px)',
+    opacity: 0,
+    transform: 'translateY(24px)',
+  },
+  pillarsGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+    gap: '16px',
+    marginTop: '32px',
+    width: '100%',
+  },
+  pillarNum: {
+    fontFamily: "'Cinzel', serif",
+    fontWeight: 700,
+    fontSize: '28px',
+    color: '#c9a84c',
+    marginBottom: '8px',
+  },
+  pillarTitle: {
+    fontFamily: "'Cinzel', serif",
+    fontWeight: 700,
+    fontSize: '17px',
+    color: '#4ecdc4',
+    letterSpacing: '1px',
+    marginBottom: '10px',
+  },
+  pillarDesc: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: '14px',
+    lineHeight: 1.65,
+    color: '#ffffff',
+    margin: 0,
+  },
+  statsWrap: {
+    display: 'flex',
+    flexWrap: 'wrap',
+    justifyContent: 'center',
+    gap: '40px',
+    marginTop: '36px',
+  },
+  statBox: {
+    textAlign: 'center',
+    minWidth: '140px',
+  },
+  statNum: {
+    fontFamily: "'Cinzel', serif",
+    fontWeight: 700,
+    fontSize: 'clamp(40px, 8vw, 64px)',
+    color: '#4ecdc4',
+    lineHeight: 1,
+  },
+  statLabel: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: '11px',
+    letterSpacing: '0.15em',
+    textTransform: 'uppercase',
+    color: '#00e5a0',
+    marginTop: '8px',
+  },
+  cierreBlock: {
+    borderLeft: '3px solid #c9a84c',
+    paddingLeft: '24px',
+    maxWidth: '720px',
+    margin: '0 auto',
+  },
+  cierreText: {
+    fontFamily: "'Cinzel', serif",
+    fontWeight: 700,
+    fontSize: 'clamp(22px, 4vw, 38px)',
+    color: '#ffffff',
+    letterSpacing: '2px',
+    lineHeight: 1.35,
+    margin: 0,
+  },
+  highlightWord: {
+    color: '#ffffff',
+  },
+  cierreSub: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: '15px',
+    color: '#ffffff',
+    opacity: 0,
+    marginTop: '28px',
+    lineHeight: 1.7,
+  },
+  tagline: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: '12px',
+    letterSpacing: '0.25em',
+    textTransform: 'uppercase',
+    color: '#00e5a0',
+    opacity: 0,
+    marginTop: '16px',
+  },
+  navBar: {
+    position: 'fixed',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '18px',
+    paddingBottom: '32px',
+    paddingTop: '16px',
+    background: 'linear-gradient(to top, #1a0400 65%, transparent)',
+    zIndex: 2,
+  },
+  dots: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+  },
+  dot: (active) => ({
+    width: active ? '28px' : '10px',
+    height: '10px',
+    borderRadius: '999px',
+    border: 'none',
+    cursor: 'pointer',
+    transition: 'all 0.3s ease',
+    backgroundColor: active ? '#c9a84c' : 'rgba(0, 168, 107, 0.35)',
+  }),
+  btnNext: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontWeight: 500,
+    fontSize: '14px',
+    letterSpacing: '0.15em',
+    padding: '12px 32px',
+    borderRadius: '8px',
+    border: '1px solid #4ecdc4',
+    color: '#4ecdc4',
+    background: 'transparent',
+    cursor: 'pointer',
+    opacity: 0,
+  },
+  wordWrap: {
+    display: 'inline-block',
+    overflow: 'hidden',
+    verticalAlign: 'top',
+    marginRight: '0.28em',
+  },
+  wordInner: {
+    display: 'inline-block',
+    transform: 'translateY(110%)',
+  },
+  sceneCenter: {
+    width: '100%',
+    textAlign: 'center',
+  },
 }
 
-function EscenaContadores({ active }) {
-  const c0 = useCountUp(5, active)
-  const c1 = useCountUp(18, active)
-  const c2 = useCountUp(30, active)
-  const valores = [c0, c1, c2]
-
+function SplitWords({ text, innerClass = 'm-word-inner', style }) {
   return (
-    <div className="flex flex-wrap justify-center gap-8 md:gap-12 mt-10">
-      {CONTADORES.map((item, i) => (
-        <div key={item.etiqueta} className="text-center">
-          <div
-            className="font-cinzel font-bold"
-            style={{
-              fontSize: 'clamp(40px, 8vw, 64px)',
-              color: '#4ecdc4',
-              lineHeight: 1,
-            }}
-          >
-            {valores[i]}
-            {item.sufijo || ''}
-          </div>
-          <div
-            className="font-dm text-xs mt-2 uppercase tracking-widest"
-            style={{ color: '#00e5a0', letterSpacing: '0.15em' }}
-          >
-            {item.etiqueta}
-          </div>
-        </div>
+    <span style={style}>
+      {text.split(' ').map((word, i) => (
+        <span key={`${word}-${i}`} style={S.wordWrap}>
+          <span className={innerClass} style={S.wordInner}>
+            {word}
+          </span>
+        </span>
       ))}
-    </div>
+    </span>
   )
 }
 
-function renderEscena(scene) {
-  switch (scene) {
-    case 0:
-      return (
-        <div className="mision-fade-up text-center max-w-3xl mx-auto">
-          <h1
-            className="font-cinzel font-bold leading-tight mb-6"
-            style={{
-              fontSize: 'clamp(22px, 4vw, 38px)',
-              color: '#4ecdc4',
-              letterSpacing: '2px',
-            }}
-          >
-            El mayor obstáculo del latino no es el talento. Es la desconfianza en
-            sí mismo.
-          </h1>
-          <p
-            className="font-dm"
-            style={{
-              fontSize: 'clamp(15px, 2vw, 18px)',
-              lineHeight: 1.75,
-              color: '#ffffff',
-              opacity: 0.9,
-            }}
-          >
-            Durante décadas nos enseñaron que lo extranjero es sinónimo de calidad.
-            Que lo nuestro siempre queda en segundo lugar.
-          </p>
-        </div>
-      )
+function animateWords(container, staggerMs = 55) {
+  const words = container?.querySelectorAll('.m-word-inner')
+  if (!words?.length) return
+  animate(words, {
+    y: ['110%', '0%'],
+    duration: 600,
+    delay: stagger(staggerMs),
+    ease: 'outExpo',
+  })
+}
 
-    case 1:
-      return (
-        <div className="mision-fade-up text-center max-w-4xl mx-auto w-full">
-          <h2
-            className="font-cinzel font-bold mb-10"
-            style={{
-              fontSize: 'clamp(20px, 3.5vw, 32px)',
-              color: '#4ecdc4',
-              letterSpacing: '2px',
-            }}
-          >
-            Divididos por frontera. Unidos por instinto.
-          </h2>
-          <div className="flex flex-wrap justify-center gap-3">
-            {PAIS_CHIPS.map((chip, i) => (
-              <span
-                key={chip}
-                className="mision-chip-in font-dm text-sm px-4 py-2 rounded-full"
-                style={{
-                  animationDelay: `${i * 80}ms`,
-                  border: '1px solid rgba(0, 168, 107, 0.25)',
-                  backgroundColor: 'rgba(0, 0, 0, 0.45)',
-                  backdropFilter: 'blur(4px)',
-                  color: '#00e5a0',
-                  letterSpacing: '0.05em',
-                }}
-              >
-                {chip}
-              </span>
-            ))}
-          </div>
-        </div>
-      )
-
-    case 2:
-      return (
-        <div className="mision-fade-up text-center max-w-4xl mx-auto w-full">
-          <h2
-            className="font-cinzel font-bold mb-10"
-            style={{
-              fontSize: 'clamp(20px, 3.5vw, 32px)',
-              color: '#4ecdc4',
-              letterSpacing: '2px',
-            }}
-          >
-            JeelJel nació para demostrar que eso es mentira.
-          </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            {PILARES.map((p, i) => (
-              <div
-                key={p.num}
-                className="mision-card-in tarjeta rounded-xl p-6 text-center"
-                style={{
-                  animationDelay: `${i * 180}ms`,
-                  background: 'rgba(0, 0, 0, 0.45)',
-                  backdropFilter: 'blur(4px)',
-                  border: '1px solid rgba(0, 168, 107, 0.25)',
-                }}
-              >
-                <span
-                  className="font-cinzel font-bold block mb-2"
-                  style={{ color: '#c9a84c', fontSize: '28px' }}
-                >
-                  {p.num}
-                </span>
-                <span
-                  className="font-cinzel font-bold"
-                  style={{ color: '#4ecdc4', fontSize: '18px', letterSpacing: '1px' }}
-                >
-                  {p.titulo}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )
-
-    case 3:
-      return (
-        <div className="mision-fade-up text-center max-w-4xl mx-auto w-full">
-          <h2
-            className="font-cinzel font-bold"
-            style={{
-              fontSize: 'clamp(20px, 3.5vw, 32px)',
-              color: '#4ecdc4',
-              letterSpacing: '2px',
-            }}
-          >
-            5 plataformas. Un solo movimiento.
-          </h2>
-          <EscenaContadores active />
-        </div>
-      )
-
-    case 4:
-      return (
-        <div className="mision-fade-up text-center max-w-3xl mx-auto">
-          <p
-            className="font-cinzel font-bold leading-tight mb-8"
-            style={{
-              fontSize: 'clamp(24px, 4.5vw, 42px)',
-              color: '#c9a84c',
-              letterSpacing: '3px',
-            }}
-          >
-            No somos la copia de nada.
-            <br />
-            Somos el original que estaba faltando.
-          </p>
-          <p
-            className="font-dm uppercase tracking-widest"
-            style={{
-              color: '#00e5a0',
-              letterSpacing: '0.25em',
-              fontSize: 'clamp(12px, 1.5vw, 14px)',
-            }}
-          >
-            JeelJel Kaanab · Tecnología con raíces
-          </p>
-        </div>
-      )
-
-    default:
-      return null
-  }
+function animateWordsSelector(root, selector, staggerMs = 55) {
+  const container = root?.querySelector(selector)
+  if (container) animateWords(container, staggerMs)
 }
 
 export default function Mision() {
-  const [scene, setScene] = useState(0)
+  const [current, setCurrent] = useState(0)
+  const sceneRef = useRef(null)
+  const timersRef = useRef([])
+
+  const clearTimers = () => {
+    timersRef.current.forEach((id) => {
+      clearInterval(id)
+      clearTimeout(id)
+    })
+    timersRef.current = []
+  }
+
+  const goTo = useCallback((n) => {
+    setCurrent(Math.max(0, Math.min(n, TOTAL - 1)))
+  }, [])
 
   useEffect(() => {
     document.body.classList.add('page-mision')
     return () => document.body.classList.remove('page-mision')
   }, [])
 
-  const siguiente = () => {
-    setScene((s) => Math.min(s + 1, TOTAL_ESCENAS - 1))
+  useEffect(() => {
+    const root = sceneRef.current
+    if (!root) return undefined
+
+    clearTimers()
+    const animations = []
+
+    const run = () => {
+      switch (current) {
+        case 0: {
+          animateWords(root)
+          const eyebrow = root.querySelector('.m-eyebrow')
+          const line = root.querySelector('.m-gold-line')
+          const sub = root.querySelector('.m-subtitle')
+          const btn = root.querySelector('.m-btn-next')
+          if (eyebrow) {
+            animations.push(
+              animate(eyebrow, { opacity: [0, 1], duration: 500, delay: 100, ease: 'outExpo' })
+            )
+          }
+          if (line) {
+            animations.push(
+              animate(line, {
+                width: [0, 56],
+                opacity: [0, 0.85],
+                duration: 700,
+                delay: 400,
+                ease: 'outExpo',
+              })
+            )
+          }
+          if (sub) {
+            animations.push(
+              animate(sub, { opacity: [0, 1], duration: 600, delay: 700, ease: 'outExpo' })
+            )
+          }
+          if (btn) {
+            animations.push(
+              animate(btn, { opacity: [0, 1], duration: 500, delay: 900, ease: 'outExpo' })
+            )
+          }
+          break
+        }
+        case 1: {
+          animateWordsSelector(root, '.m-title-line1', 55)
+          animateWordsSelector(root, '.m-title-line2', 55)
+          const eyebrow = root.querySelector('.m-eyebrow')
+          if (eyebrow) {
+            animations.push(
+              animate(eyebrow, { opacity: [0, 1], duration: 500, ease: 'outExpo' })
+            )
+          }
+          const chips = root.querySelectorAll('.m-chip')
+          if (chips.length) {
+            animations.push(
+              animate(chips, {
+                opacity: [0, 1],
+                scale: [0.8, 1],
+                duration: 500,
+                delay: stagger(70),
+                ease: 'outExpo',
+              })
+            )
+          }
+          break
+        }
+        case 2: {
+          animateWords(root)
+          const eyebrow = root.querySelector('.m-eyebrow')
+          if (eyebrow) {
+            animations.push(
+              animate(eyebrow, { opacity: [0, 1], duration: 500, ease: 'outExpo' })
+            )
+          }
+          const cards = root.querySelectorAll('.m-pillar')
+          if (cards.length) {
+            animations.push(
+              animate(cards, {
+                opacity: [0, 1],
+                y: [24, 0],
+                duration: 550,
+                delay: stagger(150),
+                ease: 'outExpo',
+              })
+            )
+          }
+          break
+        }
+        case 3: {
+          animateWords(root)
+          const eyebrow = root.querySelector('.m-eyebrow')
+          if (eyebrow) {
+            animations.push(
+              animate(eyebrow, { opacity: [0, 1], duration: 500, ease: 'outExpo' })
+            )
+          }
+          STATS.forEach((stat, i) => {
+            const el = root.querySelector(`[data-stat="${i}"]`)
+            if (!el) return
+            let val = 0
+            el.textContent = `0${stat.suffix}`
+            const id = setInterval(() => {
+              val += 1
+              el.textContent = `${val}${val >= stat.target ? stat.suffix : ''}`
+              if (val >= stat.target) clearInterval(id)
+            }, 40)
+            timersRef.current.push(id)
+          })
+          break
+        }
+        case 4: {
+          const cierreWords = root.querySelectorAll('.m-cierre-word')
+          if (cierreWords.length) {
+            animations.push(
+              animate(cierreWords, {
+                y: ['110%', '0%'],
+                duration: 600,
+                delay: stagger(50),
+                ease: 'outExpo',
+              })
+            )
+          }
+          const highlight = root.querySelector('.m-highlight')
+          const t1 = setTimeout(() => {
+            if (highlight) {
+              animate(highlight, { color: '#c9a84c', duration: 600, ease: 'outExpo' })
+            }
+          }, 2400)
+          timersRef.current.push(t1)
+          const sub = root.querySelector('.m-cierre-sub')
+          const tag = root.querySelector('.m-tagline')
+          if (sub) {
+            animations.push(
+              animate(sub, { opacity: [0, 1], duration: 600, delay: 1200, ease: 'outExpo' })
+            )
+          }
+          if (tag) {
+            animations.push(
+              animate(tag, { opacity: [0, 1], duration: 600, delay: 1600, ease: 'outExpo' })
+            )
+          }
+          break
+        }
+        default:
+          break
+      }
+    }
+
+    const frame = requestAnimationFrame(run)
+    return () => {
+      cancelAnimationFrame(frame)
+      clearTimers()
+      animations.forEach((a) => {
+        if (a?.pause) a.pause()
+      })
+    }
+  }, [current])
+
+  const renderScene = () => {
+    switch (current) {
+      case 0:
+        return (
+          <div style={S.sceneCenter}>
+            <p className="m-eyebrow" style={S.eyebrow}>
+              Nuestra razón de existir
+            </p>
+            <h1 style={S.titleTurquesa}>
+              <SplitWords text="El mayor obstáculo del latino no es el talento. Es la desconfianza en sí mismo." />
+            </h1>
+            <div className="m-gold-line" style={S.goldLine} />
+            <p className="m-subtitle" style={{ ...S.subtitle, margin: '24px auto 0' }}>
+              Durante décadas nos enseñaron que lo extranjero es sinónimo de calidad. Que lo
+              nuestro siempre queda en segundo lugar.
+            </p>
+            <button
+              type="button"
+              className="m-btn-next"
+              style={{ ...S.btnNext, marginTop: '32px' }}
+              onClick={() => goTo(1)}
+            >
+              Siguiente
+            </button>
+          </div>
+        )
+
+      case 1:
+        return (
+          <div style={S.sceneCenter}>
+            <p className="m-eyebrow" style={S.eyebrow}>
+              El problema
+            </p>
+            <h2 className="m-title-line1" style={{ ...S.titleBlanco, marginBottom: '8px' }}>
+              <SplitWords text="Divididos por frontera." />
+            </h2>
+            <h2 className="m-title-line2" style={S.titleDorado}>
+              <SplitWords text="Unidos por instinto." innerClass="m-word-inner-gold" />
+            </h2>
+            <div style={S.chipsWrap}>
+              {PAIS_CHIPS.map((chip) => (
+                <span key={chip} className="m-chip" style={S.chip}>
+                  {chip}
+                </span>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 2:
+        return (
+          <div style={{ ...S.sceneCenter, maxWidth: '900px' }}>
+            <p className="m-eyebrow" style={S.eyebrow}>
+              La respuesta
+            </p>
+            <h2 style={S.titleTurquesa}>
+              <SplitWords text="JeelJel nació para demostrar que eso es mentira." />
+            </h2>
+            <div style={S.pillarsGrid}>
+              {PILARES.map((p) => (
+                <div key={p.num} className="m-pillar" style={S.pillarCard}>
+                  <div style={S.pillarNum}>{p.num}</div>
+                  <div style={S.pillarTitle}>{p.titulo}</div>
+                  <p style={S.pillarDesc}>{p.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 3:
+        return (
+          <div style={S.sceneCenter}>
+            <p className="m-eyebrow" style={S.eyebrow}>
+              El ecosistema
+            </p>
+            <h2 style={S.titleTurquesa}>
+              <SplitWords text="5 plataformas. Un solo movimiento." />
+            </h2>
+            <div style={S.statsWrap}>
+              {STATS.map((stat, i) => (
+                <div key={stat.label} style={S.statBox}>
+                  <div className="m-stat-num" data-stat={i} style={S.statNum}>
+                    0{stat.suffix}
+                  </div>
+                  <div style={S.statLabel}>{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+
+      case 4: {
+        const part1 = 'No somos la copia de nada. Somos el'
+        const part2 = 'original'
+        const part3 = 'que estaba faltando.'
+        return (
+          <div style={S.sceneCenter}>
+            <div style={S.cierreBlock}>
+              <p style={S.cierreText}>
+                {part1.split(' ').map((w, i) => (
+                  <span key={`a-${i}`} style={S.wordWrap}>
+                    <span className="m-cierre-word" style={S.wordInner}>
+                      {w}
+                    </span>
+                  </span>
+                ))}{' '}
+                <span style={S.wordWrap}>
+                  <span className="m-cierre-word m-highlight" style={{ ...S.wordInner, ...S.highlightWord }}>
+                    {part2}
+                  </span>
+                </span>{' '}
+                {part3.split(' ').map((w, i) => (
+                  <span key={`b-${i}`} style={S.wordWrap}>
+                    <span className="m-cierre-word" style={S.wordInner}>
+                      {w}
+                    </span>
+                  </span>
+                ))}
+              </p>
+              <p className="m-cierre-sub" style={S.cierreSub}>
+                Tecnología con identidad. Imperios con raíces.
+              </p>
+              <p className="m-tagline" style={S.tagline}>
+                JeelJel Kaanab · Tecnología con raíces
+              </p>
+            </div>
+          </div>
+        )
+      }
+
+      default:
+        return null
+    }
   }
 
   return (
-    <div style={{ position: 'relative', minHeight: '100vh', backgroundColor: '#1a0400' }}>
-      <style>{`
-        @keyframes misionFadeUp {
-          from { opacity: 0; transform: translateY(28px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes misionChipIn {
-          from { opacity: 0; transform: translateY(12px) scale(0.95); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        @keyframes misionCardIn {
-          from { opacity: 0; transform: translateY(20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .mision-fade-up {
-          animation: misionFadeUp 0.65s ease-out forwards;
-        }
-        .mision-chip-in {
-          opacity: 0;
-          animation: misionChipIn 0.45s ease-out forwards;
-        }
-        .mision-card-in {
-          opacity: 0;
-          animation: misionCardIn 0.55s ease-out forwards;
-        }
-      `}</style>
-
+    <div style={S.page}>
       <div
         style={{
-          position: 'fixed',
-          inset: 0,
+          ...S.mosaico,
           backgroundImage: `url(${Tlaloc})`,
-          backgroundRepeat: 'repeat',
-          backgroundSize: '80px 80px',
-          opacity: 0.08,
-          pointerEvents: 'none',
-          zIndex: 0,
         }}
       />
+      <div style={S.grid} />
 
-      <div
-        style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundImage: `
-            linear-gradient(rgba(201, 168, 76, 0.05) 1px, transparent 1px),
-            linear-gradient(90deg, rgba(201, 168, 76, 0.05) 1px, transparent 1px)
-          `,
-          backgroundSize: '48px 48px',
-          pointerEvents: 'none',
-          zIndex: 0,
-        }}
-      />
-
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 1,
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-          paddingTop: '100px',
-          paddingBottom: '120px',
-          paddingLeft: '1.5rem',
-          paddingRight: '1.5rem',
-        }}
-      >
-        <div
-          key={scene}
-          className="flex-1 flex items-center justify-center w-full max-w-5xl mx-auto"
-        >
-          {renderEscena(scene)}
+      <div style={S.main}>
+        <div ref={sceneRef} key={current} style={S.content}>
+          {renderScene()}
         </div>
 
-        <div
-          className="fixed bottom-0 left-0 right-0 flex flex-col items-center gap-5 pb-8 pt-4"
-          style={{
-            background: 'linear-gradient(to top, #1a0400 60%, transparent)',
-            zIndex: 2,
-          }}
-        >
-          <div className="flex items-center gap-2">
-            {Array.from({ length: TOTAL_ESCENAS }, (_, i) => (
+        <div style={S.navBar}>
+          <div style={S.dots}>
+            {Array.from({ length: TOTAL }, (_, i) => (
               <button
                 key={i}
                 type="button"
                 aria-label={`Escena ${i + 1}`}
-                onClick={() => setScene(i)}
-                style={{
-                  width: i === scene ? '28px' : '10px',
-                  height: '10px',
-                  borderRadius: '999px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  backgroundColor:
-                    i === scene ? '#4ecdc4' : 'rgba(0, 168, 107, 0.35)',
-                }}
+                style={S.dot(i === current)}
+                onClick={() => goTo(i)}
               />
             ))}
           </div>
-
-          {scene < TOTAL_ESCENAS - 1 && (
-            <button
-              type="button"
-              onClick={siguiente}
-              className="boton-secundario font-dm font-medium text-sm tracking-widest px-8 py-3 rounded-lg transition-all duration-200"
-              style={{ letterSpacing: '0.15em', cursor: 'pointer' }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'rgba(78, 205, 196, 0.12)'
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'transparent'
-              }}
-            >
+          {current < TOTAL - 1 && current !== 0 && (
+            <button type="button" style={{ ...S.btnNext, opacity: 1 }} onClick={() => goTo(current + 1)}>
               Siguiente
             </button>
           )}
