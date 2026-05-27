@@ -101,6 +101,51 @@ const APPS = [
   },
 ]
 
+const SHAPE_TYPES = ['square', 'triangle', 'star']
+
+function generateFloatingShapes() {
+  const count = Math.floor(Math.random() * 5) + 18
+  return Array.from({ length: count }, (_, index) => ({
+    id: index,
+    type: SHAPE_TYPES[Math.floor(Math.random() * SHAPE_TYPES.length)],
+    size: Math.random() * 38 + 12,
+    top: Math.random() * 100,
+    left: Math.random() * 100,
+    duration: Math.random() * 14 + 6,
+    delay: Math.random() * 4,
+  }))
+}
+
+function FloatingShapes() {
+  const [shapes, setShapes] = useState([])
+
+  useEffect(() => {
+    setShapes(generateFloatingShapes())
+  }, [])
+
+  return (
+    <div className="apps-shapes" aria-hidden>
+      {shapes.map((shape) => (
+        <div
+          key={shape.id}
+          className={`apps-shape apps-shape--${shape.type}`}
+          style={{
+            top: `${shape.top}%`,
+            left: `${shape.left}%`,
+            width: shape.type !== 'star' ? `${shape.size}px` : undefined,
+            height: shape.type !== 'star' ? `${shape.size}px` : undefined,
+            fontSize: shape.type === 'star' ? `${shape.size * 0.65}px` : undefined,
+            animationDuration: `${shape.duration}s`,
+            animationDelay: `${shape.delay}s`,
+          }}
+        >
+          {shape.type === 'star' ? '✦' : null}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 function stopInnerClick(e) {
   e.stopPropagation()
 }
@@ -124,6 +169,8 @@ export default function Apps() {
         style={{ backgroundImage: `url(${mosaico})` }}
         aria-hidden
       />
+
+      <FloatingShapes />
 
       <div className="apps-content">
         <header className="apps-header">
