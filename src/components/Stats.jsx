@@ -1,8 +1,15 @@
+import { useTypewriter } from '../hooks/useTypewriter'
+
 function scrollToContacto() {
   document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' })
 }
 
 export default function Stats() {
+  const statsRef = useTypewriter(
+    'JeelJel Kaanab es un ecosistema de tecnología 100% latinoamericano. Cinco plataformas activas y creciendo — también apoyamos a emprendedores e independientes a hacer realidad sus proyectos.'
+  )
+  const ideaRef = useTypewriter('¿Tienes una idea?')
+
   return (
     <section
       className="py-12 px-6 md:px-12"
@@ -10,25 +17,21 @@ export default function Stats() {
     >
       <div className="max-w-3xl mx-auto text-center">
         <p
+          ref={statsRef}
           className="font-dm mb-6"
           style={{
             fontSize: 'clamp(15px, 2vw, 18px)',
             lineHeight: 1.75,
           }}
-        >
-          JeelJel Kaanab es un ecosistema de tecnología 100% latinoamericano.
-          Cinco plataformas activas y creciendo — también apoyamos a emprendedores
-          e independientes a hacer realidad sus proyectos.
-        </p>
+        />
         <p
+          ref={ideaRef}
           className="font-dm mb-6"
           style={{
             fontSize: 'clamp(15px, 2vw, 18px)',
             lineHeight: 1.75,
           }}
-        >
-          ¿Tienes una idea?
-        </p>
+        />
         <div
           style={{
             display: 'flex',

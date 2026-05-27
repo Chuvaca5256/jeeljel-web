@@ -35,10 +35,7 @@ const ORGS = [
 ]
 
 export default function Organizations() {
-  const orgRef = useTypewriter(
-    'No son socios ni aliados — son causas que creemos merecen existir.',
-    300
-  )
+  const orgRef = useTypewriter('No son socios ni aliados — son causas que creemos merecen existir.')
 
   return (
     <section

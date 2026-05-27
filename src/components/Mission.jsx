@@ -68,12 +68,12 @@ const PILARES = [
 
 const IMPERIOS = ['Imperio Azteca', 'Imperio Maya', 'Imperio Inca', 'Imperio Chimú']
 
-export default function Mission() {
-  const missionRef = useTypewriter(
-    '"Latinoamérica puede crear tecnología de clase mundial"',
-    300
-  )
+function PilarDesc({ desc }) {
+  const ref = useTypewriter(desc)
+  return <p ref={ref} className="font-dm text-sm" style={{ lineHeight: '1.7' }} />
+}
 
+export default function Mission() {
   return (
     <section
       id="mision"
@@ -84,7 +84,6 @@ export default function Mission() {
         {/* Cita principal */}
         <div className="text-center mb-16">
           <p
-            ref={missionRef}
             className="font-cinzel font-bold leading-tight"
             style={{
               color: 'var(--color-titulo)',
@@ -93,7 +92,9 @@ export default function Mission() {
               maxWidth: '800px',
               margin: '0 auto',
             }}
-          />
+          >
+            &ldquo;Latinoamérica puede crear tecnología de clase mundial&rdquo;
+          </p>
         </div>
 
         {/* Tres pilares — 3 columnas en desktop, 1 en móvil */}
@@ -109,9 +110,7 @@ export default function Mission() {
               >
                 {p.titulo}
               </h3>
-              <p className="font-dm text-sm" style={{ lineHeight: '1.7' }}>
-                {p.desc}
-              </p>
+              <PilarDesc desc={p.desc} />
             </div>
           ))}
         </div>

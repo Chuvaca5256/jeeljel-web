@@ -5,8 +5,7 @@ import { useTypewriter } from '../hooks/useTypewriter'
 
 export default function Hero() {
   const subtitleRef = useTypewriter(
-    'Ecosistema de tecnología latinoamericana. Cinco plataformas. Una misión.',
-    300
+    'Ecosistema de tecnología latinoamericana. Cinco plataformas. Una misión.'
   )
 
   const handleScroll = (id) => (e) => {
