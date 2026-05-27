@@ -1,47 +1,57 @@
 // HERO — video del ajolote en src/assets/ajolote_final.webm
 // mix-blend-mode: screen hace desaparecer el fondo negro del video
-import { useEffect, useRef } from 'react'
 import ajoloteWebm from '../assets/ajolote_final.webm'
+import '../styles/hero-flip.css'
+
+const titleLines = [
+  { text: 'NACIMOS PARA', color: '#4ecdc4' },
+  { text: 'CREAR IMPERIOS', color: '#c9a84c' },
+]
+
+function FlipTitle() {
+  return (
+    <div className="text-center">
+      {titleLines.map((line, li) => (
+        <div key={li} className="flip-title" style={{ lineHeight: 1.1 }}>
+          {line.text.split(' ').map((word, wi) => (
+            <span key={wi} className="flip-word">
+              {word.split('').map((char, ci) => {
+                const globalIndex =
+                  titleLines
+                    .slice(0, li)
+                    .reduce((acc, l) => acc + l.text.replace(/ /g, '').length, 0) +
+                  line.text
+                    .slice(
+                      0,
+                      line.text.split(' ').slice(0, wi).join(' ').length + (wi > 0 ? 1 : 0)
+                    )
+                    .replace(/ /g, '').length +
+                  ci
+                return (
+                  <span
+                    key={ci}
+                    className="flip-char"
+                    style={{
+                      color: line.color,
+                      fontSize: 'clamp(2.5rem, 7vw, 5rem)',
+                      fontWeight: 900,
+                      animationDelay: `${globalIndex * 80}ms`,
+                      letterSpacing: '0.02em',
+                    }}
+                  >
+                    {char}
+                  </span>
+                )
+              })}
+            </span>
+          ))}
+        </div>
+      ))}
+    </div>
+  )
+}
 
 export default function Hero() {
-  const titleRef = useRef(null)
-  const originalHtmlRef = useRef(null)
-
-  useEffect(() => {
-    let cleanup
-
-    import('animejs').then(({ createTimeline, stagger, splitText }) => {
-      if (!titleRef.current) return
-
-      if (!originalHtmlRef.current) {
-        originalHtmlRef.current = titleRef.current.innerHTML
-      }
-
-      titleRef.current.innerHTML = originalHtmlRef.current
-
-      splitText(titleRef.current, {
-        chars: `<span class="char-3d" style="display:inline-block; perspective:400px; transform-style:preserve-3d; position:relative;">
-          <em class="face face-top" style="position:absolute; top:0; left:0; width:100%; height:50%; overflow:hidden; opacity:0.5; font-style:normal; transform-origin:bottom center; backface-visibility:hidden;">{value}</em>
-          <em class="face-front" style="font-style:normal; display:block;">{value}</em>
-          <em class="face face-bottom" style="position:absolute; bottom:0; left:0; width:100%; height:50%; overflow:hidden; opacity:0.5; font-style:normal; transform-origin:top center; backface-visibility:hidden;">{value}</em>
-        </span>`,
-      })
-
-      const charsStagger = stagger(100, { start: 0 })
-      const tl = createTimeline({
-        defaults: { ease: 'linear', loop: true, duration: 750 },
-      })
-        .add('.char-3d', { rotateX: -90 }, charsStagger)
-        .add('.char-3d .face-top', { opacity: [0.5, 0] }, charsStagger)
-        .add('.char-3d .face-front', { opacity: [1, 0.5] }, charsStagger)
-        .add('.char-3d .face-bottom', { opacity: [0.5, 1] }, charsStagger)
-
-      cleanup = () => tl.pause()
-    })
-
-    return () => cleanup && cleanup()
-  }, [])
-
   const handleScroll = (id) => (e) => {
     e.preventDefault()
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
@@ -100,22 +110,7 @@ export default function Hero() {
           </video>
         </div>
 
-        <h1
-          ref={titleRef}
-          data-original="NACIMOS PARA CREAR IMPERIOS"
-          className="font-cinzel font-bold leading-tight m-0"
-          style={{
-            fontSize: 'clamp(36px, 6vw, 64px)',
-            letterSpacing: '6px',
-          }}
-        >
-          <span style={{ color: 'var(--color-titulo)', display: 'block' }}>
-            NACIMOS PARA
-          </span>
-          <span className="hero-dorado" style={{ color: '#c9a84c', display: 'block' }}>
-            CREAR IMPERIOS
-          </span>
-        </h1>
+        <FlipTitle />
 
         <p
           className="font-dm"
