@@ -24,47 +24,6 @@
   z-index: 0;
 }
 
-.apps-shape {
-  position: absolute;
-  pointer-events: none;
-  animation: apps-shape-drift linear infinite;
-}
-
-.apps-shape--square {
-  border: 1px solid rgba(78, 205, 196, 0.15);
-  background: transparent;
-  box-sizing: border-box;
-}
-
-.apps-shape--triangle {
-  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
-  background: rgba(201, 168, 76, 0.12);
-}
-
-.apps-shape--star {
-  color: rgba(100, 150, 255, 0.5);
-  line-height: 1;
-  user-select: none;
-}
-
-@keyframes apps-shape-drift {
-  0% {
-    transform: translateY(0) rotate(0deg);
-  }
-  25% {
-    transform: translateY(-10px) rotate(90deg);
-  }
-  50% {
-    transform: translateY(0) rotate(180deg);
-  }
-  75% {
-    transform: translateY(10px) rotate(270deg);
-  }
-  100% {
-    transform: translateY(0) rotate(360deg);
-  }
-}
-
 .apps-content {
   position: relative;
   z-index: 1;

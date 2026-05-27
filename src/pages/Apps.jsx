@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import mosaico from '../assets/mosaicos/Viracoch.png'
 import logoIkanNaat from '../assets/Logo_con_letras_Ikan_Naat_sin_fondo.png'
 import logoTelarana from '../assets/Logo_JeelJel_Kanaabcon_balon_sin_fondo.png'
@@ -101,48 +101,66 @@ const APPS = [
   },
 ]
 
-const SHAPE_TYPES = ['square', 'triangle', 'star']
-
-function generateFloatingShapes() {
-  const count = Math.floor(Math.random() * 5) + 18
-  return Array.from({ length: count }, (_, index) => ({
-    id: index,
-    type: SHAPE_TYPES[Math.floor(Math.random() * SHAPE_TYPES.length)],
-    size: Math.random() * 38 + 12,
-    top: Math.random() * 100,
-    left: Math.random() * 100,
-    duration: Math.random() * 14 + 6,
-    delay: Math.random() * 4,
-  }))
-}
-
-function FloatingShapes() {
-  const [shapes, setShapes] = useState([])
+function CubeBackground() {
+  const containerRef = useRef(null)
 
   useEffect(() => {
-    setShapes(generateFloatingShapes())
+    const container = containerRef.current
+    if (!container) return
+
+    const elements = []
+    const count = Math.floor(Math.random() * 5) + 18
+
+    for (let i = 0; i < count; i++) {
+      const type = i % 3
+      const el = document.createElement('div')
+      const size = Math.random() * 38 + 12
+      const x = Math.random() * 100
+      const y = Math.random() * 100
+      const duration = Math.random() * 14000 + 6000
+      const delay = Math.random() * 4000
+
+      el.style.position = 'absolute'
+      el.style.left = `${x}%`
+      el.style.top = `${y}%`
+      el.style.pointerEvents = 'none'
+      el.style.transformStyle = 'preserve-3d'
+      el.style.background = 'transparent'
+      el.style.animation = `cube-spin ${duration}ms linear ${delay}ms infinite`
+
+      if (type === 0) {
+        el.style.width = `${size}px`
+        el.style.height = `${size}px`
+        el.style.border = '1px solid rgba(78, 205, 196, 0.6)'
+        el.style.background = 'transparent'
+      } else if (type === 1) {
+        el.style.width = '0'
+        el.style.height = '0'
+        el.style.border = 'none'
+        el.style.borderLeft = `${size / 2}px solid transparent`
+        el.style.borderRight = `${size / 2}px solid transparent`
+        el.style.borderBottom = `${size}px solid rgba(201, 168, 76, 0.5)`
+        el.style.background = 'transparent'
+      } else {
+        el.style.color = 'rgba(100, 160, 255, 0.7)'
+        el.style.fontSize = `${size * 0.6}px`
+        el.style.userSelect = 'none'
+        el.textContent = '✦'
+      }
+
+      container.appendChild(el)
+      elements.push(el)
+    }
+
+    return () => elements.forEach((node) => node.remove())
   }, [])
 
   return (
-    <div className="apps-shapes" aria-hidden>
-      {shapes.map((shape) => (
-        <div
-          key={shape.id}
-          className={`apps-shape apps-shape--${shape.type}`}
-          style={{
-            top: `${shape.top}%`,
-            left: `${shape.left}%`,
-            width: shape.type !== 'star' ? `${shape.size}px` : undefined,
-            height: shape.type !== 'star' ? `${shape.size}px` : undefined,
-            fontSize: shape.type === 'star' ? `${shape.size * 0.65}px` : undefined,
-            animationDuration: `${shape.duration}s`,
-            animationDelay: `${shape.delay}s`,
-          }}
-        >
-          {shape.type === 'star' ? '✦' : null}
-        </div>
-      ))}
-    </div>
+    <div
+      ref={containerRef}
+      className="apps-shapes"
+      aria-hidden
+    />
   )
 }
 
@@ -170,7 +188,7 @@ export default function Apps() {
         aria-hidden
       />
 
-      <FloatingShapes />
+      <CubeBackground />
 
       <div className="apps-content">
         <header className="apps-header">
