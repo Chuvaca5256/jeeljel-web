@@ -51,10 +51,10 @@ body::before {
     var(--mosaico-size);
   background-position:
     center center,
-    center center,
-    center center,
-    center center,
-    center center;
+    120px center,
+    center 120px,
+    120px 120px,
+    60px 60px;
   opacity: var(--mosaico-opacity);
   pointer-events: none;
   z-index: 0;
