@@ -3,17 +3,26 @@ import { animate, stagger } from 'animejs'
 import Tlaloc from '../assets/mosaicos/Tlaloc.png'
 
 const PAIS_CHIPS = [
-  '🇲🇽 México',
-  '🇦🇷 Argentina',
-  '🇨🇴 Colombia',
-  '🇨🇱 Chile',
-  '🇵🇪 Perú',
-  '🇻🇪 Venezuela',
-  '🇪🇨 Ecuador',
-  '🇧🇴 Bolivia',
-  '🇵🇾 Paraguay',
-  '🇺🇾 Uruguay',
-  '🇬🇹 Guatemala',
+  { code: 'MX', name: 'México' },
+  { code: 'AR', name: 'Argentina' },
+  { code: 'CO', name: 'Colombia' },
+  { code: 'CL', name: 'Chile' },
+  { code: 'PE', name: 'Perú' },
+  { code: 'VE', name: 'Venezuela' },
+  { code: 'EC', name: 'Ecuador' },
+  { code: 'BO', name: 'Bolivia' },
+  { code: 'PY', name: 'Paraguay' },
+  { code: 'UY', name: 'Uruguay' },
+  { code: 'GT', name: 'Guatemala' },
+  { code: 'HN', name: 'Honduras' },
+  { code: 'SV', name: 'El Salvador' },
+  { code: 'BZ', name: 'Belice' },
+  { code: 'CU', name: 'Cuba' },
+  { code: 'DO', name: 'República Dominicana' },
+  { code: 'PR', name: 'Puerto Rico' },
+  { code: 'PA', name: 'Panamá' },
+  { code: 'CR', name: 'Costa Rica' },
+  { code: 'NI', name: 'Nicaragua' },
 ]
 
 const PILARES = [
@@ -45,7 +54,7 @@ const TOTAL = 5
 const S = {
   page: {
     position: 'relative',
-    minHeight: '100vh',
+    minHeight: 'auto',
     backgroundColor: '#1a0400',
     color: '#ffffff',
     fontFamily: "'DM Sans', sans-serif",
@@ -82,22 +91,20 @@ const S = {
   main: {
     position: 'relative',
     zIndex: 1,
-    minHeight: '100vh',
+    minHeight: 'fit-content',
     display: 'flex',
     flexDirection: 'column',
-    paddingTop: '100px',
-    paddingBottom: '130px',
+    paddingBottom: '100px',
     paddingLeft: '24px',
     paddingRight: '24px',
   },
   content: {
-    flex: 1,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
     width: '100%',
     maxWidth: '920px',
     margin: '0 auto',
+    minHeight: 'fit-content',
+    paddingTop: '40px',
+    paddingBottom: '32px',
   },
   eyebrow: {
     fontFamily: "'DM Sans', sans-serif",
@@ -159,9 +166,14 @@ const S = {
     border: '1px solid rgba(0, 168, 107, 0.25)',
     backgroundColor: 'rgba(0, 0, 0, 0.45)',
     backdropFilter: 'blur(4px)',
-    color: '#00e5a0',
+    color: '#ffffff',
     opacity: 0,
     transform: 'scale(0.8)',
+  },
+  chipCode: {
+    color: '#4ecdc4',
+    fontWeight: 700,
+    marginRight: '4px',
   },
   chipsWrap: {
     display: 'flex',
@@ -323,6 +335,7 @@ const S = {
   sceneCenter: {
     width: '100%',
     textAlign: 'center',
+    minHeight: 'fit-content',
   },
 }
 
@@ -576,9 +589,10 @@ export default function Mision() {
               <SplitWords text="Unidos por instinto." innerClass="m-word-inner-gold" />
             </h2>
             <div style={S.chipsWrap}>
-              {PAIS_CHIPS.map((chip) => (
-                <span key={chip} className="m-chip" style={S.chip}>
-                  {chip}
+              {PAIS_CHIPS.map((pais) => (
+                <span key={pais.code} className="m-chip" style={S.chip}>
+                  <span style={S.chipCode}>{pais.code}</span>
+                  {pais.name}
                 </span>
               ))}
             </div>
@@ -674,6 +688,14 @@ export default function Mision() {
 
   return (
     <div style={S.page}>
+      <style>{`
+        @media (max-width: 640px) {
+          .m-chip {
+            font-size: 12px !important;
+            padding: 4px 10px !important;
+          }
+        }
+      `}</style>
       <div
         style={{
           ...S.mosaico,
