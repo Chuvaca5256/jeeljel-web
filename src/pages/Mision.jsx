@@ -5,6 +5,7 @@ import mosaico from '../assets/mosaicos/Tlaloc.png'
 const PAIS_CHIPS = [
   { code: 'MX', name: 'México' },
   { code: 'AR', name: 'Argentina' },
+  { code: 'BR', name: 'Brasil' },
   { code: 'CO', name: 'Colombia' },
   { code: 'CL', name: 'Chile' },
   { code: 'PE', name: 'Perú' },
@@ -16,7 +17,6 @@ const PAIS_CHIPS = [
   { code: 'GT', name: 'Guatemala' },
   { code: 'HN', name: 'Honduras' },
   { code: 'SV', name: 'El Salvador' },
-  { code: 'BZ', name: 'Belice' },
   { code: 'CU', name: 'Cuba' },
   { code: 'DO', name: 'República Dominicana' },
   { code: 'PR', name: 'Puerto Rico' },
