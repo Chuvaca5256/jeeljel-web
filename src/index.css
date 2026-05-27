@@ -20,12 +20,8 @@
 html { scroll-behavior: smooth; }
 
 body {
-  background-color: #0a0508;
-  background-image: url('/fondo_pagina_web2.jpg'), url('/fondo_pagina_web1.png');
-  background-size: cover, cover;
-  background-position: center top, center bottom;
-  background-repeat: no-repeat, no-repeat;
-  background-attachment: fixed;
+  position: relative;
+  background-color: #1a0400;
   min-height: 100vh;
   margin: 0;
   color: var(--color-texto);
@@ -34,14 +30,14 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-body::after {
+body::before {
   content: '';
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(10, 5, 8, 0.35);
+  inset: 0;
+  background-image: url('./assets/mosaicos/Cuculcan.png');
+  background-repeat: repeat;
+  background-size: 80px 80px;
+  opacity: 0.08;
   pointer-events: none;
   z-index: 0;
 }
@@ -112,6 +108,6 @@ h1, h2, h3, h4, p, span, a {
 
 /* ─── Scrollbar discreta ────────────────────────────────── */
 ::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: #0a0508; }
+::-webkit-scrollbar-track { background: #1a0400; }
 ::-webkit-scrollbar-thumb { background: var(--color-tarjeta-borde); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-titulo-secundario); }
