@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-// LOGO HUB: src/assets/Logo_JeelJel_Kanaabcon_balon_sin_fondo.png ✓
+// LOGO Ollin Deportes: src/assets/Logo_JeelJel_Kanaabcon_balon_sin_fondo.png ✓
 import logoBalon from '../assets/Logo_JeelJel_Kanaabcon_balon_sin_fondo.png'
 
 // Deadline: 11 junio 2026, 17:00 UTC-6 = 23:00 UTC
@@ -91,7 +91,7 @@ export default function WorldCup() {
                 lineHeight: 1.2,
               }}
             >
-              Hub Biónico Deportivo
+              Ollin Deportes
             </h2>
 
             <p
@@ -145,7 +145,7 @@ export default function WorldCup() {
           >
             <Link
               to="/hub-bionico"
-              aria-label="Ir a Hub Biónico"
+              aria-label="Ir a Ollin Deportes"
               className="flex items-center justify-center rounded-full no-underline transition-transform duration-200"
               style={{
                 width: 'clamp(200px, 28vw, 280px)',
@@ -161,7 +161,7 @@ export default function WorldCup() {
             >
               <img
                 src={logoBalon}
-                alt="Hub Biónico Deportivo — Logo con balón"
+                alt="Ollin Deportes — Logo con balón"
                 style={{
                   width: '100%',
                   maxWidth: '280px',

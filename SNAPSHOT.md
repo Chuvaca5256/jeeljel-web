@@ -15,7 +15,7 @@
 | `/organizaciones` | Stub — pendiente contenido |
 | `/contacto` | Stub — pendiente contenido |
 
-**Navbar:** APPS · HUB BIÓNICO · MISIÓN · ORGANIZACIONES · CONTACTO
+**Navbar:** APPS · OLLIN DEPORTES · MISIÓN · ORGANIZACIONES · CONTACTO
 
 ## Fondo global
 
@@ -91,7 +91,7 @@ El servidor tiene **DOS sitios** corriendo simultáneamente:
 | `#c9a84c` | Dorado — navbar y «CREAR IMPERIOS» (sin cambiar) |
 | `#0a0508` | Fondo base del body |
 
-## 🏟️ HUB BIÓNICO DEPORTIVO — DOC-JEL-2026-001
+## 🏟️ OLLIN DEPORTES — DOC-JEL-2026-001
 
 - **URL final:** `jeeljel.com/mundial-2026`
 - **Deadline:** 11 de junio de 2026
@@ -99,4 +99,4 @@ El servidor tiene **DOS sitios** corriendo simultáneamente:
 - **Qué es:** Web app dentro de jeeljel.com para seguir partidos del Mundial 2026 en tiempo real con campo 2D isométrico (PixiJS, sin copyright), modo apostador, stats granulares por jugador (pases, faltas, tarjetas, tiros, corners, posesión), narrador comunitario con micrófono, chat en vivo (Supabase), IA analista Ikan Naat conectada a datos en vivo, y archivo post-partido.
 - **Stack:** React + Vite + Tailwind + PixiJS + Socket.io + Node.js + Redis + Docker + Supabase + API-Football Ultra ($29/mes) + Cloudflare
 - **Monetización:** Afiliados casas de apuestas (1xBet 40%, Bet365 30%) + AdSense. Estimado conservador: $3,000–3,500 USD por el Mundial.
-- **Puerto backend Hub:** 10001 (nunca 10000, ese es Ikan Naat)
+- **Puerto backend Ollin Deportes:** 10001 (nunca 10000, ese es Ikan Naat)
