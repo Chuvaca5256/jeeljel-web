@@ -1,4 +1,5 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
+import { animate } from 'animejs'
 import DiosTupa from '../assets/mosaicos/Dios_Tupa.png'
 
 const organizations = [
@@ -55,9 +56,91 @@ const organizations = [
 ]
 
 export default function Organizaciones() {
+  const gridRef = useRef(null)
+  const animatedRef = useRef(new Set())
+  const timeoutsRef = useRef([])
+  const scrambleIntervalsRef = useRef([])
+
+  function scramble(el, finalText, duration) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&'
+    const len = finalText.length
+    let frame = 0
+    const totalFrames = Math.round(duration / 30)
+    const iv = setInterval(() => {
+      let out = ''
+      for (let c = 0; c < len; c++) {
+        const progress = frame / totalFrames
+        const revealed = c / len < progress * 1.4
+        out += revealed
+          ? finalText[c]
+          : finalText[c] === ' '
+            ? ' '
+            : chars[Math.floor(Math.random() * chars.length)]
+      }
+      el.textContent = out
+      frame++
+      if (frame > totalFrames) {
+        el.textContent = finalText
+        clearInterval(iv)
+      }
+    }, 30)
+    scrambleIntervalsRef.current.push(iv)
+  }
+
   useEffect(() => {
     document.body.classList.add('page-organizaciones')
     return () => document.body.classList.remove('page-organizaciones')
+  }, [])
+
+  useEffect(() => {
+    const cards = gridRef.current?.querySelectorAll('.org-card')
+    if (!cards?.length) return undefined
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return
+
+          const card = entry.target
+          if (animatedRef.current.has(card)) return
+          animatedRef.current.add(card)
+          observer.unobserve(card)
+
+          const index = Number(card.dataset.orgIndex) || 0
+          const nameEl = card.querySelector('.org-name')
+          const statEl = card.querySelector('.org-stat')
+          const nameText = card.dataset.orgName || ''
+          const statText = card.dataset.orgStat || ''
+
+          animate(card, {
+            opacity: [0, 1],
+            y: [32, 0],
+            duration: 600,
+            delay: (index % 3) * 120,
+            ease: 'outExpo',
+          })
+
+          const t1 = setTimeout(() => {
+            if (nameEl) scramble(nameEl, nameText, 800)
+          }, 300)
+          const t2 = setTimeout(() => {
+            if (statEl) scramble(statEl, statText, 1200)
+          }, 700)
+          timeoutsRef.current.push(t1, t2)
+        })
+      },
+      { threshold: 0.15 }
+    )
+
+    cards.forEach((card) => observer.observe(card))
+
+    return () => {
+      observer.disconnect()
+      timeoutsRef.current.forEach(clearTimeout)
+      timeoutsRef.current = []
+      scrambleIntervalsRef.current.forEach(clearInterval)
+      scrambleIntervalsRef.current = []
+    }
   }, [])
 
   return (
@@ -101,16 +184,23 @@ export default function Organizaciones() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {organizations.map((org) => (
+            <div
+              ref={gridRef}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              {organizations.map((org, index) => (
                 <article
                   key={org.name}
-                  className="tarjeta flex flex-col rounded-xl p-6"
+                  className="tarjeta org-card flex flex-col rounded-xl p-6"
+                  data-org-index={index}
+                  data-org-name={org.name}
+                  data-org-stat={org.impacto}
                   style={{
                     borderRadius: '12px',
                     background: 'rgba(0, 0, 0, 0.45)',
                     backgroundColor: 'rgba(0, 0, 0, 0.45)',
                     backdropFilter: 'blur(4px)',
+                    opacity: 0,
                   }}
                 >
                   <img
@@ -121,7 +211,7 @@ export default function Organizaciones() {
                   />
 
                   <h2
-                    className="font-cinzel font-bold text-lg mb-3"
+                    className="org-name font-cinzel font-bold text-lg mb-3"
                     style={{ color: '#c9a84c', letterSpacing: '1px' }}
                   >
                     {org.name}
@@ -135,7 +225,7 @@ export default function Organizaciones() {
                   </p>
 
                   <p
-                    className="font-dm text-sm font-medium mb-5"
+                    className="org-stat font-dm text-sm font-medium mb-5"
                     style={{ color: '#4ecdc4', lineHeight: 1.6 }}
                   >
                     {org.impacto}
