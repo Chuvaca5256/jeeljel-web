@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -43,19 +44,32 @@ jobs:
           fi
           echo "Llave SSH configurada correctamente."
 
+      - name: Verificar conexión VPS
+        run: |
+          set -euo pipefail
+          SSH_OPTS="-i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=60 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
+          ssh ${SSH_OPTS} root@187.77.196.169 \
+            "mkdir -p /var/www/jeeljel-web/dist && df -h /var/www && echo OK"
+
       - name: Deploy al VPS
         run: |
           set -euo pipefail
-          SSH_OPTS="-i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=30"
-          for attempt in 1 2 3; do
-            echo "Deploy intento ${attempt}/3..."
-            if rsync -avz --delete -e "ssh ${SSH_OPTS}" ./dist/ root@187.77.196.169:/var/www/jeeljel-web/dist/; then
+          SSH_OPTS="-i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=60 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
+          echo "Tamaño del build:"
+          du -sh ./dist/
+          ls ./dist/assets/ | wc -l
+          echo "archivos en dist/assets"
+          for attempt in 1 2 3 4 5; do
+            echo "Deploy intento ${attempt}/5..."
+            if rsync -avz --delete --timeout=300 -e "ssh ${SSH_OPTS}" ./dist/ root@187.77.196.169:/var/www/jeeljel-web/dist/; then
               echo "Deploy exitoso."
+              ssh ${SSH_OPTS} root@187.77.196.169 "ls -la /var/www/jeeljel-web/dist/assets/ | tail -5"
               exit 0
             fi
-            sleep 10
+            echo "Rsync falló en intento ${attempt}."
+            sleep 20
           done
-          echo "::error::Deploy falló después de 3 intentos."
+          echo "::error::Deploy falló después de 5 intentos."
           exit 1
 
       - name: Reload Nginx
@@ -63,6 +77,6 @@ jobs:
           ssh -i ~/.ssh/deploy_key \
             -o StrictHostKeyChecking=no \
             -o UserKnownHostsFile=/dev/null \
-            -o ConnectTimeout=30 \
+            -o ConnectTimeout=60 \
             root@187.77.196.169 \
             "systemctl reload nginx"
