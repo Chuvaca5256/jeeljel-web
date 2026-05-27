@@ -10,25 +10,73 @@
 |------|--------|
 | `/` | Home (landing completa) |
 | `/apps` | Stub — pendiente contenido |
-| `/hub-bionico` | Stub — pendiente contenido |
+| `/hub-bionico` | Stub — título **OLLIN DEPORTES** (ruta sin cambiar) |
 | `/mision` | Stub — pendiente contenido |
 | `/organizaciones` | Stub — pendiente contenido |
 | `/contacto` | Stub — pendiente contenido |
 
 **Navbar:** APPS · OLLIN DEPORTES · MISIÓN · ORGANIZACIONES · CONTACTO
 
+## Home — orden de secciones
+
+`Hero` → `Divider` (greca) → `Stats` → `Divider` → `AppsGrid` (El Ecosistema) → `Divider` → `WorldCup` (Ollin Deportes) → `Divider` → `Mission` → `Divider` → `Organizations` → `Footer` (con greca arriba)
+
 ## Fondo global
 
-- **Fondo actual:** `fondo_pagina_web1.png` y `fondo_pagina_web2.png` en `public/` — mosaico de dioses prehispánicos (Kukulkán, Tláloc, Inti, Viracocha, Pachamama, Bochica, Mama Killa, Bachué) generados con Gemini
-- **Overlay:** `rgba(10,5,8,0.35)` vía `body::after`
-- Secciones grandes transparentes para que el fondo se vea en toda la página
-- `public/bg-maya.svg` existe pero **no se usa**
+- **Color base del body:** `#1a0400` (rojo oscuro) en `src/index.css`
+- **Mosaico:** solo `src/assets/mosaicos/Cuculcan.png` vía `body::before`
+  - `background-repeat: repeat`
+  - `background-size: 80px 80px` (`--mosaico-size`)
+  - `opacity: 0.08` (`--mosaico-opacity`)
+- **Sin** capas de `fondo_pagina_web1.png` / `fondo_pagina_web2.png` ni overlay `body::after`
+- Secciones con fondo transparente para que el mosaico se vea en toda la página
+- Archivos extra en `src/assets/mosaicos/` (Dios, Tlaloc, etc.) **no usados** en CSS actual
 
 ## Divisor
 
 - **Componente:** `src/components/Divider.jsx` — franja con patrón de grecas doradas en SVG `repeat-x`, altura 12px, color `#c9a84c`
 - **Uso:** entre secciones en `Home.jsx` y antes del contenido en `Footer.jsx`
 - **Bordes tarjetas:** clase `.tarjeta` — `1px solid rgba(0, 168, 107, 0.25)`
+
+## Hero (`src/components/Hero.jsx`)
+
+- **Logo:** `Logo_JeelJel_Kanaabcon_balon_sin_fondo.png` — imagen estática (reemplazó `ajolote_final.webm`)
+- **Espaciado compacto:** sin `min-h-screen` en móvil; `pt-12 pb-6` móvil, `md:min-h-screen` con `md:pt-20 md:pb-16` en desktop
+- Título «CREAR IMPERIOS» en dorado `#c9a84c`; resto de títulos en turquesa
+
+## Stats — franja descriptiva (`src/components/Stats.jsx`)
+
+Reemplazó la cuadrícula «5 Plataformas · 30+ Agentes IA · …». Ahora muestra:
+
+- Texto centrado sobre el ecosistema latinoamericano y apoyo a emprendedores
+- CTA **Contáctanos** → scroll suave a `#contacto` (footer)
+
+## El Ecosistema (`src/components/AppsGrid.jsx`)
+
+- Logos 36×36 px en esquina superior izquierda de cada tarjeta (`top: 12px`, `left: 12px`)
+- Assets en `src/assets/`:
+  - Ikan Naat: `Logo_con_letras_Ikan_Naat_sin_fondo.png`
+  - Ollin Deportes: `Logo_JeelJel_Kanaabcon_balon_sin_fondo.png`
+  - Virtyou: `Logo_virtyou_sin_fondo.png`
+  - Izydra OS: `Logo_Izydra_OS_Sin_fondo.png`
+  - Inkógnito: `Logo_inkognito_sin_fondo.png`
+
+**Descripciones actuales:**
+
+| App | Descripción |
+|-----|-------------|
+| Ikan Naat | Inteligencia artificial que te escucha, mira, lee y sabe lo que sientes. |
+| Ollin Deportes | Seguimiento del Mundial 2026 en tiempo real |
+| Virtyou | No solo es una tarjeta virtual, también es un organizador y ayuda para el día a día. |
+| Izydra OS | Organiza, crea y olvídate del trabajo pesado. |
+| Inkógnito | La red social para lo que nadie se atreve, pero en modo Inkógnito sin censura. |
+
+## Ollin Deportes — sección Home (`src/components/WorldCup.jsx`)
+
+- Título de sección: **Ollin Deportes** (antes «Hub Biónico Deportivo» en toda la app)
+- Logo clicable → `/hub-bionico`
+- **Countdown:** solo Días, Horas y Minutos (sin Segundos); una fila con `flex-nowrap`
+- Actualización cada 60 s; deadline: 11 junio 2026, 23:00 UTC
 
 ## Infraestructura
 
@@ -43,13 +91,21 @@
 | **Deploy jeeljel.com** | `/var/www/jeeljel-web/dist` |
 | **Ikan Naat** | Puerto 10000 — `proxy_pass http://localhost:10000` |
 | **GitHub** | https://github.com/Chuvaca5256/jeeljel-web |
-| **Deploy automático** | GitHub Actions — `.github/workflows/deploy.yml` — se activa en cada push a `main` |
+| **Deploy automático** | GitHub Actions — `.github/workflows/deploy.yml` — push a `main` o `workflow_dispatch` |
 | **Secret GitHub** | `VPS_SSH_KEY` — llave SSH ed25519 para deploy |
+
+### Deploy workflow (corregido)
+
+- **Sin** `ssh-keyscan` — usa `StrictHostKeyChecking=no` y `UserKnownHostsFile=/dev/null`
+- Validación de `VPS_SSH_KEY` con `ssh-keygen -y`
+- Paso previo: verificar SSH y `mkdir -p` en el VPS
+- **rsync** con hasta 5 reintentos, `--timeout=300`, keepalive SSH
+- Node.js **22** en CI
 
 ### Acceso VPS
 
 - **Usuario:** `root`
-- **Autenticación:** contraseña (sin llave SSH por ahora)
+- **Autenticación:** contraseña (sin llave SSH local; deploy vía secret en GitHub)
 - **IP:** `187.77.196.169`
 
 ## ⚠️ ARQUITECTURA CRÍTICA — LEER ANTES DE TOCAR NGINX
@@ -84,18 +140,19 @@ El servidor tiene **DOS sitios** corriendo simultáneamente:
 
 | Color | Uso |
 |-------|-----|
+| `#1a0400` | Fondo base del body (rojo oscuro) |
 | `#4ecdc4` | Turquesa — títulos principales |
 | `#00e5a0` | Jade brillante — títulos secundarios y separadores |
 | `rgba(0,168,107,0.25)` | Bordes de tarjetas (ecosistema) |
 | `#ffffff` | Blanco puro — textos de párrafo |
-| `#c9a84c` | Dorado — navbar y «CREAR IMPERIOS» (sin cambiar) |
-| `#0a0508` | Fondo base del body |
+| `#c9a84c` | Dorado — navbar y «CREAR IMPERIOS» |
 
 ## 🏟️ OLLIN DEPORTES — DOC-JEL-2026-001
 
+- **Nombre en app:** Ollin Deportes (renombrado desde Hub Biónico Deportivo)
 - **URL final:** `jeeljel.com/mundial-2026`
 - **Deadline:** 11 de junio de 2026
-- **Mascota:** Ajolote JeelJel con balón
+- **Mascota:** Ajolote JeelJel con balón (`Logo_JeelJel_Kanaabcon_balon_sin_fondo.png`)
 - **Qué es:** Web app dentro de jeeljel.com para seguir partidos del Mundial 2026 en tiempo real con campo 2D isométrico (PixiJS, sin copyright), modo apostador, stats granulares por jugador (pases, faltas, tarjetas, tiros, corners, posesión), narrador comunitario con micrófono, chat en vivo (Supabase), IA analista Ikan Naat conectada a datos en vivo, y archivo post-partido.
 - **Stack:** React + Vite + Tailwind + PixiJS + Socket.io + Node.js + Redis + Docker + Supabase + API-Football Ultra ($29/mes) + Cloudflare
 - **Monetización:** Afiliados casas de apuestas (1xBet 40%, Bet365 30%) + AdSense. Estimado conservador: $3,000–3,500 USD por el Mundial.
