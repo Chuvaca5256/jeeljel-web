@@ -148,19 +148,20 @@ function CubeBackground() {
           background: transparent;
         `
       } else {
+        el.innerHTML = `<svg width='${size}' height='${size}' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'>
+    <polygon points='50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35' 
+      stroke='rgba(100,160,255,0.5)' stroke-width='3' fill='none'/>
+  </svg>`
         el.style.cssText = `
           position: absolute;
           left: ${x}%;
           top: ${y}%;
-          color: rgba(100, 160, 255, 0.18);
-          font-size: ${size * 0.6}px;
+          width: ${size * 1.5}px;
+          height: ${size * 1.5}px;
           animation: cube-spin ${duration}ms linear ${delay}ms infinite;
           pointer-events: none;
-          user-select: none;
-          text-shadow: none;
           background: transparent;
         `
-        el.textContent = '✦'
       }
 
       container.appendChild(el)
