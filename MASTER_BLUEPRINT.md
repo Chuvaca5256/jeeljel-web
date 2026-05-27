@@ -12,7 +12,10 @@
 - ✅ jeeljel.com en línea con HTTPS
 - ✅ Configurar deploy automático desde GitHub al VPS
 - ✅ Deploy automático GitHub Actions configurado
-- ✅ Navegación actualizada: Apps, Ollin Deportes, Misión, Organizaciones, Contacto
+- ✅ Navegación actualizada: Apps, Ollin Deportes, Misión, Organizaciones (4 items — sin Contacto en navbar)
+- ✅ Quitar `/contacto` del navbar
+- ✅ Agregar Aviso de Privacidad y Términos de Uso en footer (`/privacidad`, `/terminos`)
+- ✅ Crear páginas `/privacidad` y `/terminos` (LFPDPPP v1.1 + Términos v1.1, mosaico Tlaloc)
 - ✅ Fix Nginx SPA routing (`try_files`)
 - ✅ Paleta Jade & Turquesa Maya aplicada en todo el sitio
 - ✅ Divisor de secciones con patrón greca dorada implementado
@@ -81,7 +84,7 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 
 ## Pendientes próxima sesión
 
-- [ ] 🔴 **URGENTE** Ollin Deportes — deadline 11 junio 2026 — ver SNAPSHOT para detalle completo
+- [ ] 🔴 **URGENTE** — Ollin Deportes completo — deadline 11 junio 2026
 - [ ] Registrarse en API-Football Ultra y obtener API key
 - [ ] Registrarse en afiliados: 1xBet Partners, Bet365 Affiliates
 - [ ] Crear ruta `/mundial-2026` en React dentro de jeeljel-web

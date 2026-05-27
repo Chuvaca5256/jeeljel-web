@@ -1,5 +1,13 @@
 # SNAPSHOT — Estado actual del proyecto
 
+## SNAPSHOT v2 — Footer legal + navbar limpio (27/05/2026)
+
+✅ CONTACTO eliminado del navbar — quedan 4 items: APPS · OLLIN DEPORTES · MISIÓN · ORGANIZACIONES
+✅ Footer actualizado con links: Aviso de Privacidad (`/privacidad`) y Términos de Uso (`/terminos`)
+✅ Página `/privacidad` creada — contenido LFPDPPP completo v1.1
+✅ Página `/terminos` creada — Términos de Uso v1.1 con mayoría de edad, afiliados y deslinde ecosistema
+✅ Rutas `/privacidad` y `/terminos` registradas en `App.jsx`
+
 ## SNAPSHOT v1 — Apps página (27/05/2026)
 
 ✅ Página /apps completada con sistema de tarjetas expandibles
