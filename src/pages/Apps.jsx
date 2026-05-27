@@ -134,30 +134,31 @@ function CubeBackground() {
           pointer-events: none;
         `
       } else if (type === 1) {
+        el.innerHTML = `<svg width='${size}' height='${size}' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'>
+  <polygon points='50,5 95,95 5,95' stroke='rgba(201,168,76,0.6)' stroke-width='3' fill='none'/>
+</svg>`
         el.style.cssText = `
           position: absolute;
           left: ${x}%;
           top: ${y}%;
-          width: 0;
-          height: 0;
-          border-left: ${size / 2}px solid transparent;
-          border-right: ${size / 2}px solid transparent;
-          border-bottom: ${size}px solid rgba(201, 168, 76, 0.45);
-          background: transparent;
+          width: ${size}px;
+          height: ${size}px;
           animation: cube-spin ${duration}ms linear ${delay}ms infinite;
           pointer-events: none;
+          background: transparent;
         `
       } else {
         el.style.cssText = `
           position: absolute;
           left: ${x}%;
           top: ${y}%;
-          color: rgba(100, 160, 255, 0.7);
+          color: rgba(100, 160, 255, 0.35);
           font-size: ${size * 0.6}px;
-          background: transparent;
-          user-select: none;
           animation: cube-spin ${duration}ms linear ${delay}ms infinite;
           pointer-events: none;
+          user-select: none;
+          text-shadow: none;
+          background: transparent;
         `
         el.textContent = '✦'
       }
