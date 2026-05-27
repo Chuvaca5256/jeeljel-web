@@ -152,7 +152,7 @@ function CubeBackground() {
           position: absolute;
           left: ${x}%;
           top: ${y}%;
-          color: rgba(100, 160, 255, 0.35);
+          color: rgba(100, 160, 255, 0.18);
           font-size: ${size * 0.6}px;
           animation: cube-spin ${duration}ms linear ${delay}ms infinite;
           pointer-events: none;
