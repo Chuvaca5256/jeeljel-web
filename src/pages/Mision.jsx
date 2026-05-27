@@ -2,27 +2,27 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { animate, stagger } from 'animejs'
 import mosaico from '../assets/mosaicos/Tlaloc.png'
 
-const PAIS_CHIPS = [
-  { code: 'MX', name: 'México' },
-  { code: 'AR', name: 'Argentina' },
-  { code: 'BR', name: 'Brasil' },
-  { code: 'CO', name: 'Colombia' },
-  { code: 'CL', name: 'Chile' },
-  { code: 'PE', name: 'Perú' },
-  { code: 'VE', name: 'Venezuela' },
-  { code: 'EC', name: 'Ecuador' },
-  { code: 'BO', name: 'Bolivia' },
-  { code: 'PY', name: 'Paraguay' },
-  { code: 'UY', name: 'Uruguay' },
-  { code: 'GT', name: 'Guatemala' },
-  { code: 'HN', name: 'Honduras' },
-  { code: 'SV', name: 'El Salvador' },
-  { code: 'CU', name: 'Cuba' },
-  { code: 'DO', name: 'República Dominicana' },
-  { code: 'PR', name: 'Puerto Rico' },
-  { code: 'PA', name: 'Panamá' },
-  { code: 'CR', name: 'Costa Rica' },
-  { code: 'NI', name: 'Nicaragua' },
+const countries = [
+  { code: 'mx', name: 'México', url: 'https://www.google.com/search?q=m%C3%A9xico' },
+  { code: 'ar', name: 'Argentina', url: 'https://www.google.com/search?q=Argentina' },
+  { code: 'co', name: 'Colombia', url: 'https://www.google.com/search?q=colombia' },
+  { code: 'cl', name: 'Chile', url: 'https://www.google.com/search?q=Chile' },
+  { code: 'pe', name: 'Perú', url: 'https://www.google.com/search?q=Peru' },
+  { code: 've', name: 'Venezuela', url: 'https://www.google.com/search?q=Venezuela' },
+  { code: 'ec', name: 'Ecuador', url: 'https://www.google.com/search?q=Ecuador' },
+  { code: 'bo', name: 'Bolivia', url: 'https://www.google.com/search?q=Bolivia' },
+  { code: 'py', name: 'Paraguay', url: 'https://www.google.com/search?q=Paraguay' },
+  { code: 'uy', name: 'Uruguay', url: 'https://www.google.com/search?q=Uruguay' },
+  { code: 'gt', name: 'Guatemala', url: 'https://www.google.com/search?q=Guatemala' },
+  { code: 'hn', name: 'Honduras', url: 'https://www.google.com/search?q=Honduras' },
+  { code: 'sv', name: 'El Salvador', url: 'https://www.google.com/search?q=El+Salvador' },
+  { code: 'cu', name: 'Cuba', url: 'https://www.google.com/search?q=Cuba' },
+  { code: 'do', name: 'República Dominicana', url: 'https://www.google.com/search?q=Republica+Dominicana' },
+  { code: 'pr', name: 'Puerto Rico', url: 'https://www.google.com/search?q=Puerto+Rico' },
+  { code: 'pa', name: 'Panamá', url: 'https://www.google.com/search?q=Panama' },
+  { code: 'cr', name: 'Costa Rica', url: 'https://www.google.com/search?q=Costa+Rica' },
+  { code: 'ni', name: 'Nicaragua', url: 'https://www.google.com/search?q=Nicaragua' },
+  { code: 'br', name: 'Brasil', url: 'https://www.google.com/search?q=Brasil' },
 ]
 
 const PILARES = [
@@ -194,6 +194,8 @@ const S = {
     color: '#ffffff',
     opacity: 0,
     transform: 'scale(0.8)',
+    cursor: 'pointer',
+    textDecoration: 'none',
   },
   flagImg: {
     width: '24px',
@@ -752,16 +754,29 @@ export default function Mision() {
               <SplitWords text="Unidos por instinto." innerClass="m-word-inner-gold" />
             </h2>
             <div style={S.chipsWrap}>
-              {PAIS_CHIPS.map((pais) => (
-                <span key={pais.code} className="m-chip" style={S.chip}>
+              {countries.map((country) => (
+                <a
+                  key={country.code}
+                  href={country.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="m-chip"
+                  style={S.chip}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(0, 229, 160, 0.6)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(0, 168, 107, 0.25)'
+                  }}
+                >
                   <img
-                    src={`https://flagcdn.com/24x18/${pais.code.toLowerCase()}.png`}
-                    alt={`Bandera ${pais.name}`}
+                    src={`https://flagcdn.com/24x18/${country.code}.png`}
+                    alt={`Bandera ${country.name}`}
                     style={S.flagImg}
                     loading="lazy"
                   />
-                  {pais.name}
-                </span>
+                  {country.name}
+                </a>
               ))}
             </div>
           </div>
