@@ -8,22 +8,23 @@ export default function Hero() {
   const line2Ref = useRef(null)
 
   useEffect(() => {
-    import('animejs').then(({ animate, scrambleText }) => {
-      if (!line1Ref.current || !line2Ref.current) return
+    const typewriter = (el, finalText, delay = 0) => {
+      el.textContent = ''
+      let i = 0
+      setTimeout(() => {
+        const interval = setInterval(() => {
+          el.textContent = finalText.slice(0, i) + '|'
+          i++
+          if (i > finalText.length) {
+            el.textContent = finalText
+            clearInterval(interval)
+          }
+        }, 80)
+      }, delay)
+    }
 
-      animate(line1Ref.current, {
-        innerHTML: scrambleText({ chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', cursor: '' }),
-        duration: 1200,
-        easing: 'easeOutQuad',
-      })
-
-      animate(line2Ref.current, {
-        innerHTML: scrambleText({ chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', cursor: '' }),
-        duration: 1200,
-        delay: 400,
-        easing: 'easeOutQuad',
-      })
-    })
+    if (line1Ref.current) typewriter(line1Ref.current, 'NACIMOS PARA', 300)
+    if (line2Ref.current) typewriter(line2Ref.current, 'CREAR IMPERIOS', 1400)
   }, [])
 
   const handleScroll = (id) => (e) => {
