@@ -109,7 +109,7 @@ function CubeBackground() {
     if (!container) return
 
     const elements = []
-    const count = Math.floor(Math.random() * 5) + 18
+    const count = 90
 
     for (let i = 0; i < count; i++) {
       const type = i % 3
@@ -120,31 +120,45 @@ function CubeBackground() {
       const duration = Math.random() * 14000 + 6000
       const delay = Math.random() * 4000
 
-      el.style.position = 'absolute'
-      el.style.left = `${x}%`
-      el.style.top = `${y}%`
-      el.style.pointerEvents = 'none'
-      el.style.transformStyle = 'preserve-3d'
-      el.style.background = 'transparent'
-      el.style.animation = `cube-spin ${duration}ms linear ${delay}ms infinite`
-
       if (type === 0) {
-        el.style.width = `${size}px`
-        el.style.height = `${size}px`
-        el.style.border = '1px solid rgba(78, 205, 196, 0.6)'
-        el.style.background = 'transparent'
+        el.style.cssText = `
+          position: absolute;
+          left: ${x}%;
+          top: ${y}%;
+          width: ${size}px;
+          height: ${size}px;
+          border: 1px solid rgba(78, 205, 196, 0.6);
+          background: transparent;
+          transform-style: preserve-3d;
+          animation: cube-spin ${duration}ms linear ${delay}ms infinite;
+          pointer-events: none;
+        `
       } else if (type === 1) {
-        el.style.width = '0'
-        el.style.height = '0'
-        el.style.border = 'none'
-        el.style.borderLeft = `${size / 2}px solid transparent`
-        el.style.borderRight = `${size / 2}px solid transparent`
-        el.style.borderBottom = `${size}px solid rgba(201, 168, 76, 0.5)`
-        el.style.background = 'transparent'
+        el.style.cssText = `
+          position: absolute;
+          left: ${x}%;
+          top: ${y}%;
+          width: 0;
+          height: 0;
+          border-left: ${size / 2}px solid transparent;
+          border-right: ${size / 2}px solid transparent;
+          border-bottom: ${size}px solid rgba(201, 168, 76, 0.45);
+          background: transparent;
+          animation: cube-spin ${duration}ms linear ${delay}ms infinite;
+          pointer-events: none;
+        `
       } else {
-        el.style.color = 'rgba(100, 160, 255, 0.7)'
-        el.style.fontSize = `${size * 0.6}px`
-        el.style.userSelect = 'none'
+        el.style.cssText = `
+          position: absolute;
+          left: ${x}%;
+          top: ${y}%;
+          color: rgba(100, 160, 255, 0.7);
+          font-size: ${size * 0.6}px;
+          background: transparent;
+          user-select: none;
+          animation: cube-spin ${duration}ms linear ${delay}ms infinite;
+          pointer-events: none;
+        `
         el.textContent = '✦'
       }
 
