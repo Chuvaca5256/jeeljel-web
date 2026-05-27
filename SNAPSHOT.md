@@ -10,9 +10,9 @@
 |------|--------|
 | `/` | Home (landing completa) |
 | `/apps` | Stub — pendiente contenido |
-| `/ollin-deportes` | Stub — título **OLLIN DEPORTES** (fondo Macuilxochitl) |
-| `/mision` | Stub — pendiente contenido |
-| `/organizaciones` | Stub — pendiente contenido |
+| `/ollin-deportes` | Stub — título **OLLIN DEPORTES** (renombrado desde `/hub-bionico`, redirect 301 activo) — fondo mosaico Macuilxochitl |
+| `/mision` | Stub — pendiente contenido — fondo mosaico Tlaloc |
+| `/organizaciones` | Completa — 5 causas: PETA, UNESCO, Cruz Roja, UNICEF, WWF — fondo mosaico Dios Tupa — tarjetas semitransparentes |
 | `/contacto` | Stub — pendiente contenido |
 
 **Navbar:** APPS · OLLIN DEPORTES · MISIÓN · ORGANIZACIONES · CONTACTO
@@ -30,7 +30,18 @@
   - `opacity: 0.08` (`--mosaico-opacity`)
 - **Sin** capas de `fondo_pagina_web1.png` / `fondo_pagina_web2.png` ni overlay `body::after`
 - Secciones con fondo transparente para que el mosaico se vea en toda la página
-- Archivos extra en `src/assets/mosaicos/` (Dios, Tlaloc, etc.) **no usados** en CSS actual
+- **Favicon:** `public/favicon.png` (logo `Logo_JeelJel_sin_fondo.png`)
+
+## Mosaicos por página
+
+| Archivo | Uso |
+|---------|-----|
+| `Cuculcan.png` | Home (`body::before` global) |
+| `Dios_Tupa.png` | `/organizaciones` (padding 80px aplicado) |
+| `Macuilxochitl.png` | `/ollin-deportes` (padding 80px aplicado) |
+| `Tlaloc.png` | `/mision` (padding 80px aplicado) |
+
+Cada ruta dedicada oculta el mosaico global con clase `body.page-*::before { display: none; }` en `index.css`.
 
 ## Divisor
 

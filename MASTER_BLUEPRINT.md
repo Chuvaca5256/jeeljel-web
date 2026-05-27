@@ -25,6 +25,13 @@
 - ✅ **El Ecosistema:** descripciones actualizadas en las 5 tarjetas + logos 36 px por app
 - ✅ **Countdown Ollin Deportes:** sin segundos — solo días, horas y minutos en una fila
 - ✅ **Deploy workflow corregido:** sin `ssh-keyscan`, validación de llave, reintentos rsync (5×), `workflow_dispatch`, Node 22
+- ✅ Ruta `/hub-bionico` renombrada a `/ollin-deportes` con redirect 301 en Nginx
+- ✅ Favicon actualizado con logo JeelJel Kaanab
+- ✅ Fondo mosaico Dios Tupa en `/organizaciones`
+- ✅ Fondo mosaico Macuilxochitl en `/ollin-deportes`
+- ✅ Fondo mosaico Tlaloc en `/mision`
+- ✅ Página `/organizaciones` con contenido completo: PETA, UNESCO, Cruz Roja, UNICEF, WWF
+- ✅ Tarjetas de `/organizaciones` con fondo semitransparente
 
 ## Infraestructura
 
@@ -49,9 +56,7 @@
 - [ ] Página Apps con contenido completo (Home ya tiene grid con logos)
 - [ ] Página Ollin Deportes (`/ollin-deportes`) completa con features y CTA
 - [ ] Página Misión con contenido real
-- [ ] Página Organizaciones mejorada
 - [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:`)
 - [ ] Footer global: ampliar sección de contacto si hace falta más allá del scroll desde Stats
 - [ ] Nombre latinoamericano para Virtyou
 - [ ] Rebrandear Izydra OS bajo JeelJel Kaanab
-- ✅ Ruta `/ollin-deportes` con redirect 301 desde `/hub-bionico` (Nginx)
