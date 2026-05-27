@@ -34,22 +34,23 @@ const APPS = [
     comingSoon: false,
   },
   {
-    id: 'telarana',
-    name: 'Agente Deportivo',
+    id: 'ollin-deportes',
+    name: 'Ollin Deportes',
     logo: logoTelarana,
     accent: '#f97316',
-    subtitle: 'Análisis deportivo con IA',
-    preview: 'Picks, parlays y análisis de partidos en tiempo real',
+    subtitle: 'Fútbol en vivo · Modo Apostador · IA en tiempo real',
+    preview:
+      'Mundial 2026 en campo 2D · modo apostador · IA analista — próximamente en jeeljel.com',
     description:
-      'El Agente Deportivo es el agente de análisis deportivo de Ikan Naat IA. Picks diarios, parlays, momios, análisis de fútbol, NBA, NFL y más — con datos en tiempo real y contexto latinoamericano.',
+      'Ve los partidos del Mundial 2026 en un campo 2D en tiempo real. Estadísticas de jugador, modo apostador con momios en vivo e IA analista integrada — todo desde jeeljel.com, sin pagar derechos de transmisión.',
     capabilities: [
-      'Picks diarios con datos reales',
-      'Análisis de momios y parlays',
-      'Fútbol, NBA, NFL, MLB',
-      'Datos en tiempo real vía API',
-      'Contexto LATAM',
+      'Campo 2D isométrico en tiempo real',
+      'Estadísticas granulares por jugador',
+      'Modo Apostador con momios en vivo',
+      'Narrador comunitario con rating',
+      'IA analista (Ikan Naat) conectada al partido',
     ],
-    cta: { label: 'Ir a Telaraña →', href: 'https://ikannaat.jeeljel.com' },
+    cta: { label: 'Próximamente en jeeljel.com/mundial-2026', disabled: true },
     comingSoon: false,
   },
   {
@@ -196,17 +197,30 @@ export default function Apps() {
                       ) : (
                         <>
                           <p className="apps-row-desc-text">{app.description}</p>
-                          {app.cta && (
-                            <a
-                              className="apps-row-cta"
-                              href={app.cta.href}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={stopInnerClick}
-                            >
-                              {app.cta.label}
-                            </a>
-                          )}
+                          {app.cta &&
+                            (app.cta.disabled ? (
+                              <span
+                                className="apps-row-cta"
+                                style={{
+                                  opacity: 0.55,
+                                  cursor: 'not-allowed',
+                                  pointerEvents: 'none',
+                                }}
+                                onClick={stopInnerClick}
+                              >
+                                {app.cta.label}
+                              </span>
+                            ) : (
+                              <a
+                                className="apps-row-cta"
+                                href={app.cta.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={stopInnerClick}
+                              >
+                                {app.cta.label}
+                              </a>
+                            ))}
                         </>
                       )}
                     </div>
