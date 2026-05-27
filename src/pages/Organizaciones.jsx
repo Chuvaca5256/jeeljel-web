@@ -108,6 +108,7 @@ export default function Organizaciones() {
                   className="tarjeta flex flex-col rounded-xl p-6"
                   style={{
                     borderRadius: '12px',
+                    background: 'rgba(0, 0, 0, 0.45)',
                     backgroundColor: 'rgba(0, 0, 0, 0.45)',
                     backdropFilter: 'blur(4px)',
                   }}
