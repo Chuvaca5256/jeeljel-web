@@ -64,7 +64,7 @@ const PILARES = [
   },
 ]
 
-const IMPERIOS = ['Imperio Azteca', 'Imperio Maya', 'Imperio Inca']
+const IMPERIOS = ['Imperio Azteca', 'Imperio Maya', 'Imperio Inca', 'Imperio Chimú']
 
 export default function Mission() {
   return (
