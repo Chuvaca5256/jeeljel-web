@@ -29,6 +29,70 @@ export default function Stats() {
         >
           ¿Tienes una idea?
         </p>
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: '10px',
+            margin: '24px auto',
+            maxWidth: '640px',
+          }}
+        >
+          {[
+            { code: 'mx', url: 'https://www.google.com/search?q=m%C3%A9xico' },
+            { code: 'ar', url: 'https://www.google.com/search?q=Argentina' },
+            { code: 'co', url: 'https://www.google.com/search?q=colombia' },
+            { code: 'cl', url: 'https://www.google.com/search?q=Chile' },
+            { code: 'pe', url: 'https://www.google.com/search?q=Peru' },
+            { code: 've', url: 'https://www.google.com/search?q=Venezuela' },
+            { code: 'ec', url: 'https://www.google.com/search?q=Ecuador' },
+            { code: 'bo', url: 'https://www.google.com/search?q=Bolivia' },
+            { code: 'py', url: 'https://www.google.com/search?q=Paraguay' },
+            { code: 'uy', url: 'https://www.google.com/search?q=Uruguay' },
+            { code: 'gt', url: 'https://www.google.com/search?q=Guatemala' },
+            { code: 'hn', url: 'https://www.google.com/search?q=Honduras' },
+            { code: 'sv', url: 'https://www.google.com/search?q=El+Salvador' },
+            { code: 'cu', url: 'https://www.google.com/search?q=Cuba' },
+            { code: 'do', url: 'https://www.google.com/search?q=Republica+Dominicana' },
+            { code: 'pr', url: 'https://www.google.com/search?q=Puerto+Rico' },
+            { code: 'pa', url: 'https://www.google.com/search?q=Panama' },
+            { code: 'cr', url: 'https://www.google.com/search?q=Costa+Rica' },
+            { code: 'ni', url: 'https://www.google.com/search?q=Nicaragua' },
+            { code: 'br', url: 'https://www.google.com/search?q=Brasil' },
+          ].map((c) => (
+            <a
+              key={c.code}
+              href={c.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: 'inline-block',
+                borderRadius: '4px',
+                overflow: 'hidden',
+                transition: 'transform 0.2s, opacity 0.2s',
+                opacity: 0.85,
+                cursor: 'pointer',
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = 'scale(1.15)'
+                e.currentTarget.style.opacity = '1'
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = 'scale(1)'
+                e.currentTarget.style.opacity = '0.85'
+              }}
+            >
+              <img
+                src={`https://flagcdn.com/32x24/${c.code}.png`}
+                width="32"
+                height="24"
+                alt={c.code}
+                style={{ display: 'block' }}
+              />
+            </a>
+          ))}
+        </div>
         <button
           type="button"
           onClick={scrollToContacto}
