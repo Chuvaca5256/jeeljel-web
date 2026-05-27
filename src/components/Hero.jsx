@@ -1,31 +1,13 @@
 // HERO — video del ajolote en src/assets/ajolote_final.webm
 // mix-blend-mode: screen hace desaparecer el fondo negro del video
-import { useEffect, useRef } from 'react'
 import ajoloteWebm from '../assets/ajolote_final.webm'
+import { useTypewriter } from '../hooks/useTypewriter'
 
 export default function Hero() {
-  const line1Ref = useRef(null)
-  const line2Ref = useRef(null)
-
-  useEffect(() => {
-    const typewriter = (el, finalText, delay = 0) => {
-      el.textContent = ''
-      let i = 0
-      setTimeout(() => {
-        const interval = setInterval(() => {
-          el.textContent = finalText.slice(0, i) + '|'
-          i++
-          if (i > finalText.length) {
-            el.textContent = finalText
-            clearInterval(interval)
-          }
-        }, 80)
-      }, delay)
-    }
-
-    if (line1Ref.current) typewriter(line1Ref.current, 'NACIMOS PARA', 300)
-    if (line2Ref.current) typewriter(line2Ref.current, 'CREAR IMPERIOS', 1400)
-  }, [])
+  const subtitleRef = useTypewriter(
+    'Ecosistema de tecnología latinoamericana. Cinco plataformas. Una misión.',
+    300
+  )
 
   const handleScroll = (id) => (e) => {
     e.preventDefault()
@@ -86,32 +68,23 @@ export default function Hero() {
         </div>
 
         <h1 className="text-center font-black" style={{ lineHeight: 1.1 }}>
-          <span
-            ref={line1Ref}
-            style={{ color: '#4ecdc4', fontSize: 'clamp(2.5rem, 7vw, 5rem)', display: 'block' }}
-          >
+          <span style={{ color: '#4ecdc4', fontSize: 'clamp(2.5rem, 7vw, 5rem)', display: 'block' }}>
             NACIMOS PARA
           </span>
-          <span
-            ref={line2Ref}
-            style={{ color: '#c9a84c', fontSize: 'clamp(2.5rem, 7vw, 5rem)', display: 'block' }}
-          >
+          <span style={{ color: '#c9a84c', fontSize: 'clamp(2.5rem, 7vw, 5rem)', display: 'block' }}>
             CREAR IMPERIOS
           </span>
         </h1>
 
         <p
+          ref={subtitleRef}
           className="font-dm"
           style={{
             maxWidth: '480px',
             lineHeight: '1.7',
             fontSize: 'clamp(14px, 2vw, 17px)',
           }}
-        >
-          Ecosistema de tecnología latinoamericana.
-          <br />
-          Cinco plataformas. Una misión.
-        </p>
+        />
 
         <div className="flex flex-col sm:flex-row gap-4 mt-2">
           <a

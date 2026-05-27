@@ -1,3 +1,5 @@
+import { useTypewriter } from '../hooks/useTypewriter'
+
 /*
  * ORGANIZACIONES ADMIRADAS
  * Nota: los logos reales de UNICEF, Cruz Roja, WWF y PETA se agregarán
@@ -33,6 +35,11 @@ const ORGS = [
 ]
 
 export default function Organizations() {
+  const orgRef = useTypewriter(
+    'No son socios ni aliados — son causas que creemos merecen existir.',
+    300
+  )
+
   return (
     <section
       className="pt-20 pb-6 px-6 md:px-12 md:pb-8"
@@ -49,9 +56,7 @@ export default function Organizations() {
             Organizaciones que admiramos
           </h2>
         </div>
-        <p className="font-dm text-center mb-12 text-sm">
-          No son socios ni aliados — son causas que creemos merecen existir.
-        </p>
+        <p ref={orgRef} className="font-dm text-center mb-12 text-sm" />
 
         {/* Cards horizontales */}
         <div className="flex flex-col gap-4">

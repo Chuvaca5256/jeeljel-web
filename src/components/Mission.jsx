@@ -1,3 +1,5 @@
+import { useTypewriter } from '../hooks/useTypewriter'
+
 /* ─── Iconos SVG precolombinos ─────────────────────────── */
 const PiramideIcon = () => (
   <svg width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
@@ -67,6 +69,11 @@ const PILARES = [
 const IMPERIOS = ['Imperio Azteca', 'Imperio Maya', 'Imperio Inca', 'Imperio Chimú']
 
 export default function Mission() {
+  const missionRef = useTypewriter(
+    '"Latinoamérica puede crear tecnología de clase mundial"',
+    300
+  )
+
   return (
     <section
       id="mision"
@@ -77,6 +84,7 @@ export default function Mission() {
         {/* Cita principal */}
         <div className="text-center mb-16">
           <p
+            ref={missionRef}
             className="font-cinzel font-bold leading-tight"
             style={{
               color: 'var(--color-titulo)',
@@ -85,9 +93,7 @@ export default function Mission() {
               maxWidth: '800px',
               margin: '0 auto',
             }}
-          >
-            &ldquo;Latinoamérica puede crear tecnología de clase mundial&rdquo;
-          </p>
+          />
         </div>
 
         {/* Tres pilares — 3 columnas en desktop, 1 en móvil */}

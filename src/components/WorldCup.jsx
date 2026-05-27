@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { useTypewriter } from '../hooks/useTypewriter'
 // LOGO Ollin Deportes: src/assets/Logo_JeelJel_Kanaabcon_balon_sin_fondo.png ✓
 import logoBalon from '../assets/Logo_JeelJel_Kanaabcon_balon_sin_fondo.png'
 
@@ -47,6 +48,10 @@ function CountdownBox({ value, label }) {
 }
 
 export default function WorldCup() {
+  const descRef = useTypewriter(
+    'El Mundial 2026 como nunca lo viviste — campo 2D en tiempo real, IA analista, narrador comunitario y modo apostador.',
+    300
+  )
   const [timeLeft, setTimeLeft] = useState(calcTimeLeft)
 
   useEffect(() => {
@@ -95,16 +100,14 @@ export default function WorldCup() {
             </h2>
 
             <p
+              ref={descRef}
               className="font-dm mb-8"
               style={{
                 fontSize: 'clamp(14px, 1.8vw, 17px)',
                 lineHeight: '1.7',
                 maxWidth: '500px',
               }}
-            >
-              El Mundial 2026 como nunca lo viviste — campo 2D en tiempo real,
-              IA analista, narrador comunitario y modo apostador.
-            </p>
+            />
 
             <div className="flex flex-nowrap items-start gap-3 sm:gap-5 mb-8 justify-center md:justify-start">
               <CountdownBox value={timeLeft.days}    label="Días"     />
