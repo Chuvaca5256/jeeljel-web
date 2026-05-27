@@ -91,39 +91,60 @@ const S = {
     pointerEvents: 'none',
     zIndex: 0,
   },
-  main: {
-    position: 'relative',
-    zIndex: 1,
-    display: 'flex',
-    flexDirection: 'column',
-    paddingLeft: '24px',
-    paddingRight: '24px',
-  },
-  content: {
+  slider: {
     position: 'relative',
     width: '100%',
-    maxWidth: '920px',
-    margin: '0 auto',
-    minHeight: '100vh',
-    paddingTop: '40px',
+    height: '100vh',
+    overflow: 'hidden',
+    background: '#1a0400',
   },
-  scene: {
-    display: 'flex',
+  slide: (visible) => ({
+    position: 'absolute',
+    inset: 0,
+    display: visible ? 'flex' : 'none',
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    minHeight: 'calc(100vh - 140px)',
-    paddingBottom: '80px',
-    width: '100%',
+    padding: '80px 40px 40px',
+    textAlign: 'center',
+    overflowY: 'auto',
+    zIndex: 1,
+  }),
+  header: {
+    position: 'absolute',
+    top: '80px',
+    left: 0,
+    right: 0,
+    textAlign: 'center',
+    zIndex: 10,
+    pointerEvents: 'none',
+  },
+  headerTitle: {
+    fontSize: '32px',
+    fontWeight: 700,
+    color: '#4ecdc4',
+    letterSpacing: '4px',
+    textTransform: 'uppercase',
+    marginBottom: '10px',
+    fontFamily: "'Cinzel', serif",
+    marginTop: 0,
+  },
+  headerSub: {
+    fontSize: '14px',
+    color: 'rgba(255,255,255,0.45)',
+    margin: 0,
   },
   sceneNav: {
-    marginTop: 'auto',
-    paddingTop: '32px',
+    marginTop: '32px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    gap: '18px',
-    width: '100%',
+    gap: '12px',
+    flexShrink: 0,
+  },
+  sceneDots: {
+    display: 'flex',
+    gap: '10px',
   },
   eyebrow: {
     fontFamily: "'DM Sans', sans-serif",
@@ -384,11 +405,6 @@ const S = {
     opacity: 0,
     marginTop: '16px',
   },
-  dots: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-  },
   dot: (active) => ({
     width: active ? '28px' : '10px',
     height: '10px',
@@ -423,8 +439,9 @@ const S = {
   },
   sceneCenter: {
     width: '100%',
+    maxWidth: '920px',
     textAlign: 'center',
-    minHeight: 'fit-content',
+    flexShrink: 0,
   },
 }
 
@@ -461,7 +478,7 @@ function animateWordsSelector(root, selector, staggerMs = 55) {
 export default function Mision() {
   const [current, setCurrent] = useState(0)
   const [openPilar, setOpenPilar] = useState(null)
-  const sceneRef = useRef(null)
+  const sceneRefs = useRef([])
   const timersRef = useRef([])
   const modalOverlayRef = useRef(null)
   const modalPanelRef = useRef(null)
@@ -501,19 +518,8 @@ export default function Mision() {
 
   useEffect(() => {
     document.body.classList.add('page-mision')
-    return () => {
-      document.body.classList.remove('page-mision')
-      document.body.classList.remove('mision-hide-footer')
-    }
+    return () => document.body.classList.remove('page-mision')
   }, [])
-
-  useEffect(() => {
-    if (current === 4) {
-      document.body.classList.remove('mision-hide-footer')
-    } else {
-      document.body.classList.add('mision-hide-footer')
-    }
-  }, [current])
 
   useEffect(() => {
     if (current !== 2) setOpenPilar(null)
@@ -544,7 +550,7 @@ export default function Mision() {
   }, [openPilar])
 
   useEffect(() => {
-    const root = sceneRef.current
+    const root = sceneRefs.current[current]
     if (!root) return undefined
 
     clearTimers()
@@ -701,9 +707,13 @@ export default function Mision() {
     }
   }, [current])
 
-  const renderSceneNav = () => (
+  const setSceneRef = (index) => (el) => {
+    sceneRefs.current[index] = el
+  }
+
+  const renderSceneNav = (sceneIndex) => (
     <div style={S.sceneNav}>
-      <div style={S.dots}>
+      <div style={S.sceneDots}>
         {Array.from({ length: TOTAL }, (_, i) => (
           <button
             key={i}
@@ -714,12 +724,12 @@ export default function Mision() {
           />
         ))}
       </div>
-      {current < TOTAL - 1 && (
+      {sceneIndex < 4 && (
         <button
           type="button"
-          className={current === 0 ? 'm-btn-next' : undefined}
-          style={{ ...S.btnNext, opacity: current === 0 ? 0 : 1 }}
-          onClick={() => goTo(current + 1)}
+          className={sceneIndex === 0 ? 'm-btn-next' : undefined}
+          style={{ ...S.btnNext, opacity: sceneIndex === 0 ? 0 : 1 }}
+          onClick={() => goTo(sceneIndex + 1)}
         >
           Siguiente
         </button>
@@ -727,12 +737,10 @@ export default function Mision() {
     </div>
   )
 
-  const renderScene = () => {
-    let body = null
-
-    switch (current) {
+  const renderSceneBody = (sceneIndex) => {
+    switch (sceneIndex) {
       case 0:
-        body = (
+        return (
           <div style={S.sceneCenter}>
             <p className="m-eyebrow" style={S.eyebrow}>
               Nuestra razón de existir
@@ -747,10 +755,9 @@ export default function Mision() {
             </p>
           </div>
         )
-        break
 
       case 1:
-        body = (
+        return (
           <div style={S.sceneCenter}>
             <p className="m-eyebrow" style={S.eyebrow}>
               El problema
@@ -776,10 +783,9 @@ export default function Mision() {
             </div>
           </div>
         )
-        break
 
       case 2:
-        body = (
+        return (
           <div style={{ ...S.sceneCenter, maxWidth: '900px' }}>
             <p className="m-eyebrow" style={S.eyebrow}>
               La respuesta
@@ -811,10 +817,9 @@ export default function Mision() {
             </div>
           </div>
         )
-        break
 
       case 3:
-        body = (
+        return (
           <div style={S.sceneCenter}>
             <p className="m-eyebrow" style={S.eyebrow}>
               El ecosistema
@@ -834,13 +839,12 @@ export default function Mision() {
             </div>
           </div>
         )
-        break
 
       case 4: {
         const part1 = 'No somos la copia de nada. Somos el'
         const part2 = 'original'
         const part3 = 'que estaba faltando.'
-        body = (
+        return (
           <div style={S.sceneCenter}>
             <div style={S.cierreBlock}>
               <p style={S.cierreText}>
@@ -873,29 +877,16 @@ export default function Mision() {
             </div>
           </div>
         )
-        break
       }
 
       default:
-        body = null
+        return null
     }
-
-    if (!body) return null
-
-    return (
-      <div style={S.scene}>
-        {body}
-        {renderSceneNav()}
-      </div>
-    )
   }
 
   return (
     <div style={S.page}>
       <style>{`
-        body.mision-hide-footer footer#contacto {
-          display: none;
-        }
         @media (max-width: 640px) {
           .m-chip {
             font-size: 12px !important;
@@ -911,38 +902,23 @@ export default function Mision() {
       />
       <div style={S.grid} />
 
-      <div
-        style={{
-          textAlign: 'center',
-          paddingTop: '80px',
-          paddingBottom: '8px',
-          position: 'relative',
-          zIndex: 1,
-        }}
-      >
-        <h1
-          style={{
-            fontSize: '32px',
-            fontWeight: 700,
-            color: '#4ecdc4',
-            letterSpacing: '4px',
-            textTransform: 'uppercase',
-            marginBottom: '10px',
-            fontFamily: "'Cinzel', serif",
-            marginTop: 0,
-          }}
-        >
-          Misión
-        </h1>
-        <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.45)', margin: 0 }}>
-          La razón por la que JeelJel Kaanab existe.
-        </p>
-      </div>
-
-      <div style={S.main}>
-        <div ref={sceneRef} key={current} style={S.content}>
-          {renderScene()}
+      <div style={S.slider}>
+        <div style={S.header}>
+          <h1 style={S.headerTitle}>Misión</h1>
+          <p style={S.headerSub}>La razón por la que JeelJel Kaanab existe.</p>
         </div>
+
+        {Array.from({ length: TOTAL }, (_, n) => (
+          <div
+            key={n}
+            ref={setSceneRef(n)}
+            data-scene={n}
+            style={S.slide(current === n)}
+          >
+            {renderSceneBody(n)}
+            {renderSceneNav(n)}
+          </div>
+        ))}
       </div>
 
       {openPilar !== null && (
