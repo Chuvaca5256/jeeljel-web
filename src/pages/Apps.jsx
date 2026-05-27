@@ -8,31 +8,54 @@ function CubeBackground() {
     const container = containerRef.current
     if (!container) return
     const cubes = []
-    const count = 40
+    const count = 55
 
     for (let i = 0; i < count; i++) {
-      const color =
-        i % 2 === 0 ? 'rgba(78, 205, 196, 0.6)' : 'rgba(201, 168, 76, 0.5)'
-      const cube = document.createElement('div')
+      const type = i % 3
+      const el = document.createElement('div')
       const size = Math.random() * 40 + 20
       const x = Math.random() * 100
       const y = Math.random() * 100
       const duration = Math.random() * 8000 + 6000
       const delay = Math.random() * 4000
 
-      cube.style.cssText = `
-        position: absolute;
-        width: ${size}px;
-        height: ${size}px;
-        left: ${x}%;
-        top: ${y}%;
-        border: 1px solid ${color};
-        transform-style: preserve-3d;
-        animation: cube-spin ${duration}ms linear ${delay}ms infinite;
-        pointer-events: none;
-      `
-      container.appendChild(cube)
-      cubes.push(cube)
+      if (type === 0) {
+        el.style.cssText = `
+          position: absolute;
+          width: ${size}px; height: ${size}px;
+          left: ${x}%; top: ${y}%;
+          border: 1px solid rgba(78, 205, 196, 0.6);
+          transform-style: preserve-3d;
+          animation: cube-spin ${duration}ms linear ${delay}ms infinite;
+          pointer-events: none;
+        `
+      } else if (type === 1) {
+        el.style.cssText = `
+          position: absolute;
+          width: ${size}px; height: ${size}px;
+          left: ${x}%; top: ${y}%;
+          border: 1px solid rgba(201, 168, 76, 0.6);
+          clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+          background: rgba(201, 168, 76, 0.08);
+          transform-style: preserve-3d;
+          animation: cube-spin ${duration}ms linear ${delay}ms infinite;
+          pointer-events: none;
+        `
+      } else {
+        el.style.cssText = `
+          position: absolute;
+          left: ${x}%; top: ${y}%;
+          color: rgba(100, 160, 255, 0.7);
+          font-size: ${size * 0.6}px;
+          animation: cube-spin ${duration}ms linear ${delay}ms infinite;
+          pointer-events: none;
+          user-select: none;
+        `
+        el.textContent = '✦'
+      }
+
+      container.appendChild(el)
+      cubes.push(el)
     }
 
     return () => cubes.forEach((c) => c.remove())
