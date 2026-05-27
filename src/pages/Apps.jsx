@@ -149,8 +149,8 @@ function CubeBackground() {
         `
       } else {
         el.innerHTML = `<svg width='${size}' height='${size}' viewBox='0 0 100 100' fill='none' xmlns='http://www.w3.org/2000/svg'>
-    <polygon points='50,5 61,35 95,35 68,57 79,91 50,70 21,91 32,57 5,35 39,35' 
-      stroke='rgba(100,160,255,0.5)' stroke-width='3' fill='none'/>
+    <polygon points='50,5 93,27.5 93,72.5 50,95 7,72.5 7,27.5'
+      stroke='rgba(100,160,255,0.55)' stroke-width='3' fill='none'/>
   </svg>`
         el.style.cssText = `
           position: absolute;
