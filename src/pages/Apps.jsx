@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import mosaico from '../assets/mosaicos/Viracoch.png'
 import logoIkanNaat from '../assets/Logo_con_letras_Ikan_Naat_sin_fondo.png'
+import logoTelarana from '../assets/Logo_JeelJel_Kanaabcon_balon_sin_fondo.png'
 import logoIzydra from '../assets/Logo_Izydra_OS_Sin_fondo.png'
 import logoVirtyou from '../assets/Logo_virtyou_sin_fondo.png'
 import logoInkognito from '../assets/Logo_inkognito_sin_fondo.png'
@@ -27,6 +28,44 @@ const APPS = [
       'Telaraña Deportiva',
     ],
     cta: { label: 'Entrar a Ikan Naat →', href: 'https://ikannaat.jeeljel.com' },
+    comingSoon: false,
+  },
+  {
+    id: 'telarana',
+    name: 'Telaraña Deportiva',
+    logo: logoTelarana,
+    accent: '#f97316',
+    subtitle: 'Análisis deportivo con IA',
+    preview: 'Picks, parlays y análisis de partidos en tiempo real',
+    description:
+      'La Telaraña Deportiva es el agente de análisis deportivo de Ikan Naat IA. Picks diarios, parlays, momios, análisis de fútbol, NBA, NFL y más — con datos en tiempo real y contexto latinoamericano.',
+    capabilities: [
+      'Picks diarios con datos reales',
+      'Análisis de momios y parlays',
+      'Fútbol, NBA, NFL, MLB',
+      'Datos en tiempo real vía API',
+      'Contexto LATAM',
+    ],
+    cta: { label: 'Ir a Telaraña →', href: 'https://ikannaat.jeeljel.com' },
+    comingSoon: false,
+  },
+  {
+    id: 'companeros',
+    name: 'Compañeros Virtuales',
+    logo: logoVirtyou,
+    accent: '#ec4899',
+    subtitle: 'Siempre contigo',
+    preview: 'Luna, Sofía, Mateo y más — compañía inteligente disponible 24/7',
+    description:
+      'Los compañeros virtuales de Ikan Naat IA son presencias inteligentes diseñadas para acompañarte. Conversación natural, memoria de tus preferencias, personalidades únicas y disponibles en cualquier momento.',
+    capabilities: [
+      'Luna, Sofía, Mateo y más',
+      'Conversación natural profunda',
+      'Memoria de preferencias',
+      'Personalidades únicas',
+      'Disponibles 24/7',
+    ],
+    cta: { label: 'Conocer compañeros →', href: 'https://ikannaat.jeeljel.com' },
     comingSoon: false,
   },
   {
