@@ -127,14 +127,14 @@ body.page-mision::before {
 }
 
 body.page-mision {
-  position: relative;
+  background-color: #1a0400;
 }
 
 body.page-mision::after {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: url('./assets/mosaicos/Tlaloc.png');
+  background-image: url('/src/assets/mosaicos/Tlaloc.png');
   background-repeat: repeat;
   background-size: 80px 80px;
   opacity: 0.08;

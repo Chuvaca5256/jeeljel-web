@@ -58,7 +58,7 @@ const S = {
   page: {
     position: 'relative',
     minHeight: 'auto',
-    background: '#1a0400',
+    background: 'transparent',
     color: '#ffffff',
     fontFamily: "'DM Sans', sans-serif",
   },
@@ -517,9 +517,9 @@ export default function Mision() {
   }, [])
 
   useEffect(() => {
-    document.body.classList.add('page-mision')
-    return () => document.body.classList.remove('page-mision')
-  }, [])
+    document.body.classList.add('page-mision');
+    return () => document.body.classList.remove('page-mision');
+  }, []);
 
   useEffect(() => {
     if (current !== 2) setOpenPilar(null)
