@@ -36,8 +36,8 @@ APPS EN CATÁLOGO `/apps` (5 tarjetas — **Compañeros Virtuales eliminado** de
 ✅ 01 — Ikan Naat IA (#4ecdc4) — en línea — https://ikannaat.jeeljel.com
 ⏳ 02 — Ollin Deportes (#f97316) — próximamente
 ⏳ 03 — VirtYou (#b464ff) — próximamente
-⏳ 04 — Izydra OS (#c9a84c) — próximamente
-⏳ 05 — Inkógnito (#e05555) — próximamente
+⏳ 04 — Izydra OS (#c9a84c) — próximamente — gestión operativa seguridad privada
+⏳ 05 — Inkógnito (#e05555) — próximamente — relatos adultos, tokens, swipe, live streaming
 
 ### Tarjeta 02 — Ollin Deportes (`/apps`)
 
@@ -61,6 +61,27 @@ APPS EN CATÁLOGO `/apps` (5 tarjetas — **Compañeros Virtuales eliminado** de
 - **Repo propio:** https://github.com/Chuvaca5256/Virtyou
 - **Deploy provisional:** https://virtyou.vercel.app (solo documentación interna — **no publicar en jeeljel.com**)
 - **CTA:** deshabilitado (`Próximamente →`, sin enlace externo)
+
+### Tarjeta 04 — Izydra OS (`/apps`)
+
+- **Nombre:** Izydra OS
+- **Tagline:** Gestión operativa de élite
+- **Color acento:** `#c9a84c`
+- **Estado:** Próximamente
+- **Logo:** `Logo_Izydra_OS_Sin_fondo.png`
+- **Features:** Control de turnos, rondines QR, asistencias exportables, chat encriptado, radio táctica, acceso por roles, gestión de clientes, cierre de sesión instantáneo
+- **CTA:** deshabilitado
+
+### Tarjeta 05 — Inkógnito (`/apps`)
+
+- **Nombre:** Inkógnito
+- **Tagline:** Relatos sin censura
+- **Color acento:** `#e05555`
+- **Estado:** Próximamente
+- **Logo:** `Logo_inkognito_sin_fondo.png`
+- **Descripción:** Plataforma tipo Tinder + OnlyFans para adultos. Relatos narrativos sin censura, economía de tokens, swipe de contenido, confesionario anónimo, live streaming y mensajes premium entre lectores y creadores.
+- **Repo:** github.com/Chuvaca5256/inkognito-app
+- **CTA:** deshabilitado
 
 ARCHIVOS CLAVE:
 - Componente: src/pages/Apps.jsx
