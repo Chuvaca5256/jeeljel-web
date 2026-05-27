@@ -145,3 +145,8 @@ body.page-mision::after {
   pointer-events: none;
   z-index: 0;
 }
+
+@keyframes cube-spin {
+  0%   { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+  100% { transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg); }
+}
