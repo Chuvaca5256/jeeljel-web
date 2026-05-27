@@ -12,12 +12,11 @@ function pad(n) {
 
 function calcTimeLeft() {
   const diff = TARGET - new Date()
-  if (diff <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 }
+  if (diff <= 0) return { days: 0, hours: 0, minutes: 0 }
   return {
     days:    Math.floor(diff / (1000 * 60 * 60 * 24)),
     hours:   Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
     minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
-    seconds: Math.floor((diff % (1000 * 60)) / 1000),
   }
 }
 
@@ -51,7 +50,7 @@ export default function WorldCup() {
   const [timeLeft, setTimeLeft] = useState(calcTimeLeft)
 
   useEffect(() => {
-    const id = setInterval(() => setTimeLeft(calcTimeLeft()), 1000)
+    const id = setInterval(() => setTimeLeft(calcTimeLeft()), 60_000)
     return () => clearInterval(id)
   }, [])
 
@@ -107,7 +106,7 @@ export default function WorldCup() {
               IA analista, narrador comunitario y modo apostador.
             </p>
 
-            <div className="flex items-start gap-3 sm:gap-5 mb-8 flex-wrap justify-center md:justify-start">
+            <div className="flex flex-nowrap items-start gap-3 sm:gap-5 mb-8 justify-center md:justify-start">
               <CountdownBox value={timeLeft.days}    label="Días"     />
               <div
                 className="font-cinzel font-bold text-3xl self-start mt-4"
@@ -123,13 +122,6 @@ export default function WorldCup() {
                 :
               </div>
               <CountdownBox value={timeLeft.minutes} label="Minutos"  />
-              <div
-                className="font-cinzel font-bold text-3xl self-start mt-4"
-                style={{ color: 'var(--color-titulo)', opacity: 0.5 }}
-              >
-                :
-              </div>
-              <CountdownBox value={timeLeft.seconds} label="Segundos" />
             </div>
 
             <button
