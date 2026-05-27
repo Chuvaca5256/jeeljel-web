@@ -86,9 +86,25 @@ const APPS = [
     name: 'VirtYou',
     logo: logoVirtyou,
     accent: '#b464ff',
-    subtitle: 'Tu identidad digital',
-    preview: 'Próximamente — tu avatar e identidad digital inteligente',
-    comingSoon: true,
+    subtitle: 'Tu identidad digital, siempre contigo',
+    preview:
+      'Tarjeta digital dinámica con QR, módulos de vida cotidiana y ficha médica incluida',
+    description:
+      'VirtYou es tu tarjeta de representación digital: compártela con un QR o NFC, lleva tu ficha médica siempre a la mano y organiza tu vida con módulos para finanzas, salud, hogar, vehículo y más. Próximamente: crea y envía invitaciones digitales para cualquier evento — también disponibles en tarjeta NFC física. Pago único, sin suscripciones.',
+    capabilities: [
+      '🪪 Tarjeta digital compartible por QR y NFC',
+      '🩺 Ficha Médica incluida gratis — tipo de sangre, alergias y emergencias',
+      '💸 Panel Economía — resumen consolidado de todos tus gastos',
+      '🛒 Lista de Compras e inventario de despensa en tiempo real',
+      '🏥 Panel Salud — historial, medicamentos y citas',
+      '🐾 Módulo Mascotas — vacunas, citas y control de alimento',
+      '🚗 Panel Vehículo — mantenimiento, niveles y reparaciones',
+      '🎯 Metas y Ahorro — objetivos visuales y fondo de emergencia',
+      '📅 Agenda Familiar con recordatorios y notificaciones',
+      '🎉 Invitaciones digitales — crea y envía invitaciones para cualquier evento, también en tarjeta NFC física',
+    ],
+    cta: { label: 'Próximamente →', disabled: true },
+    comingSoon: false,
   },
   {
     id: 'inkognito',
