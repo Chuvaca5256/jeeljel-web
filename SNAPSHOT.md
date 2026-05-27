@@ -28,18 +28,29 @@ Cada app es un objeto en el array `apps[]` dentro de Apps.jsx con esta estructur
 REGLAS DE CONTENIDO:
 - NUNCA mencionar motores de IA externos (Flux, Luma, GPT, Claude, Gemini, DeepSeek, etc.)
 - Describir la funcionalidad, no la tecnología detrás
-- El nombre de la sección interna es 'Agente Deportivo', no 'Telaraña Deportiva' (en jeeljel.com)
-- Apps próximamente: ctaUrl: null, descripcion e capacidades con texto 'Próximamente'
+- Apps próximamente: CTA deshabilitado (`cta.disabled: true`), sin enlace activo
+- **Ollin Deportes** (tarjeta 02 en `/apps`) es un **producto independiente** de jeeljel.com — NO es un agente dentro de Ikan Naat IA
+- El **Agente de Apuestas** (slug `telarana` / capacidad dentro de Ikan Naat IA) sigue viviendo **dentro de Ikan Naat** sin cambios
 
-APPS COMPLETADAS:
-✅ 01 — Ikan Naat IA (#4ecdc4) — https://ikannaat.jeeljel.com
-
-APPS PENDIENTES (mismo patrón):
-⏳ 02 — Agente Deportivo (#f97316)
+APPS EN CATÁLOGO `/apps`:
+✅ 01 — Ikan Naat IA (#4ecdc4) — en línea — https://ikannaat.jeeljel.com
+⏳ 02 — Ollin Deportes (#f97316) — tarjeta completa, producto próximamente — https://jeeljel.com/ollin-deportes
 ⏳ 03 — Compañeros Virtuales (#ec4899)
 ⏳ 04 — Izydra OS (#c9a84c) — próximamente
 ⏳ 05 — VirtYou (#b464ff) — próximamente
 ⏳ 06 — Inkógnito (#e05555) — próximamente
+
+### Tarjeta 02 — Ollin Deportes (`/apps`)
+
+- **Nombre:** Ollin Deportes (renombrada desde «Agente Deportivo» en el catálogo)
+- **Tagline:** Fútbol en vivo · Modo Apostador · IA en tiempo real
+- **Color acento:** `#f97316`
+- **Estado:** Próximamente (producto independiente en desarrollo, no en línea)
+- **URL destino:** `jeeljel.com/ollin-deportes`
+- **CTA texto:** ¡Ingresa aquí! (botón deshabilitado, coming soon)
+- **Logo:** ajolote con balón — `Logo_JeelJel_Kanaabcon_balon_sin_fondo.png`
+- **Features:** Campo 2D isométrico en tiempo real · Estadísticas granulares por jugador · Modo Apostador con momios en vivo · Narrador comunitario con rating · IA analista (Ikan Naat) conectada al partido
+- **Stack planeado:** React + Vite + Tailwind + PixiJS + Socket.io + Node.js + Redis + Docker + API-Football Ultra ($29/mes)
 
 ARCHIVOS CLAVE:
 - Componente: src/pages/Apps.jsx
@@ -56,7 +67,7 @@ ARCHIVOS CLAVE:
 | Ruta | Estado |
 |------|--------|
 | `/` | Home (landing completa) |
-| `/apps` | Hero con cubos wireframe animados (turquesa), triángulos dorados y estrellas azules en fondo full-page |
+| `/apps` | Catálogo expandible (6 apps) + fondo mosaico Viracoch + 90 formas wireframe SVG (cuadrados turquesa, triángulos dorados, hexágonos azules) |
 | `/ollin-deportes` | Stub — título **OLLIN DEPORTES** (renombrado desde `/hub-bionico`, redirect 301 activo) — fondo mosaico Macuilxochitl |
 | `/mision` | Stub — pendiente contenido — fondo mosaico Tlaloc |
 | `/organizaciones` | Completa — 5 causas: PETA, UNESCO, Cruz Roja, UNICEF, WWF — fondo mosaico Dios Tupa — tarjetas semitransparentes |
@@ -231,7 +242,7 @@ El servidor tiene **DOS sitios** corriendo simultáneamente:
 ## 🏟️ OLLIN DEPORTES — DOC-JEL-2026-001
 
 - **Nombre en app:** Ollin Deportes (renombrado desde Hub Biónico Deportivo)
-- **URL final:** `jeeljel.com/mundial-2026`
+- **URL final:** `jeeljel.com/ollin-deportes`
 - **Deadline:** 11 de junio de 2026
 - **Mascota:** Ajolote JeelJel con balón (`Logo_JeelJel_Kanaabcon_balon_sin_fondo.png`)
 - **Qué es:** Web app dentro de jeeljel.com para seguir partidos del Mundial 2026 en tiempo real con campo 2D isométrico (PixiJS, sin copyright), modo apostador, stats granulares por jugador (pases, faltas, tarjetas, tiros, corners, posesión), narrador comunitario con micrófono, chat en vivo (Supabase), IA analista Ikan Naat conectada a datos en vivo, y archivo post-partido.

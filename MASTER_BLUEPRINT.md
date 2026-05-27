@@ -57,7 +57,18 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - Solo una fila abierta a la vez
 - Fuente Cinzel para títulos
 - REGLA: nunca mencionar motores externos de IA en el contenido
-- Para agregar una app nueva: agregar objeto al array `apps[]` en Apps.jsx siguiendo el patrón del SNAPSHOT
+- Para agregar una app nueva: agregar objeto al array `APPS` en Apps.jsx siguiendo el patrón del SNAPSHOT
+- **Fondo:** `CubeBackground` — 90 elementos wireframe SVG (cuadrados, triángulos, hexágonos), animación `cube-spin`
+
+**Tarjeta 02 — Ollin Deportes**
+- Renombrada de «Agente Deportivo» a **Ollin Deportes** en el catálogo
+- Tagline: Fútbol en vivo · Modo Apostador · IA en tiempo real
+- Acento `#f97316` · Logo ajolote con balón
+- Estado: Próximamente · URL destino: `jeeljel.com/ollin-deportes`
+- CTA: **¡Ingresa aquí!** (deshabilitado)
+- Features: campo 2D, stats por jugador, modo apostador, narrador comunitario, IA analista Ikan Naat
+- Stack planeado: React + Vite + Tailwind + PixiJS + Socket.io + Node.js + Redis + Docker + API-Football Ultra ($29/mes)
+- **Aclaración:** Ollin Deportes es producto **independiente** de jeeljel.com — NO es un agente dentro de Ikan Naat IA. El Agente de Apuestas (slug `telarana`) permanece dentro de Ikan Naat sin cambios.
 
 ## Pendientes próxima sesión
 
