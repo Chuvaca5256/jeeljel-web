@@ -47,9 +47,19 @@ jobs:
       - name: Verificar conexión VPS
         run: |
           set -euo pipefail
-          SSH_OPTS="-i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=60 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
-          ssh ${SSH_OPTS} root@187.77.196.169 \
-            "mkdir -p /var/www/jeeljel-web/dist && df -h /var/www && echo OK"
+          SSH_OPTS="-i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=30 -o ServerAliveInterval=15 -o ServerAliveCountMax=4"
+          for attempt in 1 2 3 4 5; do
+            echo "Verificación SSH intento ${attempt}/5..."
+            if ssh ${SSH_OPTS} root@187.77.196.169 \
+              "mkdir -p /var/www/jeeljel-web/dist && df -h /var/www && echo OK"; then
+              echo "Conexión VPS OK."
+              exit 0
+            fi
+            echo "SSH falló en intento ${attempt}."
+            sleep 15
+          done
+          echo "::error::No se pudo conectar al VPS después de 5 intentos."
+          exit 1
 
       - name: Deploy al VPS
         run: |
