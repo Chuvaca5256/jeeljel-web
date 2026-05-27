@@ -29,17 +29,20 @@ const PILARES = [
   {
     num: '01',
     titulo: 'Demostrar',
-    desc: 'Que la tecnología latinoamericana compite al más alto nivel global.',
+    tagline: 'La tecnología latinoamericana compite al más alto nivel global.',
+    desc: 'Durante décadas se asumió que lo tecnológico de calidad venía de afuera. JeelJel existe para romper ese mito con hechos: plataformas bien diseñadas, bien construidas y pensadas desde adentro. Cada línea de código es una respuesta a quienes creyeron que no podíamos.',
   },
   {
     num: '02',
     titulo: 'Unir',
-    desc: 'Un ecosistema que conecta talento, ideas y territorios sin fronteras.',
+    tagline: 'Un ecosistema que conecta a todos los países latinoamericanos sin fronteras.',
+    desc: 'Latinoamérica comparte idioma, historia y cultura, pero rara vez construye junta. JeelJel es el puente digital que cambia eso. No buscamos competir entre nosotros — buscamos sumar. El talento latino no tiene frontera, y tampoco debería tenerla nuestra tecnología.',
   },
   {
     num: '03',
     titulo: 'Empoderar',
-    desc: 'Herramientas para que cada creador construya su propio imperio.',
+    tagline: 'Herramientas para que cada creador latinoamericano construya su propio imperio.',
+    desc: 'El emprendedor latino tiene ideas, tiene hambre y tiene creatividad. Lo que le ha faltado son las herramientas correctas a su alcance. JeelJel Kaanab construye esas herramientas — no para Silicon Valley, sino para el fundador que opera desde cualquier rincón de Latinoamérica.',
   },
 ]
 
@@ -187,13 +190,19 @@ const S = {
     marginTop: '32px',
   },
   pillarCard: {
-    padding: '24px',
+    width: '100%',
+    padding: '28px 20px',
     borderRadius: '12px',
     border: '1px solid rgba(0, 168, 107, 0.25)',
     backgroundColor: 'rgba(0, 0, 0, 0.45)',
     backdropFilter: 'blur(4px)',
     opacity: 0,
     transform: 'translateY(24px)',
+    cursor: 'pointer',
+    textAlign: 'center',
+    font: 'inherit',
+    color: 'inherit',
+    transition: 'border-color 0.2s ease, background-color 0.2s ease',
   },
   pillarsGrid: {
     display: 'grid',
@@ -215,13 +224,87 @@ const S = {
     fontSize: '17px',
     color: '#4ecdc4',
     letterSpacing: '1px',
-    marginBottom: '10px',
+    margin: 0,
   },
-  pillarDesc: {
+  modalOverlay: {
+    position: 'fixed',
+    inset: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.75)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '24px',
+    zIndex: 100,
+    opacity: 0,
+  },
+  modalPanel: {
+    position: 'relative',
+    width: '100%',
+    maxWidth: '520px',
+    maxHeight: '85vh',
+    overflowY: 'auto',
+    backgroundColor: '#0d0200',
+    border: '1px solid rgba(0, 229, 160, 0.3)',
+    borderRadius: '20px',
+    padding: '40px 32px 32px',
+    opacity: 0,
+    transform: 'scale(0.85)',
+  },
+  modalClose: {
+    position: 'absolute',
+    top: '16px',
+    right: '16px',
+    width: '36px',
+    height: '36px',
+    borderRadius: '8px',
+    border: '1px solid rgba(0, 168, 107, 0.25)',
+    background: 'rgba(0, 0, 0, 0.4)',
+    color: '#4ecdc4',
+    fontSize: '20px',
+    lineHeight: 1,
+    cursor: 'pointer',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: 0,
+  },
+  modalNum: {
+    fontFamily: "'Cinzel', serif",
+    fontWeight: 700,
+    fontSize: '56px',
+    color: '#c9a84c',
+    lineHeight: 1,
+    marginBottom: '8px',
+  },
+  modalTitle: {
+    fontFamily: "'Cinzel', serif",
+    fontWeight: 700,
+    fontSize: '22px',
+    color: '#4ecdc4',
+    textTransform: 'uppercase',
+    letterSpacing: '2px',
+    margin: '0 0 20px',
+  },
+  modalDivider: {
+    width: '56px',
+    height: '2px',
+    backgroundColor: '#c9a84c',
+    marginBottom: '20px',
+    opacity: 0.85,
+  },
+  modalTagline: {
     fontFamily: "'DM Sans', sans-serif",
-    fontSize: '14px',
-    lineHeight: 1.65,
-    color: '#ffffff',
+    fontSize: '16px',
+    lineHeight: 1.6,
+    color: '#00e5a0',
+    margin: '0 0 16px',
+    fontWeight: 500,
+  },
+  modalDesc: {
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: '15px',
+    lineHeight: 1.75,
+    color: 'rgba(255, 255, 255, 0.75)',
     margin: 0,
   },
   statsWrap: {
@@ -375,8 +458,11 @@ function animateWordsSelector(root, selector, staggerMs = 55) {
 
 export default function Mision() {
   const [current, setCurrent] = useState(0)
+  const [openPilar, setOpenPilar] = useState(null)
   const sceneRef = useRef(null)
   const timersRef = useRef([])
+  const modalOverlayRef = useRef(null)
+  const modalPanelRef = useRef(null)
 
   const clearTimers = () => {
     timersRef.current.forEach((id) => {
@@ -387,13 +473,62 @@ export default function Mision() {
   }
 
   const goTo = useCallback((n) => {
+    setOpenPilar(null)
     setCurrent(Math.max(0, Math.min(n, TOTAL - 1)))
+  }, [])
+
+  const openPilarModal = useCallback((index) => {
+    setOpenPilar(index)
+  }, [])
+
+  const closePilarModal = useCallback(() => {
+    const overlay = modalOverlayRef.current
+    const panel = modalPanelRef.current
+    if (!overlay || !panel) {
+      setOpenPilar(null)
+      return
+    }
+    animate(overlay, { opacity: [1, 0], duration: 280, ease: 'outExpo' })
+    animate(panel, {
+      opacity: [1, 0],
+      scale: [1, 0.9],
+      duration: 280,
+      ease: 'outExpo',
+    }).then(() => setOpenPilar(null))
   }, [])
 
   useEffect(() => {
     document.body.classList.add('page-mision')
     return () => document.body.classList.remove('page-mision')
   }, [])
+
+  useEffect(() => {
+    if (current !== 2) setOpenPilar(null)
+  }, [current])
+
+  useEffect(() => {
+    if (openPilar === null) return undefined
+
+    const overlay = modalOverlayRef.current
+    const panel = modalPanelRef.current
+    if (!overlay || !panel) return undefined
+
+    overlay.style.opacity = '0'
+    panel.style.opacity = '0'
+    panel.style.transform = 'scale(0.85)'
+
+    const frame = requestAnimationFrame(() => {
+      animate(overlay, { opacity: [0, 1], duration: 400, ease: 'outExpo' })
+      animate(panel, {
+        opacity: [0, 1],
+        scale: [0.85, 1],
+        duration: 400,
+        ease: 'cubicBezier(0.34, 1.56, 0.64, 1)',
+      })
+    })
+
+    return () => cancelAnimationFrame(frame)
+  }, [openPilar])
 
   useEffect(() => {
     const root = sceneRef.current
@@ -618,12 +753,25 @@ export default function Mision() {
               <SplitWords text="JeelJel nació para demostrar que eso es mentira." />
             </h2>
             <div style={S.pillarsGrid}>
-              {PILARES.map((p) => (
-                <div key={p.num} className="m-pillar" style={S.pillarCard}>
+              {PILARES.map((p, index) => (
+                <button
+                  key={p.num}
+                  type="button"
+                  className="m-pillar"
+                  style={S.pillarCard}
+                  onClick={() => openPilarModal(index)}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(0, 229, 160, 0.45)'
+                    e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.55)'
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.borderColor = 'rgba(0, 168, 107, 0.25)'
+                    e.currentTarget.style.backgroundColor = 'rgba(0, 0, 0, 0.45)'
+                  }}
+                >
                   <div style={S.pillarNum}>{p.num}</div>
                   <div style={S.pillarTitle}>{p.titulo}</div>
-                  <p style={S.pillarDesc}>{p.desc}</p>
-                </div>
+                </button>
               ))}
             </div>
           </div>
@@ -765,6 +913,40 @@ export default function Mision() {
           )}
         </div>
       </div>
+
+      {openPilar !== null && (
+        <div
+          ref={modalOverlayRef}
+          style={S.modalOverlay}
+          role="presentation"
+          onClick={closePilarModal}
+        >
+          <div
+            ref={modalPanelRef}
+            style={S.modalPanel}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="pilar-modal-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              style={S.modalClose}
+              onClick={closePilarModal}
+              aria-label="Cerrar"
+            >
+              ×
+            </button>
+            <div style={S.modalNum}>{PILARES[openPilar].num}</div>
+            <h3 id="pilar-modal-title" style={S.modalTitle}>
+              {PILARES[openPilar].titulo}
+            </h3>
+            <div style={S.modalDivider} />
+            <p style={S.modalTagline}>{PILARES[openPilar].tagline}</p>
+            <p style={S.modalDesc}>{PILARES[openPilar].desc}</p>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
