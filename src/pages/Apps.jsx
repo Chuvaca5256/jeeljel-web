@@ -138,7 +138,7 @@ export default function Apps() {
             return (
               <li
                 key={app.id}
-                className={`apps-row${isOpen ? ' apps-row--open' : ''}`}
+                className={`apps-row${isOpen ? ' apps-row--open open' : ''}`}
                 onClick={() => handleRowClick(app.id)}
                 role="button"
                 tabIndex={0}
@@ -168,9 +168,23 @@ export default function Apps() {
                         <p className="apps-row-subtitle">{app.subtitle}</p>
                       </div>
                     </div>
-                    <span className="apps-row-toggle" aria-hidden>
-                      +
-                    </span>
+                    {!isOpen ? (
+                      <span className="apps-row-toggle" aria-hidden>
+                        +
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        className="apps-row-close"
+                        aria-label="Cerrar"
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          handleRowClick(app.id)
+                        }}
+                      >
+                        ×
+                      </button>
+                    )}
                   </div>
 
                   <div className="apps-row-right">
@@ -181,7 +195,7 @@ export default function Apps() {
                         <p className="apps-row-soon">Próximamente</p>
                       ) : (
                         <>
-                          <p style={{ margin: 0 }}>{app.description}</p>
+                          <p className="apps-row-desc-text">{app.description}</p>
                           {app.cta && (
                             <a
                               className="apps-row-cta"
