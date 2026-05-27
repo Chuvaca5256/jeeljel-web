@@ -50,7 +50,7 @@ const APPS = [
       'Narrador comunitario con rating',
       'IA analista (Ikan Naat) conectada al partido',
     ],
-    cta: { label: 'Próximamente en jeeljel.com/ollin-deportes', disabled: true },
+    cta: { label: '¡Ingresa aquí!', disabled: true },
     comingSoon: false,
   },
   {
