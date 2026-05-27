@@ -8,9 +8,11 @@ function CubeBackground() {
     const container = containerRef.current
     if (!container) return
     const cubes = []
-    const count = 25
+    const count = 40
 
     for (let i = 0; i < count; i++) {
+      const color =
+        i % 2 === 0 ? 'rgba(78, 205, 196, 0.6)' : 'rgba(201, 168, 76, 0.5)'
       const cube = document.createElement('div')
       const size = Math.random() * 40 + 20
       const x = Math.random() * 100
@@ -24,7 +26,7 @@ function CubeBackground() {
         height: ${size}px;
         left: ${x}%;
         top: ${y}%;
-        border: 1px solid rgba(78, 205, 196, 0.3);
+        border: 1px solid ${color};
         transform-style: preserve-3d;
         animation: cube-spin ${duration}ms linear ${delay}ms infinite;
         pointer-events: none;
@@ -40,7 +42,7 @@ function CubeBackground() {
     <div
       ref={containerRef}
       style={{
-        position: 'absolute',
+        position: 'fixed',
         inset: 0,
         overflow: 'hidden',
         pointerEvents: 'none',
@@ -71,6 +73,8 @@ export default function Apps() {
         }}
       />
 
+      <CubeBackground />
+
       <div
         style={{
           position: 'relative',
@@ -79,10 +83,7 @@ export default function Apps() {
           padding: '120px 40px 40px',
         }}
       >
-        <div style={{ position: 'relative', minHeight: '200px' }}>
-          <CubeBackground />
-          <div style={{ position: 'relative', zIndex: 1 }}>
-            <h1
+        <h1
               style={{
                 textAlign: 'center',
                 fontFamily: "'Cinzel', serif",
@@ -109,8 +110,6 @@ export default function Apps() {
             >
               El ecosistema JeelJel Kaanab.
             </p>
-          </div>
-        </div>
       </div>
     </div>
   )
