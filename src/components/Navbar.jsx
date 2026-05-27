@@ -4,7 +4,7 @@ import logoStatic from '../assets/Logo_JeelJel_sin_fondo.png'
 
 const NAV_LINKS = [
   { label: 'APPS', to: '/apps' },
-  { label: 'OLLIN DEPORTES', to: '/hub-bionico' },
+  { label: 'OLLIN DEPORTES', to: '/ollin-deportes' },
   { label: 'MISIÓN', to: '/mision' },
   { label: 'ORGANIZACIONES', to: '/organizaciones' },
   { label: 'CONTACTO', to: '/contacto' },

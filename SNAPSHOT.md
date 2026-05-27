@@ -10,7 +10,7 @@
 |------|--------|
 | `/` | Home (landing completa) |
 | `/apps` | Stub — pendiente contenido |
-| `/hub-bionico` | Stub — título **OLLIN DEPORTES** (ruta sin cambiar) |
+| `/ollin-deportes` | Stub — título **OLLIN DEPORTES** (fondo Macuilxochitl) |
 | `/mision` | Stub — pendiente contenido |
 | `/organizaciones` | Stub — pendiente contenido |
 | `/contacto` | Stub — pendiente contenido |
@@ -74,7 +74,7 @@ Reemplazó la cuadrícula «5 Plataformas · 30+ Agentes IA · …». Ahora mues
 ## Ollin Deportes — sección Home (`src/components/WorldCup.jsx`)
 
 - Título de sección: **Ollin Deportes** (antes «Hub Biónico Deportivo» en toda la app)
-- Logo clicable → `/hub-bionico`
+- Logo clicable → `/ollin-deportes`
 - **Countdown:** solo Días, Horas y Minutos (sin Segundos); una fila con `flex-nowrap`
 - Actualización cada 60 s; deadline: 11 junio 2026, 23:00 UTC
 

@@ -4,8 +4,8 @@ import Macuilxochitl from '../assets/mosaicos/Macuilxochitl.png'
 
 export default function HubBionico() {
   useEffect(() => {
-    document.body.classList.add('page-hub-bionico')
-    return () => document.body.classList.remove('page-hub-bionico')
+    document.body.classList.add('page-ollin-deportes')
+    return () => document.body.classList.remove('page-ollin-deportes')
   }, [])
 
   return (

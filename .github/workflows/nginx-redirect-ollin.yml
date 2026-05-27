@@ -1,0 +1,49 @@
+name: Nginx redirect hub-bionico → ollin-deportes
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/nginx-redirect-ollin.yml'
+
+jobs:
+  nginx-redirect:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Agregar redirect 301 en jeeljel-landing
+        env:
+          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
+        run: |
+          set -euo pipefail
+          mkdir -p ~/.ssh
+          printf '%s\n' "${VPS_SSH_KEY}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          SSH_OPTS="-i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -o ConnectTimeout=60"
+
+          ssh ${SSH_OPTS} root@187.77.196.169 << 'ENDSSH'
+          set -e
+          CONF="/etc/nginx/sites-enabled/jeeljel-landing"
+
+          if grep -q 'location = /hub-bionico' "$CONF"; then
+            echo "Redirect ya existe en $CONF"
+          else
+            cp "$CONF" "${CONF}.bak.$(date +%Y%m%d%H%M%S)"
+            awk '
+              /^[[:space:]]*location \// && !done {
+                print "    location = /hub-bionico {"
+                print "        return 301 /ollin-deportes;"
+                print "    }"
+                print ""
+                done = 1
+              }
+              { print }
+            ' "$CONF" > "${CONF}.tmp" && mv "${CONF}.tmp" "$CONF"
+            echo "Redirect agregado antes de location /"
+          fi
+
+          nginx -t
+          systemctl reload nginx
+          echo "Nginx recargado OK"
+          ENDSSH

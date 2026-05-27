@@ -144,7 +144,7 @@ export default function WorldCup() {
             style={{ width: 'clamp(200px, 30vw, 320px)' }}
           >
             <Link
-              to="/hub-bionico"
+              to="/ollin-deportes"
               aria-label="Ir a Ollin Deportes"
               className="flex items-center justify-center rounded-full no-underline transition-transform duration-200"
               style={{
