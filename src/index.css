@@ -121,3 +121,7 @@ body.page-organizaciones::before {
 body.page-ollin-deportes::before {
   display: none;
 }
+
+body.page-mision::before {
+  display: none;
+}
