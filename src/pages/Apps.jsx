@@ -50,7 +50,7 @@ const APPS = [
       'Narrador comunitario con rating',
       'IA analista (Ikan Naat) conectada al partido',
     ],
-    cta: { label: 'Próximamente en jeeljel.com/mundial-2026', disabled: true },
+    cta: { label: 'Próximamente en jeeljel.com/ollin-deportes', disabled: true },
     comingSoon: false,
   },
   {
