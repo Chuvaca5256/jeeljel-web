@@ -1,0 +1,128 @@
+.legal-page {
+  position: relative;
+  min-height: 100vh;
+  background-color: #1a0400;
+}
+
+.legal-page__mosaic {
+  position: fixed;
+  inset: 0;
+  background-repeat: repeat;
+  background-size: 80px 80px;
+  opacity: 0.08;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.legal-page__content {
+  position: relative;
+  z-index: 1;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 120px 24px 64px;
+}
+
+.legal-page__title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(28px, 5vw, 36px);
+  font-weight: 600;
+  color: #4ecdc4;
+  letter-spacing: 0.12em;
+  text-align: center;
+  margin: 0 0 12px;
+}
+
+.legal-page__meta {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.65);
+  text-align: center;
+  margin: 0 0 40px;
+}
+
+.legal-page__body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  line-height: 1.75;
+  color: #ffffff;
+}
+
+.legal-page__body h2 {
+  font-family: 'Cinzel', serif;
+  font-size: 18px;
+  font-weight: 600;
+  color: #4ecdc4;
+  letter-spacing: 0.06em;
+  margin: 32px 0 12px;
+}
+
+.legal-page__body h3 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  margin: 24px 0 10px;
+}
+
+.legal-page__body p {
+  margin: 0 0 16px;
+}
+
+.legal-page__body ul {
+  margin: 0 0 16px;
+  padding-left: 1.25rem;
+}
+
+.legal-page__body li {
+  margin-bottom: 8px;
+}
+
+.legal-page__body blockquote {
+  margin: 16px 0;
+  padding: 12px 16px;
+  border-left: 3px solid #4ecdc4;
+  background: rgba(78, 205, 196, 0.06);
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.legal-page__body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 16px 0 20px;
+  font-size: 14px;
+}
+
+.legal-page__body th,
+.legal-page__body td {
+  border: 1px solid rgba(78, 205, 196, 0.25);
+  padding: 10px 12px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.legal-page__body th {
+  color: #4ecdc4;
+  font-weight: 600;
+}
+
+.legal-page__body a {
+  color: #4ecdc4;
+  text-decoration: none;
+}
+
+.legal-page__body a:hover {
+  color: #c9a84c;
+}
+
+.legal-page__body em {
+  font-style: italic;
+}
+
+.legal-page__footer-note {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(78, 205, 196, 0.2);
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+}

@@ -1,4 +1,5 @@
 // FOOTER — logo estático en src/assets/Logo_JeelJel_sin_fondo.png
+import { Link } from 'react-router-dom'
 import logoStatic from '../assets/Logo_JeelJel_sin_fondo.png'
 import Divider from './Divider'
 
@@ -39,6 +40,28 @@ export default function Footer() {
             >
               {label}
             </a>
+          ))}
+        </div>
+
+        <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+          {[
+            { label: 'Aviso de Privacidad', to: '/privacidad' },
+            { label: 'Términos de Uso', to: '/terminos' },
+          ].map(({ label, to }) => (
+            <Link
+              key={to}
+              to={to}
+              className="font-dm text-sm transition-colors duration-200 no-underline"
+              style={{ color: '#4ecdc4' }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.color = '#c9a84c'
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.color = '#4ecdc4'
+              }}
+            >
+              {label}
+            </Link>
           ))}
         </div>
 

@@ -130,6 +130,14 @@ body.page-mision::before {
   display: none;
 }
 
+body.page-legal::before {
+  display: none;
+}
+
+body.page-legal {
+  background-color: #1a0400;
+}
+
 body.page-mision {
   background-color: #1a0400;
 }

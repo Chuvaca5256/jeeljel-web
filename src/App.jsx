@@ -8,6 +8,8 @@ import HubBionico from './pages/HubBionico'
 import Mision from './pages/Mision'
 import Organizaciones from './pages/Organizaciones'
 import Contacto from './pages/Contacto'
+import Privacidad from './pages/Privacidad'
+import Terminos from './pages/Terminos'
 
 export default function App() {
   return (
@@ -22,6 +24,8 @@ export default function App() {
           <Route path="/mision" element={<Mision />} />
           <Route path="/organizaciones" element={<Organizaciones />} />
           <Route path="/contacto" element={<Contacto />} />
+          <Route path="/privacidad" element={<Privacidad />} />
+          <Route path="/terminos" element={<Terminos />} />
         </Routes>
       </main>
       <Footer />

@@ -7,7 +7,6 @@ const NAV_LINKS = [
   { label: 'OLLIN DEPORTES', to: '/ollin-deportes' },
   { label: 'MISIÓN', to: '/mision' },
   { label: 'ORGANIZACIONES', to: '/organizaciones' },
-  { label: 'CONTACTO', to: '/contacto' },
 ]
 
 const linkStyle = {
