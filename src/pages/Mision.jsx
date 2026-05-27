@@ -94,20 +94,36 @@ const S = {
   main: {
     position: 'relative',
     zIndex: 1,
-    minHeight: 'fit-content',
     display: 'flex',
     flexDirection: 'column',
-    paddingBottom: '100px',
     paddingLeft: '24px',
     paddingRight: '24px',
   },
   content: {
+    position: 'relative',
     width: '100%',
     maxWidth: '920px',
     margin: '0 auto',
-    minHeight: 'fit-content',
+    minHeight: '100vh',
     paddingTop: '40px',
-    paddingBottom: '32px',
+  },
+  scene: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 'calc(100vh - 140px)',
+    paddingBottom: '80px',
+    width: '100%',
+  },
+  sceneNav: {
+    marginTop: 'auto',
+    paddingTop: '32px',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    gap: '18px',
+    width: '100%',
   },
   eyebrow: {
     fontFamily: "'DM Sans', sans-serif",
@@ -368,20 +384,6 @@ const S = {
     opacity: 0,
     marginTop: '16px',
   },
-  navBar: {
-    position: 'fixed',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    gap: '18px',
-    paddingBottom: '32px',
-    paddingTop: '16px',
-    background: 'linear-gradient(to top, #1a0400 65%, transparent)',
-    zIndex: 2,
-  },
   dots: {
     display: 'flex',
     alignItems: 'center',
@@ -499,8 +501,19 @@ export default function Mision() {
 
   useEffect(() => {
     document.body.classList.add('page-mision')
-    return () => document.body.classList.remove('page-mision')
+    return () => {
+      document.body.classList.remove('page-mision')
+      document.body.classList.remove('mision-hide-footer')
+    }
   }, [])
+
+  useEffect(() => {
+    if (current === 4) {
+      document.body.classList.remove('mision-hide-footer')
+    } else {
+      document.body.classList.add('mision-hide-footer')
+    }
+  }, [current])
 
   useEffect(() => {
     if (current !== 2) setOpenPilar(null)
@@ -688,10 +701,38 @@ export default function Mision() {
     }
   }, [current])
 
+  const renderSceneNav = () => (
+    <div style={S.sceneNav}>
+      <div style={S.dots}>
+        {Array.from({ length: TOTAL }, (_, i) => (
+          <button
+            key={i}
+            type="button"
+            aria-label={`Escena ${i + 1}`}
+            style={S.dot(i === current)}
+            onClick={() => goTo(i)}
+          />
+        ))}
+      </div>
+      {current < TOTAL - 1 && (
+        <button
+          type="button"
+          className={current === 0 ? 'm-btn-next' : undefined}
+          style={{ ...S.btnNext, opacity: current === 0 ? 0 : 1 }}
+          onClick={() => goTo(current + 1)}
+        >
+          Siguiente
+        </button>
+      )}
+    </div>
+  )
+
   const renderScene = () => {
+    let body = null
+
     switch (current) {
       case 0:
-        return (
+        body = (
           <div style={S.sceneCenter}>
             <p className="m-eyebrow" style={S.eyebrow}>
               Nuestra razón de existir
@@ -704,19 +745,12 @@ export default function Mision() {
               Durante décadas nos enseñaron que lo extranjero es sinónimo de calidad. Que lo
               nuestro siempre queda en segundo lugar.
             </p>
-            <button
-              type="button"
-              className="m-btn-next"
-              style={{ ...S.btnNext, marginTop: '32px' }}
-              onClick={() => goTo(1)}
-            >
-              Siguiente
-            </button>
           </div>
         )
+        break
 
       case 1:
-        return (
+        body = (
           <div style={S.sceneCenter}>
             <p className="m-eyebrow" style={S.eyebrow}>
               El problema
@@ -742,9 +776,10 @@ export default function Mision() {
             </div>
           </div>
         )
+        break
 
       case 2:
-        return (
+        body = (
           <div style={{ ...S.sceneCenter, maxWidth: '900px' }}>
             <p className="m-eyebrow" style={S.eyebrow}>
               La respuesta
@@ -776,9 +811,10 @@ export default function Mision() {
             </div>
           </div>
         )
+        break
 
       case 3:
-        return (
+        body = (
           <div style={S.sceneCenter}>
             <p className="m-eyebrow" style={S.eyebrow}>
               El ecosistema
@@ -798,12 +834,13 @@ export default function Mision() {
             </div>
           </div>
         )
+        break
 
       case 4: {
         const part1 = 'No somos la copia de nada. Somos el'
         const part2 = 'original'
         const part3 = 'que estaba faltando.'
-        return (
+        body = (
           <div style={S.sceneCenter}>
             <div style={S.cierreBlock}>
               <p style={S.cierreText}>
@@ -836,16 +873,29 @@ export default function Mision() {
             </div>
           </div>
         )
+        break
       }
 
       default:
-        return null
+        body = null
     }
+
+    if (!body) return null
+
+    return (
+      <div style={S.scene}>
+        {body}
+        {renderSceneNav()}
+      </div>
+    )
   }
 
   return (
     <div style={S.page}>
       <style>{`
+        body.mision-hide-footer footer#contacto {
+          display: none;
+        }
         @media (max-width: 640px) {
           .m-chip {
             font-size: 12px !important;
@@ -892,25 +942,6 @@ export default function Mision() {
       <div style={S.main}>
         <div ref={sceneRef} key={current} style={S.content}>
           {renderScene()}
-        </div>
-
-        <div style={S.navBar}>
-          <div style={S.dots}>
-            {Array.from({ length: TOTAL }, (_, i) => (
-              <button
-                key={i}
-                type="button"
-                aria-label={`Escena ${i + 1}`}
-                style={S.dot(i === current)}
-                onClick={() => goTo(i)}
-              />
-            ))}
-          </div>
-          {current < TOTAL - 1 && current !== 0 && (
-            <button type="button" style={{ ...S.btnNext, opacity: 1 }} onClick={() => goTo(current + 1)}>
-              Siguiente
-            </button>
-          )}
         </div>
       </div>
 
