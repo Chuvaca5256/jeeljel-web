@@ -32,6 +32,8 @@
 - ✅ Fondo mosaico Tlaloc en `/mision`
 - ✅ Página `/organizaciones` con contenido completo: PETA, UNESCO, Cruz Roja, UNICEF, WWF
 - ✅ Tarjetas de `/organizaciones` con fondo semitransparente
+- ✅ Efecto typewriter con scroll trigger en subtítulos clave (Hero, WorldCup, Organizations, Mission, Stats)
+- ✅ Fondo animado cubos wireframe + triángulos + estrellas en `/apps`
 
 ## Infraestructura
 
@@ -53,7 +55,7 @@
 - [ ] Registrarse en API-Football Ultra y obtener API key
 - [ ] Registrarse en afiliados: 1xBet Partners, Bet365 Affiliates
 - [ ] Crear ruta `/mundial-2026` en React dentro de jeeljel-web
-- [ ] Página Apps con contenido completo (Home ya tiene grid con logos)
+- [ ] Página Apps — ampliar contenido más allá del hero animado (grid sigue en Home)
 - [ ] Página Ollin Deportes (`/ollin-deportes`) completa con features y CTA
 - [ ] Página Misión con contenido real
 - [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:`)

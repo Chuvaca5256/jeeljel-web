@@ -9,7 +9,7 @@
 | Ruta | Estado |
 |------|--------|
 | `/` | Home (landing completa) |
-| `/apps` | Stub — pendiente contenido |
+| `/apps` | Hero con cubos wireframe animados (turquesa), triángulos dorados y estrellas azules en fondo full-page |
 | `/ollin-deportes` | Stub — título **OLLIN DEPORTES** (renombrado desde `/hub-bionico`, redirect 301 activo) — fondo mosaico Macuilxochitl |
 | `/mision` | Stub — pendiente contenido — fondo mosaico Tlaloc |
 | `/organizaciones` | Completa — 5 causas: PETA, UNESCO, Cruz Roja, UNICEF, WWF — fondo mosaico Dios Tupa — tarjetas semitransparentes |
@@ -40,6 +40,7 @@
 | `Dios_Tupa.png` | `/organizaciones` (padding 80px aplicado) |
 | `Macuilxochitl.png` | `/ollin-deportes` (padding 80px aplicado) |
 | `Tlaloc.png` | `/mision` (padding 80px aplicado) |
+| `Viracoch.png` | `/apps` — capa fija en componente + `body.page-apps::before { display: none; }` |
 
 Cada ruta dedicada oculta el mosaico global con clase `body.page-*::before { display: none; }` en `index.css`.
 
@@ -51,15 +52,23 @@ Cada ruta dedicada oculta el mosaico global con clase `body.page-*::before { dis
 
 ## Hero (`src/components/Hero.jsx`)
 
-- **Logo:** `Logo_JeelJel_Kanaabcon_balon_sin_fondo.png` — imagen estática (reemplazó `ajolote_final.webm`)
+- **Video:** `ajolote_final.webm` con `mix-blend-mode: screen`
 - **Espaciado compacto:** sin `min-h-screen` en móvil; `pt-12 pb-6` móvil, `md:min-h-screen` con `md:pt-20 md:pb-16` en desktop
-- Título «CREAR IMPERIOS» en dorado `#c9a84c`; resto de títulos en turquesa
+- **Título «NACIMOS PARA CREAR IMPERIOS»:** estático — dos líneas (turquesa + dorado `#c9a84c`), sin animación
+- **Subtítulo:** typewriter vía `useTypewriter` (ver Animaciones globales)
+
+## Animaciones globales
+
+- **`useTypewriter`** en `src/hooks/useTypewriter.js` — efecto typewriter activado por **IntersectionObserver** (scroll trigger), speed **41 ms**, usado en: subtítulo Hero, descripción WorldCup, subtítulo Organizations, tarjetas Mission (descripciones de pilares), párrafos Stats
+- **Cubos wireframe CSS en `/apps`** — 55 elementos (cuadrados turquesa, triángulos dorados, estrellas azules `✦`), animación `cube-spin` en `src/index.css`; contenedor `position: fixed` full-page
+- **Título NACIMOS PARA CREAR IMPERIOS** — estático (sin animación)
 
 ## Stats — franja descriptiva (`src/components/Stats.jsx`)
 
 Reemplazó la cuadrícula «5 Plataformas · 30+ Agentes IA · …». Ahora muestra:
 
-- Texto centrado sobre el ecosistema latinoamericano y apoyo a emprendedores
+- Dos párrafos con typewriter (ecosistema + «¿Tienes una idea?»)
+- Fila de **20 banderas** clickeables (flagcdn, sin nombre) que abren búsqueda Google en pestaña nueva
 - CTA **Contáctanos** → scroll suave a `#contacto` (footer)
 
 ## El Ecosistema (`src/components/AppsGrid.jsx`)
