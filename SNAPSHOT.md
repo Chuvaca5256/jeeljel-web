@@ -107,7 +107,11 @@ Cada ruta dedicada oculta el mosaico global con clase `body.page-*::before { dis
 ## Animaciones globales
 
 - **`useTypewriter`** en `src/hooks/useTypewriter.js` — efecto typewriter activado por **IntersectionObserver** (scroll trigger), speed **41 ms**, usado en: subtítulo Hero, descripción WorldCup, subtítulo Organizations, tarjetas Mission (descripciones de pilares), párrafos Stats
-- **Cubos wireframe CSS en `/apps`** — 55 elementos (cuadrados turquesa, triángulos dorados, estrellas azules `✦`), animación `cube-spin` en `src/index.css`; contenedor `position: fixed` full-page
+- **Fondo animado /apps:** 90 elementos aleatorios en cada carga
+  - Cuadrados turquesa — wireframe SVG, solo contorno
+  - Triángulos dorados — wireframe SVG, solo contorno
+  - Hexágonos azules — wireframe SVG, solo contorno (reemplazaron estrellas)
+  - Animación: cube-spin CSS, todos en loop infinito
 - **Título NACIMOS PARA CREAR IMPERIOS** — estático (sin animación)
 
 ## Stats — franja descriptiva (`src/components/Stats.jsx`)

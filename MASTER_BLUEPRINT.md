@@ -33,7 +33,7 @@
 - ✅ Página `/organizaciones` con contenido completo: PETA, UNESCO, Cruz Roja, UNICEF, WWF
 - ✅ Tarjetas de `/organizaciones` con fondo semitransparente
 - ✅ Efecto typewriter con scroll trigger en subtítulos clave (Hero, WorldCup, Organizations, Mission, Stats)
-- ✅ Fondo animado cubos wireframe + triángulos + estrellas en `/apps`
+- ✅ Fondo animado /apps — cuadrados turquesa + triángulos dorados + hexágonos azules, todos wireframe SVG
 
 ## Infraestructura
 
