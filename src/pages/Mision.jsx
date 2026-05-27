@@ -704,6 +704,34 @@ export default function Mision() {
       />
       <div style={S.grid} />
 
+      <div
+        style={{
+          textAlign: 'center',
+          paddingTop: '80px',
+          paddingBottom: '8px',
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
+        <h1
+          style={{
+            fontSize: '32px',
+            fontWeight: 700,
+            color: '#4ecdc4',
+            letterSpacing: '4px',
+            textTransform: 'uppercase',
+            marginBottom: '10px',
+            fontFamily: "'Cinzel', serif",
+            marginTop: 0,
+          }}
+        >
+          Misión
+        </h1>
+        <p style={{ fontSize: '14px', color: 'rgba(255,255,255,0.45)', margin: 0 }}>
+          La razón por la que JeelJel Kaanab existe.
+        </p>
+      </div>
+
       <div style={S.main}>
         <div ref={sceneRef} key={current} style={S.content}>
           {renderScene()}
