@@ -32,13 +32,12 @@ REGLAS DE CONTENIDO:
 - **Ollin Deportes** (tarjeta 02 en `/apps`) es un **producto independiente** de jeeljel.com — NO es un agente dentro de Ikan Naat IA
 - El **Agente de Apuestas** (slug `telarana` / capacidad dentro de Ikan Naat IA) sigue viviendo **dentro de Ikan Naat** sin cambios
 
-APPS EN CATÁLOGO `/apps`:
+APPS EN CATÁLOGO `/apps` (5 tarjetas — **Compañeros Virtuales eliminado** del catálogo):
 ✅ 01 — Ikan Naat IA (#4ecdc4) — en línea — https://ikannaat.jeeljel.com
-⏳ 02 — Ollin Deportes (#f97316) — tarjeta completa, producto próximamente — https://jeeljel.com/ollin-deportes
-⏳ 03 — Compañeros Virtuales (#ec4899)
+⏳ 02 — Ollin Deportes (#f97316) — próximamente
+⏳ 03 — VirtYou (#b464ff) — próximamente
 ⏳ 04 — Izydra OS (#c9a84c) — próximamente
-⏳ 05 — VirtYou (#b464ff) — próximamente
-⏳ 06 — Inkógnito (#e05555) — próximamente
+⏳ 05 — Inkógnito (#e05555) — próximamente
 
 ### Tarjeta 02 — Ollin Deportes (`/apps`)
 
@@ -51,6 +50,17 @@ APPS EN CATÁLOGO `/apps`:
 - **Logo:** ajolote con balón — `Logo_JeelJel_Kanaabcon_balon_sin_fondo.png`
 - **Features:** Campo 2D isométrico en tiempo real · Estadísticas granulares por jugador · Modo Apostador con momios en vivo · Narrador comunitario con rating · IA analista (Ikan Naat) conectada al partido
 - **Stack planeado:** React + Vite + Tailwind + PixiJS + Socket.io + Node.js + Redis + Docker + API-Football Ultra ($29/mes)
+
+### Tarjeta 03 — VirtYou (`/apps`)
+
+- **Subtítulo:** Tu identidad digital, siempre contigo
+- **Color acento:** `#b464ff`
+- **Estado:** Próximamente
+- **Logo:** `Logo_virtyou_sin_fondo.png`
+- **Descripción:** Tarjeta digital dinámica compartible por QR y NFC. Ficha Médica gratis incluida. Módulos de pago único para finanzas, salud, hogar, vehículo, mascotas, agenda familiar, metas y ahorro. Próximamente: invitaciones digitales también en tarjeta NFC física. Sin suscripciones.
+- **Repo propio:** https://github.com/Chuvaca5256/Virtyou
+- **Deploy provisional:** https://virtyou.vercel.app (solo documentación interna — **no publicar en jeeljel.com**)
+- **CTA:** deshabilitado (`Próximamente →`, sin enlace externo)
 
 ARCHIVOS CLAVE:
 - Componente: src/pages/Apps.jsx
@@ -67,7 +77,7 @@ ARCHIVOS CLAVE:
 | Ruta | Estado |
 |------|--------|
 | `/` | Home (landing completa) |
-| `/apps` | Catálogo expandible (6 apps) + fondo mosaico Viracoch + 90 formas wireframe SVG (cuadrados turquesa, triángulos dorados, hexágonos azules) |
+| `/apps` | Catálogo expandible (5 apps) + fondo mosaico Viracoch + 90 formas wireframe SVG (cuadrados turquesa, triángulos dorados, hexágonos azules) |
 | `/ollin-deportes` | Stub — título **OLLIN DEPORTES** (renombrado desde `/hub-bionico`, redirect 301 activo) — fondo mosaico Macuilxochitl |
 | `/mision` | Stub — pendiente contenido — fondo mosaico Tlaloc |
 | `/organizaciones` | Completa — 5 causas: PETA, UNESCO, Cruz Roja, UNICEF, WWF — fondo mosaico Dios Tupa — tarjetas semitransparentes |

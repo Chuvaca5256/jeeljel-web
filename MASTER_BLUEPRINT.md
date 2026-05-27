@@ -59,6 +59,7 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - REGLA: nunca mencionar motores externos de IA en el contenido
 - Para agregar una app nueva: agregar objeto al array `APPS` en Apps.jsx siguiendo el patrón del SNAPSHOT
 - **Fondo:** `CubeBackground` — 90 elementos wireframe SVG (cuadrados, triángulos, hexágonos), animación `cube-spin`
+- **Catálogo (5 tarjetas):** 01 Ikan Naat IA · 02 Ollin Deportes · 03 VirtYou · 04 Izydra OS · 05 Inkógnito — **Compañeros Virtuales eliminado**
 
 **Tarjeta 02 — Ollin Deportes**
 - Renombrada de «Agente Deportivo» a **Ollin Deportes** en el catálogo
@@ -70,13 +71,21 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - Stack planeado: React + Vite + Tailwind + PixiJS + Socket.io + Node.js + Redis + Docker + API-Football Ultra ($29/mes)
 - **Aclaración:** Ollin Deportes es producto **independiente** de jeeljel.com — NO es un agente dentro de Ikan Naat IA. El Agente de Apuestas (slug `telarana`) permanece dentro de Ikan Naat sin cambios.
 
+**Tarjeta 03 — VirtYou**
+- Subtítulo: Tu identidad digital, siempre contigo · Acento `#b464ff` · Estado: Próximamente
+- Logo: `Logo_virtyou_sin_fondo.png`
+- Descripción: tarjeta digital QR/NFC, ficha médica gratis, módulos pago único (finanzas, salud, hogar, vehículo, mascotas, agenda, metas). Próximamente invitaciones digitales y NFC física. Sin suscripciones.
+- Repo: https://github.com/Chuvaca5256/Virtyou
+- Deploy provisional: https://virtyou.vercel.app (no enlazar en el sitio — desarrollo)
+- CTA: deshabilitado
+
 ## Pendientes próxima sesión
 
 - [ ] 🔴 **URGENTE** Ollin Deportes — deadline 11 junio 2026 — ver SNAPSHOT para detalle completo
 - [ ] Registrarse en API-Football Ultra y obtener API key
 - [ ] Registrarse en afiliados: 1xBet Partners, Bet365 Affiliates
 - [ ] Crear ruta `/mundial-2026` en React dentro de jeeljel-web
-- [ ] Página Apps — ampliar contenido más allá del hero animado (grid sigue en Home)
+- [ ] Página `/apps` — completar tarjetas 04 Izydra y 05 Inkógnito (01–03 con contenido en catálogo)
 - [ ] Página Ollin Deportes (`/ollin-deportes`) completa con features y CTA
 - [ ] Página Misión con contenido real
 - [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:`)
