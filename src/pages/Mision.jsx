@@ -48,7 +48,7 @@ const PILARES = [
 
 const STATS = [
   { target: 5, label: 'Plataformas', suffix: '' },
-  { target: 18, label: 'Países objetivo', suffix: '' },
+  { target: 18, label: 'Países hermanos', suffix: '' },
   { target: 30, label: 'Agentes IA', suffix: '+' },
 ]
 
