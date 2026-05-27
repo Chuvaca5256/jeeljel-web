@@ -11,7 +11,7 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative flex flex-col items-center justify-start min-h-0 text-center px-6 overflow-hidden pt-10 pb-6 sm:pt-12 sm:pb-8 md:min-h-screen md:pt-20 md:pb-16 lg:pt-24"
+      className="relative flex flex-col items-center justify-start min-h-0 text-center px-6 overflow-hidden pt-12 pb-6 sm:pt-14 sm:pb-8 md:min-h-screen md:pt-20 md:pb-16 lg:pt-24"
     >
       <div
         className="absolute inset-0 pointer-events-none"
