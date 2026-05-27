@@ -12,6 +12,8 @@
   --color-boton-primario: #00e5a0;
   --color-boton-secundario: #4ecdc4;
   --color-dorado: #c9a84c;
+  --mosaico-size: 80px 80px;
+  --mosaico-opacity: 0.08;
 }
 
 /* ─── Reset global ─────────────────────────────────────── */
@@ -34,10 +36,26 @@ body::before {
   content: '';
   position: fixed;
   inset: 0;
-  background-image: url('./assets/mosaicos/Cuculcan.png');
-  background-repeat: repeat;
-  background-size: 80px 80px;
-  opacity: 0.08;
+  background-image:
+    url('./assets/mosaicos/Cuculcan.png'),
+    url('./assets/mosaicos/Dios.png'),
+    url('./assets/mosaicos/Dios_2.png'),
+    url('./assets/mosaicos/Dios_3.png'),
+    url('./assets/mosaicos/Tlaloc.png');
+  background-repeat: repeat, repeat, repeat, repeat, repeat;
+  background-size:
+    var(--mosaico-size),
+    var(--mosaico-size),
+    var(--mosaico-size),
+    var(--mosaico-size),
+    var(--mosaico-size);
+  background-position:
+    0 0,
+    80px 0,
+    0 80px,
+    80px 80px,
+    40px 40px;
+  opacity: var(--mosaico-opacity);
   pointer-events: none;
   z-index: 0;
 }

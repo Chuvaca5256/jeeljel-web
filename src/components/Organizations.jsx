@@ -35,7 +35,7 @@ const ORGS = [
 export default function Organizations() {
   return (
     <section
-      className="py-20 px-6 md:px-12"
+      className="pt-20 pb-6 px-6 md:px-12 md:pb-8"
       style={{ backgroundColor: 'transparent' }}
     >
       <div className="max-w-5xl mx-auto">

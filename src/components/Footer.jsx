@@ -6,7 +6,7 @@ export default function Footer() {
   return (
     <footer
       id="footer"
-      className="py-12 px-6 md:px-12"
+      className="pt-2 pb-12 px-6 md:px-12"
       style={{ backgroundColor: 'transparent' }}
     >
       <Divider />
