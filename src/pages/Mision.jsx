@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { animate, stagger } from 'animejs'
-import Tlaloc from '../assets/mosaicos/Tlaloc.png'
+import mosaico from '../assets/mosaicos/Tlaloc.png'
 
 const PAIS_CHIPS = [
   { code: 'MX', name: 'México' },
@@ -55,13 +55,6 @@ const STATS = [
 const TOTAL = 5
 
 const S = {
-  page: {
-    position: 'relative',
-    minHeight: 'auto',
-    background: 'transparent',
-    color: '#ffffff',
-    fontFamily: "'DM Sans', sans-serif",
-  },
   grid: {
     position: 'fixed',
     inset: 0,
@@ -82,21 +75,11 @@ const S = {
     pointerEvents: 'none',
     zIndex: 0,
   },
-  mosaico: {
-    position: 'fixed',
-    inset: 0,
-    backgroundRepeat: 'repeat',
-    backgroundSize: '80px 80px',
-    opacity: 0.08,
-    pointerEvents: 'none',
-    zIndex: 0,
-  },
   slider: {
     position: 'relative',
     width: '100%',
     height: '100vh',
     overflow: 'hidden',
-    background: '#1a0400',
   },
   slide: (visible) => ({
     position: 'absolute',
@@ -885,7 +868,15 @@ export default function Mision() {
   }
 
   return (
-    <div style={S.page}>
+    <div
+      style={{
+        position: 'relative',
+        minHeight: '100vh',
+        backgroundColor: '#1a0400',
+        color: '#ffffff',
+        fontFamily: "'DM Sans', sans-serif",
+      }}
+    >
       <style>{`
         @media (max-width: 640px) {
           .m-chip {
@@ -896,64 +887,72 @@ export default function Mision() {
       `}</style>
       <div
         style={{
-          ...S.mosaico,
-          backgroundImage: `url(${Tlaloc})`,
+          position: 'fixed',
+          inset: 0,
+          backgroundImage: `url(${mosaico})`,
+          backgroundRepeat: 'repeat',
+          backgroundSize: '80px 80px',
+          opacity: 0.08,
+          pointerEvents: 'none',
+          zIndex: 0,
         }}
       />
-      <div style={S.grid} />
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        <div style={S.grid} />
 
-      <div style={S.slider}>
-        <div style={S.header}>
-          <h1 style={S.headerTitle}>Misión</h1>
-          <p style={S.headerSub}>La razón por la que JeelJel Kaanab existe.</p>
-        </div>
-
-        {Array.from({ length: TOTAL }, (_, n) => (
-          <div
-            key={n}
-            ref={setSceneRef(n)}
-            data-scene={n}
-            style={S.slide(current === n)}
-          >
-            {renderSceneBody(n)}
-            {renderSceneNav(n)}
+        <div style={S.slider}>
+          <div style={S.header}>
+            <h1 style={S.headerTitle}>Misión</h1>
+            <p style={S.headerSub}>La razón por la que JeelJel Kaanab existe.</p>
           </div>
-        ))}
-      </div>
 
-      {openPilar !== null && (
-        <div
-          ref={modalOverlayRef}
-          style={S.modalOverlay}
-          role="presentation"
-          onClick={closePilarModal}
-        >
-          <div
-            ref={modalPanelRef}
-            style={S.modalPanel}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="pilar-modal-title"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              type="button"
-              style={S.modalClose}
-              onClick={closePilarModal}
-              aria-label="Cerrar"
+          {Array.from({ length: TOTAL }, (_, n) => (
+            <div
+              key={n}
+              ref={setSceneRef(n)}
+              data-scene={n}
+              style={S.slide(current === n)}
             >
-              ×
-            </button>
-            <div style={S.modalNum}>{PILARES[openPilar].num}</div>
-            <h3 id="pilar-modal-title" style={S.modalTitle}>
-              {PILARES[openPilar].titulo}
-            </h3>
-            <div style={S.modalDivider} />
-            <p style={S.modalTagline}>{PILARES[openPilar].tagline}</p>
-            <p style={S.modalDesc}>{PILARES[openPilar].desc}</p>
-          </div>
+              {renderSceneBody(n)}
+              {renderSceneNav(n)}
+            </div>
+          ))}
         </div>
-      )}
+
+        {openPilar !== null && (
+          <div
+            ref={modalOverlayRef}
+            style={S.modalOverlay}
+            role="presentation"
+            onClick={closePilarModal}
+          >
+            <div
+              ref={modalPanelRef}
+              style={S.modalPanel}
+              role="dialog"
+              aria-modal="true"
+              aria-labelledby="pilar-modal-title"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button
+                type="button"
+                style={S.modalClose}
+                onClick={closePilarModal}
+                aria-label="Cerrar"
+              >
+                ×
+              </button>
+              <div style={S.modalNum}>{PILARES[openPilar].num}</div>
+              <h3 id="pilar-modal-title" style={S.modalTitle}>
+                {PILARES[openPilar].titulo}
+              </h3>
+              <div style={S.modalDivider} />
+              <p style={S.modalTagline}>{PILARES[openPilar].tagline}</p>
+              <p style={S.modalDesc}>{PILARES[openPilar].desc}</p>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
