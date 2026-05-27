@@ -98,6 +98,16 @@ Reemplazó la cuadrícula «5 Plataformas · 30+ Agentes IA · …». Ahora mues
 - **Countdown:** solo Días, Horas y Minutos (sin Segundos); una fila con `flex-nowrap`
 - Actualización cada 60 s; deadline: 11 junio 2026, 23:00 UTC
 
+## Correos corporativos (pendiente configurar)
+
+| Correo | Uso |
+|--------|-----|
+| hola@jeeljel.com | Quejas y sugerencias de clientes |
+| proyectos@jeeljel.com | Colaboraciones, desarrollo y negocios |
+| compras@jeeljel.com | Pagos y suscripciones — contador |
+| direccion@jeeljel.com | Contacto personal y negocios de la empresa |
+| equipo@jeeljel.com | Comunicación interna y colaboradores |
+
 ## Infraestructura
 
 | Recurso | Detalle |

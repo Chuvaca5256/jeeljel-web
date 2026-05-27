@@ -62,3 +62,10 @@
 - [ ] Footer global: ampliar sección de contacto si hace falta más allá del scroll desde Stats
 - [ ] Nombre latinoamericano para Virtyou
 - [ ] Rebrandear Izydra OS bajo JeelJel Kaanab
+- [ ] Pagar paquete 5 buzones en Hostinger y crear correos:
+  - hola@jeeljel.com — quejas y sugerencias de clientes
+  - proyectos@jeeljel.com — colaboraciones, desarrollo y negocios
+  - compras@jeeljel.com — pagos y suscripciones (contador)
+  - direccion@jeeljel.com — contacto personal y negocios de la empresa
+  - equipo@jeeljel.com — comunicación interna y colaboradores
+- [ ] Migrar correos a otro proveedor cuando expire plan Hostinger
