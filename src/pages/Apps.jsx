@@ -17,15 +17,15 @@ const APPS = [
     preview:
       'Chat, expertos, imágenes, videos y compañeros virtuales — todo desde $0',
     description:
-      'El ecosistema de inteligencia artificial de Latinoamérica. Expertos especializados con protocolos reales (médico, abogado, psicólogo, nutriólogo, financiero), generación de imágenes con Flux, videos con Luma AI, compañeros virtuales y agente programador.',
+      'El ecosistema de inteligencia artificial de Latinoamérica. Expertos especializados con protocolos reales (médico, abogado, psicólogo, nutriólogo, financiero), generación de imágenes y videos, compañeros virtuales, agente programador, análisis deportivo y más. Todo en una sola plataforma, desde $0, en tu idioma y con contexto cultural latinoamericano.',
     capabilities: [
       '🧠 Expertos Nivel 2 — Médico, abogado, psicólogo, nutriólogo, financiero, dentista, veterinario y más con protocolos clínicos reales',
-      '🎨 Imágenes con IA — Genera imágenes fotorrealistas e ilustraciones en segundos con Flux',
-      '🎬 Videos con IA — Crea clips y animaciones con Luma AI directo desde el chat',
+      '🎨 Imágenes con IA — Genera imágenes fotorrealistas e ilustraciones en segundos con solo describirlas',
+      '🎬 Videos con IA — Crea clips y animaciones directamente desde el chat con solo pedirlos',
       '💕 Compañeros Virtuales — Luna, Sofía, Mateo y más: presencias inteligentes disponibles 24/7 con memoria',
       '🔍 Deep Agent Web — Investiga en internet en tiempo real y sintetiza la información al instante',
       '💻 Agente Programador — Genera, ejecuta y descarga apps web completas con código real',
-      '⚽ Telaraña Deportiva — Picks diarios, parlays y análisis de fútbol, NBA, NFL con datos en tiempo real',
+      '⚽ Agente Deportivo — Picks diarios, parlays, análisis de momios y predicciones para fútbol, NBA, NFL y más con datos en tiempo real. Ideal para apostar con criterio: compara cuotas, arma tus combinadas y recibe análisis detallado de cada partido antes de jugarte tu dinero',
       '🗣️ Videollamada con IA — Sesiones en vivo con expertos: cámara, audio y detección emocional',
       '📄 Análisis de documentos — Procesa Word, Excel, PDF y archivos con IA especializada',
       '💰 Desde $0 — Plan gratuito real, sin trampa, con acceso a funciones clave desde el primer día',
@@ -35,13 +35,13 @@ const APPS = [
   },
   {
     id: 'telarana',
-    name: 'Telaraña Deportiva',
+    name: 'Agente Deportivo',
     logo: logoTelarana,
     accent: '#f97316',
     subtitle: 'Análisis deportivo con IA',
     preview: 'Picks, parlays y análisis de partidos en tiempo real',
     description:
-      'La Telaraña Deportiva es el agente de análisis deportivo de Ikan Naat IA. Picks diarios, parlays, momios, análisis de fútbol, NBA, NFL y más — con datos en tiempo real y contexto latinoamericano.',
+      'El Agente Deportivo es el agente de análisis deportivo de Ikan Naat IA. Picks diarios, parlays, momios, análisis de fútbol, NBA, NFL y más — con datos en tiempo real y contexto latinoamericano.',
     capabilities: [
       'Picks diarios con datos reales',
       'Análisis de momios y parlays',
