@@ -1,12 +1,8 @@
-// LOGOS DE APPS:
-// - Hub Biónico: src/assets/Logo_JeelJel_con_balon.png ✓
-// - Ikan Naat: coloca Logo_con_letras_Ikan_Naat_sin_fondo.png en src/assets/ y descomenta:
-// import logoIkanNaat from '../assets/Logo_con_letras_Ikan_Naat_sin_fondo.png'
-import logoConBalon from '../assets/Logo_JeelJel_con_balon.png'
-
-// Cuando tengas el archivo del logo de Ikan Naat, descomenta la línea de arriba
-// y reemplaza `null` en la primera app por `logoIkanNaat`
-const logoIkanNaat = null
+import logoHubBionico from '../assets/Logo_JeelJel_Kanaabcon_balon_sin_fondo.png'
+import logoIkanNaat from '../assets/Logo_con_letras_Ikan_Naat_sin_fondo.png'
+import logoVirtyou from '../assets/Logo_virtyou_sin_fondo.png'
+import logoIzydra from '../assets/Logo_Izydra_OS_Sin_fondo.png'
+import logoInkognito from '../assets/Logo_inkognito_sin_fondo.png'
 
 const APPS = [
   {
@@ -17,7 +13,7 @@ const APPS = [
     desc: 'IA Conversacional para Latinoamérica',
     link: 'https://ikannaat.jeeljel.com',
     linkActivo: true,
-    logo: logoIkanNaat, // reemplazar con `logoIkanNaat` cuando esté el archivo
+    logo: logoIkanNaat,
   },
   {
     nombre: 'Hub Biónico Deportivo',
@@ -25,7 +21,7 @@ const APPS = [
     badge: 'URGENTE',
     badgeColor: '#e85d26',
     desc: 'Seguimiento del Mundial 2026 en tiempo real',
-    logo: logoConBalon,
+    logo: logoHubBionico,
   },
   {
     nombre: 'Virtyou',
@@ -33,6 +29,7 @@ const APPS = [
     badge: 'FASE 1',
     badgeColor: '#7b2d8b',
     desc: 'Identidad digital dinámica con QR y NFC',
+    logo: logoVirtyou,
   },
   {
     nombre: 'Izydra OS',
@@ -40,6 +37,7 @@ const APPS = [
     badge: 'QA',
     badgeColor: '#c9a84c',
     desc: 'SaaS de gestión para seguridad privada',
+    logo: logoIzydra,
   },
   {
     nombre: 'Inkógnito',
@@ -48,77 +46,58 @@ const APPS = [
     badgeColor: '#8b2a2a',
     desc: 'Red social adulta · Solo web',
     nota: 'Acceso con verificación de edad',
+    logo: logoInkognito,
   },
 ]
+
+const LOGO_STYLE = {
+  position: 'absolute',
+  top: '12px',
+  left: '12px',
+  width: '36px',
+  height: '36px',
+  objectFit: 'contain',
+}
 
 function AppCard({ app }) {
   const content = (
     <div
-      className="tarjeta relative flex flex-col h-full p-5 rounded-xl transition-transform duration-200 cursor-pointer"
+      className="tarjeta relative flex flex-col h-full p-5 pt-14 rounded-xl transition-transform duration-200 cursor-pointer"
       style={{ borderRadius: '12px' }}
       onMouseEnter={(e) => (e.currentTarget.style.transform = 'translateY(-4px)')}
       onMouseLeave={(e) => (e.currentTarget.style.transform = 'translateY(0)')}
     >
-      {/* Borde superior de acento */}
       <div
         className="absolute top-0 left-0 right-0 rounded-t-xl"
         style={{ height: '2px', backgroundColor: 'var(--color-titulo-secundario)' }}
       />
 
-      <div className="flex items-start justify-between mb-3 mt-1">
-        {/* Logo si existe, sino nombre en texto */}
-        {app.logo ? (
-          <img
-            src={app.logo}
-            alt={app.nombre}
-            className="h-10 w-auto object-contain"
-            style={{ maxWidth: '70%' }}
-          />
-        ) : (
-          <span
-            className="font-cinzel font-bold text-base leading-tight"
-            style={{ color: 'var(--color-titulo)', maxWidth: '72%' }}
-          >
-            {app.nombre}
-          </span>
-        )}
+      <img src={app.logo} alt={app.nombre} style={LOGO_STYLE} />
 
-        {/* Badge de estado */}
-        <span
-          className="font-dm text-xs px-2 py-0.5 rounded font-medium flex-shrink-0"
-          className="etiqueta-secundaria"
-          style={{
-            backgroundColor: 'rgba(0, 168, 107, 0.15)',
-            border: '1px solid var(--color-separador)',
-            letterSpacing: '0.08em',
-          }}
-        >
-          {app.badge}
-        </span>
-      </div>
-
-      {/* Nombre debajo del logo cuando hay imagen */}
-      {app.logo && (
-        <span
-          className="font-cinzel font-bold text-sm leading-tight mb-1"
-          style={{ color: 'var(--color-titulo)' }}
-        >
-          {app.nombre}
-        </span>
-      )}
-
-      <p
-        className="font-dm text-sm mt-auto"
-        style={{ lineHeight: '1.6' }}
+      <span
+        className="absolute top-3 right-3 font-dm text-xs px-2 py-0.5 rounded font-medium etiqueta-secundaria"
+        style={{
+          backgroundColor: 'rgba(0, 168, 107, 0.15)',
+          border: '1px solid var(--color-separador)',
+          letterSpacing: '0.08em',
+        }}
       >
+        {app.badge}
+      </span>
+
+      <span
+        className="font-cinzel font-bold text-sm leading-tight mb-2 pr-16"
+        style={{ color: 'var(--color-titulo)' }}
+      >
+        {app.nombre}
+      </span>
+
+      <p className="font-dm text-sm mt-auto" style={{ lineHeight: '1.6' }}>
         {app.desc}
       </p>
 
-      {/* Nota discreta para Inkógnito */}
       {app.nota && (
-        <p className="font-dm text-xs mt-2">
-          {app.nota}
-        </p>
+        <p className="font-dm text-xs mt-2">{app.nota}</p>
       )}
     </div>
   )
@@ -141,7 +120,6 @@ function AppCard({ app }) {
 export default function AppsGrid() {
   return (
     <section id="apps" className="py-24 px-6 md:px-12 max-w-6xl mx-auto w-full">
-      {/* Título — todo en mayúsculas, más impacto */}
       <div className="text-center mb-14">
         <h2
           className="font-cinzel font-bold uppercase"
@@ -151,7 +129,6 @@ export default function AppsGrid() {
         </h2>
       </div>
 
-      {/* Grid de apps */}
       <div
         className="grid gap-4"
         style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))' }}
@@ -160,7 +137,6 @@ export default function AppsGrid() {
           <AppCard key={app.nombre} app={app} />
         ))}
 
-        {/* Celda "más apps" */}
         <div
           className="tarjeta flex items-center justify-center p-5 rounded-xl"
           style={{ borderRadius: '12px', minHeight: '120px' }}
