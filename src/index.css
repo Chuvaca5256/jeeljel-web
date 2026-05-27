@@ -122,6 +122,10 @@ body.page-ollin-deportes::before {
   display: none;
 }
 
+body.page-apps::before {
+  display: none;
+}
+
 body.page-mision::before {
   display: none;
 }
