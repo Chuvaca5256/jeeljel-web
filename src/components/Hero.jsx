@@ -1,8 +1,31 @@
 // HERO — video del ajolote en src/assets/ajolote_final.webm
 // mix-blend-mode: screen hace desaparecer el fondo negro del video
+import { useEffect, useRef } from 'react'
 import ajoloteWebm from '../assets/ajolote_final.webm'
 
 export default function Hero() {
+  const line1Ref = useRef(null)
+  const line2Ref = useRef(null)
+
+  useEffect(() => {
+    import('animejs').then(({ animate, scrambleText }) => {
+      if (!line1Ref.current || !line2Ref.current) return
+
+      animate(line1Ref.current, {
+        innerHTML: scrambleText({ chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', cursor: '' }),
+        duration: 1200,
+        easing: 'easeOutQuad',
+      })
+
+      animate(line2Ref.current, {
+        innerHTML: scrambleText({ chars: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ', cursor: '' }),
+        duration: 1200,
+        delay: 400,
+        easing: 'easeOutQuad',
+      })
+    })
+  }, [])
+
   const handleScroll = (id) => (e) => {
     e.preventDefault()
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
@@ -62,10 +85,16 @@ export default function Hero() {
         </div>
 
         <h1 className="text-center font-black" style={{ lineHeight: 1.1 }}>
-          <span style={{ color: '#4ecdc4', fontSize: 'clamp(2.5rem, 7vw, 5rem)', display: 'block' }}>
+          <span
+            ref={line1Ref}
+            style={{ color: '#4ecdc4', fontSize: 'clamp(2.5rem, 7vw, 5rem)', display: 'block' }}
+          >
             NACIMOS PARA
           </span>
-          <span style={{ color: '#c9a84c', fontSize: 'clamp(2.5rem, 7vw, 5rem)', display: 'block' }}>
+          <span
+            ref={line2Ref}
+            style={{ color: '#c9a84c', fontSize: 'clamp(2.5rem, 7vw, 5rem)', display: 'block' }}
+          >
             CREAR IMPERIOS
           </span>
         </h1>
