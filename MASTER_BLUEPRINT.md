@@ -59,7 +59,7 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - REGLA: nunca mencionar motores externos de IA en el contenido
 - Para agregar una app nueva: agregar objeto al array `APPS` en Apps.jsx siguiendo el patrón del SNAPSHOT
 - **Fondo:** `CubeBackground` — 90 elementos wireframe SVG (cuadrados, triángulos, hexágonos), animación `cube-spin`
-- **Catálogo (5 tarjetas):** 01 Ikan Naat IA · 02 Ollin Deportes · 03 VirtYou · 04 Izydra OS · 05 Inkógnito — **Compañeros Virtuales eliminado**
+- **Catálogo (5 tarjetas):** 01 Ikan Naat IA · 02 Ollin Deportes · 03 VirtYou · 04 Izydra OS · 05 Inkógnito — todas con contenido completo ✅
 
 **Tarjeta 02 — Ollin Deportes**
 - Renombrada de «Agente Deportivo» a **Ollin Deportes** en el catálogo
@@ -85,7 +85,7 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - [ ] Registrarse en API-Football Ultra y obtener API key
 - [ ] Registrarse en afiliados: 1xBet Partners, Bet365 Affiliates
 - [ ] Crear ruta `/mundial-2026` en React dentro de jeeljel-web
-- [ ] Página `/apps` — completar tarjetas 04 Izydra y 05 Inkógnito (01–03 con contenido en catálogo)
+- [x] Página `/apps` — tarjetas 04 Izydra OS y 05 Inkógnito completadas
 - [ ] Página Ollin Deportes (`/ollin-deportes`) completa con features y CTA
 - [ ] Página Misión con contenido real
 - [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:`)
