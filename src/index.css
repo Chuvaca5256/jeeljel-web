@@ -12,7 +12,7 @@
   --color-boton-primario: #00e5a0;
   --color-boton-secundario: #4ecdc4;
   --color-dorado: #c9a84c;
-  --mosaico-size: 80px 80px;
+  --mosaico-size: 120px 120px;
   --mosaico-opacity: 0.08;
 }
 
@@ -50,11 +50,11 @@ body::before {
     var(--mosaico-size),
     var(--mosaico-size);
   background-position:
-    0 0,
-    80px 0,
-    0 80px,
-    80px 80px,
-    40px 40px;
+    center center,
+    center center,
+    center center,
+    center center,
+    center center;
   opacity: var(--mosaico-opacity);
   pointer-events: none;
   z-index: 0;
