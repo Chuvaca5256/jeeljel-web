@@ -1,7 +1,13 @@
+import { useEffect } from 'react'
 import PageStub from './PageStub'
 import DiosTupa from '../assets/mosaicos/Dios_Tupa.png'
 
 export default function Organizaciones() {
+  useEffect(() => {
+    document.body.classList.add('page-organizaciones')
+    return () => document.body.classList.remove('page-organizaciones')
+  }, [])
+
   return (
     <div
       style={{

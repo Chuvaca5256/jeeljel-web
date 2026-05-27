@@ -113,3 +113,7 @@ h1, h2, h3, h4, p, span, a {
 ::-webkit-scrollbar-track { background: #1a0400; }
 ::-webkit-scrollbar-thumb { background: var(--color-tarjeta-borde); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-titulo-secundario); }
+
+body.page-organizaciones::before {
+  display: none;
+}
