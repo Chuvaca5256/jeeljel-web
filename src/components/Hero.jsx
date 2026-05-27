@@ -1,55 +1,6 @@
 // HERO — video del ajolote en src/assets/ajolote_final.webm
 // mix-blend-mode: screen hace desaparecer el fondo negro del video
 import ajoloteWebm from '../assets/ajolote_final.webm'
-import '../styles/hero-flip.css'
-
-const titleLines = [
-  { text: 'NACIMOS PARA', color: '#4ecdc4' },
-  { text: 'CREAR IMPERIOS', color: '#c9a84c' },
-]
-
-function FlipTitle() {
-  return (
-    <div className="text-center">
-      {titleLines.map((line, li) => (
-        <div key={li} className="flip-title" style={{ lineHeight: 1.1 }}>
-          {line.text.split(' ').map((word, wi) => (
-            <span key={wi} className="flip-word">
-              {word.split('').map((char, ci) => {
-                const globalIndex =
-                  titleLines
-                    .slice(0, li)
-                    .reduce((acc, l) => acc + l.text.replace(/ /g, '').length, 0) +
-                  line.text
-                    .slice(
-                      0,
-                      line.text.split(' ').slice(0, wi).join(' ').length + (wi > 0 ? 1 : 0)
-                    )
-                    .replace(/ /g, '').length +
-                  ci
-                return (
-                  <span
-                    key={ci}
-                    className="flip-char"
-                    style={{
-                      color: line.color,
-                      fontSize: 'clamp(2.5rem, 7vw, 5rem)',
-                      fontWeight: 900,
-                      animationDelay: `${globalIndex * 80}ms`,
-                      letterSpacing: '0.02em',
-                    }}
-                  >
-                    {char}
-                  </span>
-                )
-              })}
-            </span>
-          ))}
-        </div>
-      ))}
-    </div>
-  )
-}
 
 export default function Hero() {
   const handleScroll = (id) => (e) => {
@@ -110,7 +61,14 @@ export default function Hero() {
           </video>
         </div>
 
-        <FlipTitle />
+        <h1 className="text-center font-black" style={{ lineHeight: 1.1 }}>
+          <span style={{ color: '#4ecdc4', fontSize: 'clamp(2.5rem, 7vw, 5rem)', display: 'block' }}>
+            NACIMOS PARA
+          </span>
+          <span style={{ color: '#c9a84c', fontSize: 'clamp(2.5rem, 7vw, 5rem)', display: 'block' }}>
+            CREAR IMPERIOS
+          </span>
+        </h1>
 
         <p
           className="font-dm"
