@@ -158,8 +158,8 @@ export default function Apps() {
                         src={app.logo}
                         alt=""
                         className="apps-row-logo"
-                        width={40}
-                        height={40}
+                        width={36}
+                        height={36}
                       />
                       <div className="apps-row-left-text">
                         <h2 className="apps-row-name" style={{ color: app.accent }}>
@@ -203,7 +203,9 @@ export default function Apps() {
                       ) : (
                         <ul>
                           {app.capabilities.map((cap) => (
-                            <li key={cap}>{cap}</li>
+                            <li key={cap} className="feat">
+                              {cap}
+                            </li>
                           ))}
                         </ul>
                       )}
