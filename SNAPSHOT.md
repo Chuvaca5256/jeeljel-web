@@ -1,5 +1,52 @@
 # SNAPSHOT — Estado actual del proyecto
 
+## SNAPSHOT v1 — Apps página (27/05/2026)
+
+✅ Página /apps completada con sistema de tarjetas expandibles
+
+PATRÓN APRENDIDO — CÓMO SE CONSTRUYE UNA APP CARD EN jeeljel.com:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+El componente Apps.jsx usa un sistema de filas expandibles.
+Cada app es un objeto en el array `apps[]` dentro de Apps.jsx con esta estructura exacta:
+
+{
+  id: '01',
+  logo: logoIkanNaat,                    // import del asset en src/assets/
+  name: 'IKAN NAAT IA',                  // mayúsculas, font Cinzel
+  accentColor: '#4ecdc4',                // color único por app
+  subtitulo: 'Ecosistema IA latinoamericano',
+  preview: 'Texto corto siempre visible en fila colapsada — una línea',
+  descripcion: 'Párrafo completo visible al expandir.',
+  capacidades: [
+    '🧠 Título corto — descripción en una línea sin mencionar motores externos (no poner Flux, Luma AI, GPT, Claude, Gemini, etc.)',
+    // máximo 10 items
+  ],
+  ctaTexto: 'Entrar a Ikan Naat →',
+  ctaUrl: 'https://ikannaat.jeeljel.com',  // null si es próximamente
+}
+
+REGLAS DE CONTENIDO:
+- NUNCA mencionar motores de IA externos (Flux, Luma, GPT, Claude, Gemini, DeepSeek, etc.)
+- Describir la funcionalidad, no la tecnología detrás
+- El nombre de la sección interna es 'Agente Deportivo', no 'Telaraña Deportiva' (en jeeljel.com)
+- Apps próximamente: ctaUrl: null, descripcion e capacidades con texto 'Próximamente'
+
+APPS COMPLETADAS:
+✅ 01 — Ikan Naat IA (#4ecdc4) — https://ikannaat.jeeljel.com
+
+APPS PENDIENTES (mismo patrón):
+⏳ 02 — Agente Deportivo (#f97316)
+⏳ 03 — Compañeros Virtuales (#ec4899)
+⏳ 04 — Izydra OS (#c9a84c) — próximamente
+⏳ 05 — VirtYou (#b464ff) — próximamente
+⏳ 06 — Inkógnito (#e05555) — próximamente
+
+ARCHIVOS CLAVE:
+- Componente: src/pages/Apps.jsx
+- Estilos: src/pages/Apps.css (o inline en el componente)
+- Assets logos: src/assets/Logo_[NombreApp]_sin_fondo.png
+- Fuente: Cinzel (Google Fonts, ya importada)
+
 ## Stack
 
 - React + Vite + Tailwind + React Router

@@ -49,6 +49,16 @@
 - Destino: `root@187.77.196.169:/var/www/jeeljel-web/dist/`
 - Re-disparar manualmente: GitHub → Actions → Deploy jeeljel.com → Run workflow
 
+### Página /apps — jeeljel.com
+
+Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
+- Colapsada: 80px altura, logo + nombre + preview en una línea
+- Expandida: descripción + lista de capacidades + botón CTA
+- Solo una fila abierta a la vez
+- Fuente Cinzel para títulos
+- REGLA: nunca mencionar motores externos de IA en el contenido
+- Para agregar una app nueva: agregar objeto al array `apps[]` en Apps.jsx siguiendo el patrón del SNAPSHOT
+
 ## Pendientes próxima sesión
 
 - [ ] 🔴 **URGENTE** Ollin Deportes — deadline 11 junio 2026 — ver SNAPSHOT para detalle completo
