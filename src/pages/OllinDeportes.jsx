@@ -95,126 +95,131 @@ export default function OllinDeportes() {
           )}
 
           {availableSports.length > 0 && (
-            <div className="ollin-sports-section">
-              <div className="ollin-sports" role="tablist" aria-label="Deportes">
-                {availableSports.map((s) => (
-                  <button
-                    key={s.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={sport === s.id}
-                    className={`ollin-sports__btn${sport === s.id ? ' is-active' : ''}`}
-                    onClick={() => setSport(s.id)}
-                  >
-                    {s.label}
-                  </button>
-                ))}
-              </div>
+            <>
+              <div className="ollin-sports-section">
+                <div className="ollin-sports" role="tablist" aria-label="Deportes">
+                  {availableSports.map((s) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      role="tab"
+                      aria-selected={sport === s.id}
+                      className={`ollin-sports__btn${sport === s.id ? ' is-active' : ''}`}
+                      onClick={() => setSport(s.id)}
+                    >
+                      {s.label}
+                    </button>
+                  ))}
+                </div>
 
-              <button
-                type="button"
-                className="ollin-panel-toggle"
-                onClick={togglePanel}
-                aria-expanded={panelOpen}
-                aria-controls="ollin-matches-panel"
-              >
-                <span
-                  className={`ollin-panel-toggle__arrow${panelOpen ? ' is-open' : ''}`}
-                  aria-hidden
+                <button
+                  type="button"
+                  className="ollin-panel-toggle"
+                  onClick={togglePanel}
+                  aria-expanded={panelOpen}
+                  aria-controls="ollin-matches-panel"
                 >
-                  {panelOpen ? '↑' : '↓'}
-                </span>
-                <span className="ollin-panel-toggle__label">Ver partidos</span>
-              </button>
-            </div>
-          )}
-
-          <div
-            id="ollin-matches-panel"
-            className={`ollin-panel${panelOpen ? ' is-open' : ''}`}
-          >
-            <div className="ollin-panel__inner">
-              <div className="ollin-search">
-                <label className="ollin-search__wrap" htmlFor="ollin-match-search">
-                  <span className="ollin-search__icon" aria-hidden>
-                    🔍
+                  <span
+                    className={`ollin-panel-toggle__arrow${!panelOpen ? ' is-blinking' : ''}`}
+                    aria-hidden
+                  >
+                    {panelOpen ? '↑' : '↓'}
                   </span>
-                  <input
-                    id="ollin-match-search"
-                    type="search"
-                    className="ollin-search__input"
-                    placeholder="Buscar equipo o liga..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    autoComplete="off"
-                  />
-                </label>
+                  <span className="ollin-panel-toggle__label">Ver partidos</span>
+                </button>
               </div>
 
-              <div className="ollin-mobile-tabs" role="tablist" aria-label="Columnas">
-                {MOBILE_TABS.map((tab) => (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={mobileTab === tab.id}
-                    className={`ollin-mobile-tabs__btn${mobileTab === tab.id ? ' is-active' : ''}`}
-                    onClick={() => setMobileTab(tab.id)}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
+              <div
+                id="ollin-matches-panel"
+                className={`ollin-panel${panelOpen ? ' is-open' : ''}`}
+                aria-hidden={!panelOpen}
+              >
+                <div className="ollin-panel__inner">
+                  <div className="ollin-search">
+                    <label className="ollin-search__wrap" htmlFor="ollin-match-search">
+                      <span className="ollin-search__icon" aria-hidden>
+                        🔍
+                      </span>
+                      <input
+                        id="ollin-match-search"
+                        type="search"
+                        className="ollin-search__input"
+                        placeholder="Buscar equipo o liga..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        autoComplete="off"
+                        tabIndex={panelOpen ? 0 : -1}
+                      />
+                    </label>
+                  </div>
 
-              <div className="ollin-columns">
-                <div
-                  className={`ollin-columns__item${mobileTab === 'live' ? ' is-mobile-active' : ''}`}
-                >
-                  <MatchColumn
-                    title="EN VIVO"
-                    badge="live"
-                    matches={columns.live}
-                    loading={loading}
-                    emptyIcon={emptyIcon}
-                    emptyLabel={emptyLabel}
-                  />
-                </div>
-                <div
-                  className={`ollin-columns__item${mobileTab === 'hoy' ? ' is-mobile-active' : ''}`}
-                >
-                  <MatchColumn
-                    title="HOY"
-                    matches={columns.hoy}
-                    loading={loading}
-                    emptyIcon={emptyIcon}
-                    emptyLabel={emptyLabel}
-                  />
-                </div>
-                <div
-                  className={`ollin-columns__item${mobileTab === 'pasados' ? ' is-mobile-active' : ''}`}
-                >
-                  <MatchColumn
-                    title="PASADOS"
-                    matches={columns.pasados}
-                    loading={loading}
-                    emptyIcon={emptyIcon}
-                    emptyLabel={emptyLabel}
-                  />
-                </div>
-                <div
-                  className={`ollin-columns__item${mobileTab === 'proximos' ? ' is-mobile-active' : ''}`}
-                >
-                  <MatchColumn
-                    title="PRÓXIMOS"
-                    matches={columns.proximos}
-                    loading={loading}
-                    emptyIcon={emptyIcon}
-                    emptyLabel={emptyLabel}
-                  />
+                  <div className="ollin-mobile-tabs" role="tablist" aria-label="Columnas">
+                    {MOBILE_TABS.map((tab) => (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={mobileTab === tab.id}
+                        className={`ollin-mobile-tabs__btn${mobileTab === tab.id ? ' is-active' : ''}`}
+                        onClick={() => setMobileTab(tab.id)}
+                        tabIndex={panelOpen ? 0 : -1}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="ollin-columns">
+                    <div
+                      className={`ollin-columns__item${mobileTab === 'live' ? ' is-mobile-active' : ''}`}
+                    >
+                      <MatchColumn
+                        title="EN VIVO"
+                        badge="live"
+                        matches={columns.live}
+                        loading={loading}
+                        emptyIcon={emptyIcon}
+                        emptyLabel={emptyLabel}
+                      />
+                    </div>
+                    <div
+                      className={`ollin-columns__item${mobileTab === 'hoy' ? ' is-mobile-active' : ''}`}
+                    >
+                      <MatchColumn
+                        title="HOY"
+                        matches={columns.hoy}
+                        loading={loading}
+                        emptyIcon={emptyIcon}
+                        emptyLabel={emptyLabel}
+                      />
+                    </div>
+                    <div
+                      className={`ollin-columns__item${mobileTab === 'pasados' ? ' is-mobile-active' : ''}`}
+                    >
+                      <MatchColumn
+                        title="PASADOS"
+                        matches={columns.pasados}
+                        loading={loading}
+                        emptyIcon={emptyIcon}
+                        emptyLabel={emptyLabel}
+                      />
+                    </div>
+                    <div
+                      className={`ollin-columns__item${mobileTab === 'proximos' ? ' is-mobile-active' : ''}`}
+                    >
+                      <MatchColumn
+                        title="PRÓXIMOS"
+                        matches={columns.proximos}
+                        loading={loading}
+                        emptyIcon={emptyIcon}
+                        emptyLabel={emptyLabel}
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
+            </>
+          )}
         </div>
       </div>
     </OllinLayout>

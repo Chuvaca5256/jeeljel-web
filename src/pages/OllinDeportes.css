@@ -112,11 +112,10 @@
   font-size: 22px;
   line-height: 1;
   color: #4ecdc4;
-  animation: ollin-arrow-blink 1.4s ease-in-out infinite;
 }
 
-.ollin-panel-toggle__arrow.is-open {
-  animation: none;
+.ollin-panel-toggle__arrow.is-blinking {
+  animation: ollin-arrow-blink 1.4s ease-in-out infinite;
 }
 
 .ollin-panel-toggle__label {
@@ -140,17 +139,22 @@
 }
 
 .ollin-panel {
-  display: grid;
-  grid-template-rows: 0fr;
-  transition: grid-template-rows 0.45s ease;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    max-height 0.45s ease,
+    opacity 0.35s ease;
 }
 
 .ollin-panel.is-open {
-  grid-template-rows: 1fr;
+  max-height: 10000px;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .ollin-panel__inner {
-  overflow: hidden;
   min-height: 0;
   padding-top: 0;
   transition: padding-top 0.45s ease;

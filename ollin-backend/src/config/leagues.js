@@ -1,5 +1,6 @@
 /** Ligas de fútbol permitidas — IDs API-Football */
 const LIGAS_PERMITIDAS = [
+  1, // Torneo internacional de selecciones 2026
   2, // Fútbol internacional — selecciones (API id 2)
   3, // UEFA European Championship
   4, // Copa América

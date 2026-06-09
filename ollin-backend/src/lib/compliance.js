@@ -10,6 +10,7 @@ const BANNED_REPLACEMENTS = [
 ]
 
 const LEAGUE_DISPLAY_NAMES = {
+  1: 'Fútbol internacional — selecciones',
   2: 'Fútbol internacional — selecciones',
   3: 'Eurocopa',
   4: 'Copa América',
