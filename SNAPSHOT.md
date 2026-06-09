@@ -1,5 +1,11 @@
 # SNAPSHOT — Estado actual del proyecto
 
+## SNAPSHOT v3 — Actualización visual (09/06/2026)
+
+✅ Logo Ikan Naat actualizado — nuevo quetzal neón turquesa (`Logo_Ika_Naat_sin_fondo_sin_letras.png`)
+✅ `/apps` — figuras geométricas reducidas a 58 elementos (cuadrados, triángulos, hexágonos)
+✅ `/mision` — layout flex 100vh: header natural + contenido centrado en espacio disponible, responsivo sin paddingTop fijo
+
 ## SNAPSHOT v2 — Footer legal + navbar limpio (27/05/2026)
 
 ✅ CONTACTO eliminado del navbar — quedan 4 items: APPS · OLLIN DEPORTES · MISIÓN · ORGANIZACIONES

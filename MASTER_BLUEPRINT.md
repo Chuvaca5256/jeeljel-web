@@ -37,6 +37,9 @@
 - ✅ Tarjetas de `/organizaciones` con fondo semitransparente
 - ✅ Efecto typewriter con scroll trigger en subtítulos clave (Hero, WorldCup, Organizations, Mission, Stats)
 - ✅ Fondo animado /apps — cuadrados turquesa + triángulos dorados + hexágonos azules, todos wireframe SVG
+- ✅ Logo Ikan Naat reemplazado por quetzal neón (`Logo_Ika_Naat_sin_fondo_sin_letras.png`) — refs actualizadas en `Apps.jsx` y `AppsGrid.jsx`
+- ✅ Figuras geométricas `/apps` reducidas a 58 elementos
+- ✅ Página `/mision` responsiva — layout flex 100vh, contenido centrado en todas las pantallas
 
 ## Infraestructura
 
@@ -61,7 +64,7 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - Fuente Cinzel para títulos
 - REGLA: nunca mencionar motores externos de IA en el contenido
 - Para agregar una app nueva: agregar objeto al array `APPS` en Apps.jsx siguiendo el patrón del SNAPSHOT
-- **Fondo:** `CubeBackground` — 90 elementos wireframe SVG (cuadrados, triángulos, hexágonos), animación `cube-spin`
+- **Fondo:** `CubeBackground` — 58 elementos wireframe SVG (cuadrados, triángulos, hexágonos), animación `cube-spin`
 - **Catálogo (5 tarjetas):** 01 Ikan Naat IA · 02 Ollin Deportes · 03 VirtYou · 04 Izydra OS · 05 Inkógnito — todas con contenido completo ✅
 
 **Tarjeta 02 — Ollin Deportes**
