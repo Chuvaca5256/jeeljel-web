@@ -132,7 +132,7 @@ function CubeBackground() {
     if (!container) return
 
     const elements = []
-    const count = 72
+    const count = 58
 
     for (let i = 0; i < count; i++) {
       const type = i % 3
