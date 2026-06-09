@@ -706,7 +706,7 @@ export default function Mision() {
     switch (sceneIndex) {
       case 0:
         return (
-          <div style={S.sceneCenter}>
+          <div className="m-scene-center" style={S.sceneCenter}>
             <p className="m-eyebrow" style={S.eyebrow}>
               Nuestra razón de existir
             </p>
@@ -723,7 +723,7 @@ export default function Mision() {
 
       case 1:
         return (
-          <div style={S.sceneCenter}>
+          <div className="m-scene-center" style={S.sceneCenter}>
             <p className="m-eyebrow" style={S.eyebrow}>
               El problema
             </p>
@@ -764,7 +764,7 @@ export default function Mision() {
 
       case 2:
         return (
-          <div style={{ ...S.sceneCenter, maxWidth: '900px' }}>
+          <div className="m-scene-center" style={{ ...S.sceneCenter, maxWidth: '900px' }}>
             <p className="m-eyebrow" style={S.eyebrow}>
               La respuesta
             </p>
@@ -798,7 +798,7 @@ export default function Mision() {
 
       case 3:
         return (
-          <div style={{ ...S.sceneCenter, paddingTop: '5rem' }}>
+          <div className="m-scene-center" style={S.sceneCenter}>
             <p className="m-eyebrow" style={S.eyebrow}>
               El ecosistema
             </p>
@@ -823,7 +823,7 @@ export default function Mision() {
         const part2 = 'original'
         const part3 = 'que estaba faltando.'
         return (
-          <div style={{ ...S.sceneCenter, paddingTop: '5rem' }}>
+          <div className="m-scene-center" style={S.sceneCenter}>
             <div style={S.cierreBlock}>
               <p style={S.cierreText}>
                 {part1.split(' ').map((w, i) => (
@@ -873,6 +873,19 @@ export default function Mision() {
       }}
     >
       <style>{`
+        .m-scene-center {
+          padding-top: 8rem;
+        }
+        @media (min-width: 769px) and (max-width: 1024px) {
+          .m-scene-center {
+            padding-top: 6rem;
+          }
+        }
+        @media (min-width: 1025px) {
+          .m-scene-center {
+            padding-top: 4rem;
+          }
+        }
         @media (max-width: 640px) {
           .m-chip {
             font-size: 12px !important;
