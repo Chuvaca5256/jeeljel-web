@@ -5,6 +5,7 @@ const config = require('./config/env')
 const { connectRedis, getClient } = require('./lib/redis')
 const { router: fixturesRouter, healthHandler } = require('./routes/fixtures')
 const { attachSocketIO, startPolling, stopPolling } = require('./services/polling')
+const { createChatRouter } = require('./routes/chat')
 
 async function main() {
   const app = express()
@@ -16,8 +17,8 @@ async function main() {
     if (origin && config.corsOrigins.includes(origin)) {
       res.header('Access-Control-Allow-Origin', origin)
     }
-    res.header('Access-Control-Allow-Methods', 'GET, OPTIONS')
-    res.header('Access-Control-Allow-Headers', 'Content-Type')
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization')
     if (req.method === 'OPTIONS') return res.sendStatus(204)
     next()
   })
@@ -42,6 +43,9 @@ async function main() {
       methods: ['GET', 'POST'],
     },
   })
+
+  app.use('/chat', createChatRouter(io))
+  app.use('/api/ollin/chat', createChatRouter(io))
 
   io.on('connection', (socket) => {
     console.log(`[ollin][socket] Cliente conectado: ${socket.id}`)

@@ -19,10 +19,16 @@ const config = {
   footballBaseUrl: 'https://v3.football.api-sports.io',
   baseballBaseUrl: 'https://v1.baseball.api-sports.io',
   corsOrigins: ['https://jeeljel.com', 'http://localhost:5173'],
+  supabaseUrl: process.env.SUPABASE_URL || '',
+  supabaseServiceKey: process.env.SUPABASE_SERVICE_KEY || '',
 }
 
 if (!config.apiSportsKey) {
   console.warn('[ollin] API_SPORTS_KEY no definida — el polling a API-Sports fallará hasta configurar .env')
+}
+
+if (!config.supabaseUrl || !config.supabaseServiceKey) {
+  console.warn('[ollin] SUPABASE_URL / SUPABASE_SERVICE_KEY no definidas — el chat no persistirá mensajes')
 }
 
 module.exports = config

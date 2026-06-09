@@ -67,6 +67,42 @@ CORS permitido: `https://jeeljel.com`, `http://localhost:5173`
 
 TTL = 2 × `POLLING_INTERVAL_MS`
 
+## Chat en vivo — moderación
+
+El filtro corre **solo en backend** antes de insertar en Supabase.
+
+| Endpoint | Método | Descripción |
+|----------|--------|-------------|
+| `/chat/messages` | POST | Publicar mensaje (filtrado + anti-spam + reincidencia) |
+| `/chat/status` | GET | Estado mute/ban del usuario o IP |
+
+Body POST `/chat/messages`:
+```json
+{
+  "matchId": "12345",
+  "message": "texto",
+  "userId": "uuid-opcional",
+  "displayName": "Aficionado_4821"
+}
+```
+
+Respuesta bloqueada (422):
+```json
+{
+  "ok": false,
+  "blocked": true,
+  "userMessage": "Tu mensaje no fue enviado. En Ollin Deportes fomentamos la convivencia sana — sin insultos ni discriminación."
+}
+```
+
+**Archivos:**
+- `src/lib/chatFilter.terms.js` — listas editables
+- `src/lib/chatFilter.js` — normalización anti-evasión + evaluación
+- `src/lib/chatModeration.js` — reincidencia (Redis): 3 bloqueos/10 min → mute 15 min; 3 mutes/día → ban 24 h
+- `docs/chat-schema.sql` — tablas `ollin_chat` y `ollin_chat_moderacion`
+
+Variables `.env`: `SUPABASE_URL`, `SUPABASE_SERVICE_KEY`
+
 ## Cumplimiento legal
 
 Antes de escribir UI o respuestas API, leer `src/lib/compliance.js` y `src/lib/sanitize.js`.
