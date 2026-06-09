@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import mosaico from '../assets/mosaicos/Viracoch.png'
-import logoIkanNaat from '../assets/Logo_con_letras_Ikan_Naat_sin_fondo.png'
+import logoIkanNaat from '../assets/Logo_Ika_Naat_sin_fondo_sin_letras.png'
 import logoTelarana from '../assets/Logo_JeelJel_Kanaabcon_balon_sin_fondo.png'
 import logoIzydra from '../assets/Logo_Izydra_OS_Sin_fondo.png'
 import logoVirtyou from '../assets/Logo_virtyou_sin_fondo.png'
@@ -132,7 +132,7 @@ function CubeBackground() {
     if (!container) return
 
     const elements = []
-    const count = 90
+    const count = 72
 
     for (let i = 0; i < count; i++) {
       const type = i % 3

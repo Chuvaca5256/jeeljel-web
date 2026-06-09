@@ -798,7 +798,7 @@ export default function Mision() {
 
       case 3:
         return (
-          <div style={S.sceneCenter}>
+          <div style={{ ...S.sceneCenter, paddingTop: '2.5rem' }}>
             <p className="m-eyebrow" style={S.eyebrow}>
               El ecosistema
             </p>
@@ -823,7 +823,7 @@ export default function Mision() {
         const part2 = 'original'
         const part3 = 'que estaba faltando.'
         return (
-          <div style={S.sceneCenter}>
+          <div style={{ ...S.sceneCenter, paddingTop: '2.5rem' }}>
             <div style={S.cierreBlock}>
               <p style={S.cierreText}>
                 {part1.split(' ').map((w, i) => (

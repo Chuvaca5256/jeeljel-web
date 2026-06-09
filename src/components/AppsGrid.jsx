@@ -1,5 +1,5 @@
 import logoHubBionico from '../assets/Logo_JeelJel_Kanaabcon_balon_sin_fondo.png'
-import logoIkanNaat from '../assets/Logo_con_letras_Ikan_Naat_sin_fondo.png'
+import logoIkanNaat from '../assets/Logo_Ika_Naat_sin_fondo_sin_letras.png'
 import logoVirtyou from '../assets/Logo_virtyou_sin_fondo.png'
 import logoIzydra from '../assets/Logo_Izydra_OS_Sin_fondo.png'
 import logoInkognito from '../assets/Logo_inkognito_sin_fondo.png'

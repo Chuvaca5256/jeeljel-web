@@ -176,7 +176,7 @@ Reemplazó la cuadrícula «5 Plataformas · 30+ Agentes IA · …». Ahora mues
 
 - Logos 36×36 px en esquina superior izquierda de cada tarjeta (`top: 12px`, `left: 12px`)
 - Assets en `src/assets/`:
-  - Ikan Naat: `Logo_con_letras_Ikan_Naat_sin_fondo.png`
+  - Ikan Naat: `Logo_Ika_Naat_sin_fondo_sin_letras.png`
   - Ollin Deportes: `Logo_JeelJel_Kanaabcon_balon_sin_fondo.png`
   - Virtyou: `Logo_virtyou_sin_fondo.png`
   - Izydra OS: `Logo_Izydra_OS_Sin_fondo.png`
