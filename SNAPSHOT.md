@@ -1,10 +1,24 @@
 # SNAPSHOT — Estado actual del proyecto
 
-## SNAPSHOT v4 — Ollin Deportes en arranque (09/06/2026)
+## SNAPSHOT v5 — Ollin Deportes en producción (09/06/2026)
 
-⏳ Página `/ollin-deportes` — **pendiente de construir** (stub actual: título + mosaico Macuilxochitl)
+✅ **`/ollin-deportes` funcional en producción** — https://jeeljel.com/ollin-deportes
+✅ **Frontend completo** — selector ⚽/⚾, panel colapsable «Ver partidos», buscador en tiempo real, 4 columnas (EN VIVO · HOY · PASADOS · PRÓXIMOS), `MatchCard` + `TeamDisplay`, skeletons, fallback mock offline
+✅ **Backend `ollin-backend/`** — Node.js Express puerto **10001** + Redis + PM2 + Socket.io + polling API-Sports
+✅ **Béisbol MLB** — partidos en vivo vía API-Baseball
+✅ **Fútbol próximos** — ligas **1, 2, 3, 4** season 2026 (`next=10` por liga) combinadas en `ollin:futbol:proximos`
+✅ **Hook `useOllinData`** — fetch `/api/ollin/fixtures/{live,hoy,proximos}` + evento Socket.io `ollin:update`
+✅ **Moderación de chat activa** — `chatFilter` + `chatModeration` + reincidencia Redis + rutas `/chat/messages` y `/chat/status`
+✅ **Cumplimiento legal** — `compliance.js` + `sanitize.js` (backend y frontend), `OllinLegalDisclaimer`, sin logos oficiales ni términos prohibidos en UI; redirect `/mundial-2026` → `/ollin-deportes`
+⏳ **SSO jeeljel.com** — registro unificado pendiente de implementar
+⏳ **Tablas de posiciones** — pendiente
+⏳ **`/ollin-deportes/partido/:id`** — stub en producción; vista de partido individual pendiente de desarrollar
+
+## SNAPSHOT v4 — Ollin Deportes en arranque (09/06/2026) — SUPERSEDIDO por v5
+
+~~⏳ Página `/ollin-deportes` — **pendiente de construir**~~ → **completada** (ver SNAPSHOT v5)
 ✅ Documento de arquitectura creado — `CURSOR_OllinDeportes_v1.md` (DOC-JEL-2026-OLLIN-001)
-🔴 Deadline construcción completa: **11 junio 2026**
+✅ Deadline construcción página principal: **11 junio 2026** — página principal entregada; partido individual y tablas pendientes
 
 ## SNAPSHOT v3 — Actualización visual (09/06/2026)
 
@@ -54,7 +68,7 @@ REGLAS DE CONTENIDO:
 
 APPS EN CATÁLOGO `/apps` (5 tarjetas — **Compañeros Virtuales eliminado** del catálogo):
 ✅ 01 — Ikan Naat IA (#4ecdc4) — en línea — https://ikannaat.jeeljel.com
-⏳ 02 — Ollin Deportes (#f97316) — próximamente
+✅ 02 — Ollin Deportes (#f97316) — **en línea** — https://jeeljel.com/ollin-deportes
 ⏳ 03 — VirtYou (#b464ff) — próximamente
 ⏳ 04 — Izydra OS (#c9a84c) — próximamente — gestión operativa seguridad privada
 ⏳ 05 — Inkógnito (#e05555) — próximamente — relatos adultos, tokens, swipe, live streaming
@@ -64,12 +78,12 @@ APPS EN CATÁLOGO `/apps` (5 tarjetas — **Compañeros Virtuales eliminado** de
 - **Nombre:** Ollin Deportes (renombrada desde «Agente Deportivo» en el catálogo)
 - **Tagline:** Fútbol en vivo · Modo Apostador · IA en tiempo real
 - **Color acento:** `#f97316`
-- **Estado:** Próximamente (producto independiente en desarrollo, no en línea)
-- **URL destino:** `jeeljel.com/ollin-deportes`
-- **CTA texto:** ¡Ingresa aquí! (botón deshabilitado, coming soon)
+- **Estado:** **En línea** — producto independiente en producción
+- **URL destino:** https://jeeljel.com/ollin-deportes
+- **CTA texto:** ¡Ingresa aquí! (pendiente habilitar enlace en tarjeta `/apps`)
 - **Logo:** ajolote con balón — `Logo_JeelJel_Kanaabcon_balon_sin_fondo.png`
 - **Features:** Campo 2D isométrico en tiempo real · Estadísticas granulares por jugador · Modo Apostador con momios en vivo · Narrador comunitario con rating · IA analista (Ikan Naat) conectada al partido
-- **Stack planeado:** React + Vite + Tailwind + PixiJS + Socket.io + Node.js + Redis + Docker + API-Football Ultra ($29/mes)
+- **Stack en producción:** React + Vite + Tailwind + Socket.io-client (frontend) · Node.js + Express + Redis + PM2 + Socket.io + API-Sports (backend `:10001`)
 
 ### Tarjeta 03 — VirtYou (`/apps`)
 
@@ -119,7 +133,8 @@ ARCHIVOS CLAVE:
 |------|--------|
 | `/` | Home (landing completa) |
 | `/apps` | Catálogo expandible (5 apps) + fondo mosaico Viracoch + 90 formas wireframe SVG (cuadrados turquesa, triángulos dorados, hexágonos azules) |
-| `/ollin-deportes` | **Pendiente de construir** — stub actual (título + mosaico Macuilxochitl); arquitectura en `CURSOR_OllinDeportes_v1.md` — deadline 11 jun 2026 |
+| `/ollin-deportes` | **En producción** — selector deportes, panel colapsable, buscador, 4 columnas de partidos, Socket.io; disclaimer legal |
+| `/ollin-deportes/partido/:id` | **Stub** — ruta registrada; vista de partido pendiente de desarrollar |
 | `/mision` | Stub — pendiente contenido — fondo mosaico Tlaloc |
 | `/organizaciones` | Completa — 5 causas: PETA, UNESCO, Cruz Roja, UNICEF, WWF — fondo mosaico Dios Tupa — tarjetas semitransparentes |
 | `/contacto` | Stub — pendiente contenido |
@@ -199,7 +214,7 @@ Reemplazó la cuadrícula «5 Plataformas · 30+ Agentes IA · …». Ahora mues
 | App | Descripción |
 |-----|-------------|
 | Ikan Naat | Inteligencia artificial que te escucha, mira, lee y sabe lo que sientes. |
-| Ollin Deportes | Seguimiento del Mundial 2026 en tiempo real |
+| Ollin Deportes | Estadísticas deportivas en tiempo real — fútbol y béisbol |
 | Virtyou | No solo es una tarjeta virtual, también es un organizador y ayuda para el día a día. |
 | Izydra OS | Organiza, crea y olvídate del trabajo pesado. |
 | Inkógnito | La red social para lo que nadie se atreve, pero en modo Inkógnito sin censura. |
@@ -233,6 +248,7 @@ Reemplazó la cuadrícula «5 Plataformas · 30+ Agentes IA · …». Ahora mues
 | **SSL ikannaat** | Certbot — `/etc/letsencrypt/live/ikannaat.jeeljel.com/` |
 | **Deploy jeeljel.com** | `/var/www/jeeljel-web/dist` |
 | **Ikan Naat** | Puerto 10000 — `proxy_pass http://localhost:10000` |
+| **Ollin Deportes backend** | Puerto **10001** — PM2 + Redis + Socket.io; Nginx `location /api/ollin/` → `:10001` (jeeljel-landing) |
 | **GitHub** | https://github.com/Chuvaca5256/jeeljel-web |
 | **Deploy automático** | GitHub Actions — `.github/workflows/deploy.yml` — push a `main` o `workflow_dispatch` |
 | **Secret GitHub** | `VPS_SSH_KEY` — llave SSH ed25519 para deploy |
@@ -293,10 +309,13 @@ El servidor tiene **DOS sitios** corriendo simultáneamente:
 ## 🏟️ OLLIN DEPORTES — DOC-JEL-2026-001
 
 - **Nombre en app:** Ollin Deportes (renombrado desde Hub Biónico Deportivo)
-- **URL final:** `jeeljel.com/ollin-deportes`
-- **Deadline:** 11 de junio de 2026
+- **URL final:** https://jeeljel.com/ollin-deportes — **EN PRODUCCIÓN**
 - **Mascota:** Ajolote JeelJel con balón (`Logo_JeelJel_Kanaabcon_balon_sin_fondo.png`)
-- **Qué es:** Web app dentro de jeeljel.com para seguir partidos del Mundial 2026 en tiempo real con campo 2D isométrico (PixiJS, sin copyright), modo apostador, stats granulares por jugador (pases, faltas, tarjetas, tiros, corners, posesión), narrador comunitario con micrófono, chat en vivo (Supabase), IA analista Ikan Naat conectada a datos en vivo, y archivo post-partido.
-- **Stack:** React + Vite + Tailwind + PixiJS + Socket.io + Node.js + Redis + Docker + Supabase + API-Football Ultra ($29/mes) + Cloudflare
-- **Monetización:** Afiliados casas de apuestas (1xBet 40%, Bet365 30%) + AdSense. Estimado conservador: $3,000–3,500 USD por el Mundial.
+- **Qué es:** Web app dentro de jeeljel.com para seguir fútbol y béisbol (MLB) en tiempo real: columnas EN VIVO / HOY / PASADOS / PRÓXIMOS, chat en vivo moderado (Supabase), modo apostador y campo 2D isométrico (PixiJS) planeados en fases siguientes.
+- **Stack en producción:** React + Vite + Tailwind + Socket.io (frontend) · Node.js + Express + Redis + PM2 + Socket.io + API-Sports (backend `:10001`) · Supabase (chat)
+- **Backend Redis keys:** `ollin:futbol:live`, `ollin:futbol:hoy`, `ollin:futbol:proximos`, `ollin:beisbol:hoy`
+- **Fútbol próximos:** polling adicional ligas API **1, 2, 3, 4** season **2026** (`next=10` c/u)
+- **Cumplimiento legal:** capa `compliance.js` + `sanitize.js` + `OllinLegalDisclaimer`; sin logos oficiales ni términos FIFA/Mundial/World Cup en UI
+- **Moderación chat:** filtros de contenido, anti-evasión, mute/ban por reincidencia (Redis)
+- **Pendiente:** SSO jeeljel.com · tablas de posiciones · página `/ollin-deportes/partido/:id` completa · campo 2D PixiJS · afiliados
 - **Puerto backend Ollin Deportes:** 10001 (nunca 10000, ese es Ikan Naat)

@@ -1,8 +1,6 @@
 # JeelJel Coins (JC) — Economía Universal del Ecosistema
 ## JeelJel Kaanab | Documento Maestro | v13 — 09/06/2026
 
-> **Archivo canónico:** [`JeelJel_Coins_Ecosistema_Master_v13.md`](./JeelJel_Coins_Ecosistema_Master_v13.md) — este archivo es un alias con el mismo contenido.
-
 ---
 
 ## ¿QUÉ ES ESTE DOCUMENTO?
