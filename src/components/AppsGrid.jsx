@@ -20,7 +20,7 @@ const APPS = [
     acento: '#e85d26',
     badge: 'URGENTE',
     badgeColor: '#e85d26',
-    desc: 'Seguimiento del Mundial 2026 en tiempo real',
+    desc: 'Fútbol internacional y ligas en tiempo real',
     logo: logoHubBionico,
   },
   {

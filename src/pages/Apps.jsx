@@ -40,9 +40,9 @@ const APPS = [
     accent: '#f97316',
     subtitle: 'Fútbol en vivo · Modo Apostador · IA en tiempo real',
     preview:
-      'Mundial 2026 en campo 2D · modo apostador · IA analista — próximamente en jeeljel.com',
+      'Fútbol internacional en campo 2D · Modo Apostador · IA analista — próximamente en jeeljel.com',
     description:
-      'Ve los partidos del Mundial 2026 en un campo 2D en tiempo real. Estadísticas de jugador, modo apostador con momios en vivo e IA analista integrada — todo desde jeeljel.com, sin pagar derechos de transmisión.',
+      'Sigue partidos de fútbol internacional y ligas principales en un campo 2D en tiempo real. Estadísticas por jugador, Modo Apostador con momios en vivo e IA analista — todo desde jeeljel.com, sin transmisión de video ni audio.',
     capabilities: [
       'Campo 2D isométrico en tiempo real',
       'Estadísticas granulares por jugador',

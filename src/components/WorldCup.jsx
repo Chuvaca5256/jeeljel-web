@@ -49,7 +49,7 @@ function CountdownBox({ value, label }) {
 
 export default function WorldCup() {
   const descRef = useTypewriter(
-    'El Mundial 2026 como nunca lo viviste — campo 2D en tiempo real, IA analista, narrador comunitario y modo apostador.'
+    'Fútbol internacional en campo 2D en tiempo real — Modo Apostador, momios en vivo e IA analista integrada.'
   )
   const [timeLeft, setTimeLeft] = useState(calcTimeLeft)
 

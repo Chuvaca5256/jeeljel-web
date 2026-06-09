@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import PageStub from './PageStub'
+import OllinLayout from '../components/ollin/OllinLayout'
 import Macuilxochitl from '../assets/mosaicos/Macuilxochitl.png'
 
 export default function HubBionico() {
@@ -9,27 +10,29 @@ export default function HubBionico() {
   }, [])
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        minHeight: '100vh',
-      }}
-    >
+    <OllinLayout pageTitle="Ollin Deportes">
       <div
         style={{
-          position: 'fixed',
-          inset: 0,
-          backgroundImage: `url(${Macuilxochitl})`,
-          backgroundRepeat: 'repeat',
-          backgroundSize: '80px 80px',
-          opacity: 0.08,
-          pointerEvents: 'none',
-          zIndex: 0,
+          position: 'relative',
+          minHeight: '100vh',
         }}
-      />
-      <div style={{ position: 'relative', zIndex: 1 }}>
-        <PageStub title="OLLIN DEPORTES" />
+      >
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            backgroundImage: `url(${Macuilxochitl})`,
+            backgroundRepeat: 'repeat',
+            backgroundSize: '80px 80px',
+            opacity: 0.08,
+            pointerEvents: 'none',
+            zIndex: 0,
+          }}
+        />
+        <div style={{ position: 'relative', zIndex: 1 }}>
+          <PageStub title="OLLIN DEPORTES" />
+        </div>
       </div>
-    </div>
+    </OllinLayout>
   )
 }

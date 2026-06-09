@@ -56,7 +56,7 @@ API-Football → Backend Node.js (polling) → Redis (caché) → Socket.io → 
 ### Fase 1 (lanzamiento)
 | Deporte | Liga(s) prioritarias | API endpoint base |
 |---------|---------------------|-------------------|
-| **Fútbol/Soccer** | FIFA World Cup 2026, Liga MX, Liga Bancomer, Copa MX, Champions League, La Liga, Premier League, Libertadores, Sudamericana | `/fixtures` (API-Football) |
+| **Fútbol/Soccer** | Fútbol internacional, Liga MX, Copa MX, Champions League, La Liga, Premier League, Libertadores, Sudamericana | `/fixtures` (API-Football) |
 | **Béisbol** | MLB (Major League Baseball) | `/games` (API-Baseball) |
 
 ### Fase 2 (post-Mundial)
@@ -246,13 +246,32 @@ location /api/ollin/ {
 - En fútbol mostrar **solo ligas principales y latinoamericanas** — no ligas amateur ni de categorías inferiores
 - El agente de Apuestas dentro de Ikan Naat (slug `telarana`) es un producto **separado** — Ollin Deportes no lo reemplaza
 
+### 10.1 Cumplimiento legal (obligatorio — frontend y backend)
+
+**Lenguaje neutro — prohibido invocar marcas del torneo:** En UI, textos, metadatos, títulos y URLs **NUNCA** usar: `FIFA`, `World Cup`, `Copa del Mundo`, `Copa Mundial`, `Mundial 2026` ni logo/trofeo/mascotas del torneo. Sustituir por: **Fútbol internacional**, **Selecciones nacionales** o el nombre de la liga/competición sanitizado. No usar la ruta `/mundial-2026` (redirigir a `/ollin-deportes`).
+
+**Identificadores visuales:**
+- Selecciones nacionales → **bandera del país** (`flagcdn`, como en `/mision`)
+- Clubes → **círculo con iniciales y color propio** — **NUNCA** escudo oficial de club ni federación
+- Backend: sanitizar fixtures en `ollin-backend/src/lib/sanitize.js` antes de Redis; eliminar `team.logo` / `league.logo`
+
+**Disclaimer legal:** Texto exacto en footer de `/ollin-deportes` y cada `/ollin-deportes/partido/:id` vía `OllinLayout` + `OllinLegalDisclaimer`.
+
+**Sin audiovisual:** No incrustar, enlazar ni mostrar video, audio, clips ni highlights. Campo 2D = **SVG propio** con datos.
+
+**Afiliados apuestas:** Solo lenguaje propio — **Momios en vivo**, **Modo Apostador**. Prohibido nombrar el torneo o «Mundial».
+
+**Permitido:** Nombres de equipos/selecciones como texto informativo (ej. «México vs Brasil»).
+
+**Módulos:** `src/ollin/compliance.js`, `src/ollin/teamDisplay.js`, `src/components/ollin/*`, `ollin-backend/src/lib/compliance.js`, `ollin-backend/src/lib/sanitize.js`
+
 ---
 
 ## 11. LIGAS DE FÚTBOL PERMITIDAS
 
 ```javascript
 const LIGAS_PERMITIDAS = [
-  2,    // FIFA World Cup
+  2,    // Fútbol internacional — selecciones (API id 2)
   3,    // UEFA European Championship
   4,    // Copa América
   9,    // Copa MX
