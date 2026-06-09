@@ -48,14 +48,26 @@ El hub de identidad es **jeeljel.com** (Opción B). El usuario se registra una s
 8. Puede entrar a cualquier app del ecosistema con esas credenciales
 ```
 
-### Ollin Deportes como puerta de entrada — Estrategia Mundial 2026
+### Ollin Deportes como puerta de entrada — Estrategia torneo selecciones 2026
 
-**El Mundial 2026 es el motor de registro más poderoso del ecosistema.**
+**El torneo de selecciones 2026 es el motor de registro más poderoso del ecosistema.**
 
 - Millones de personas buscarán seguir partidos en tiempo real
-- Ollin Deportes es gratuito y público — pero para el chat en vivo se requiere cuenta JeelJel
-- Al registrarse en Ollin Deportes durante el Mundial → ya tienen cuenta en todo el ecosistema
-- Post-Mundial: se les presenta Ikan Naat, Izydra OS, Virtyou, Inkógnito
+- Ollin Deportes es gratuito y público durante el torneo — estrategia de adquisición SSO
+- Al registrarse en Ollin Deportes durante el torneo → ya tienen cuenta en todo el ecosistema
+- Post-torneo: se les presenta Ikan Naat, Izydra OS, Virtyou, Inkógnito
+
+### Decisión CEO — Modelo de acceso post-torneo (09/06/2026)
+
+| Fase | Qué ve el usuario | Requisito |
+|------|-------------------|-----------|
+| **Durante torneo selecciones 2026** | Todo el contenido Ollin Deportes | **Gratis, sin cuenta** (chat requiere registro SSO) |
+| **Post-torneo — tier básico** | Marcadores básicos | **Gratis, sin cuenta** |
+| **Post-torneo — tier completo** | Estadísticas completas, partidos en vivo detallados, ligas premium | **Suscriptor Pro activo** de cualquier app JeelJel (Ikan Naat, Izydra OS, Virtyou, Inkógnito) |
+
+**Implementación técnica:** flag `PREMIUM_ONLY` por liga ya preparado en arquitectura frontend — activable post-torneo sin rediseño.
+
+**Plan API-Sports:** FREE actual (100 req/día, polling 10 min) → upgrade PRO (7,500 req/día, 60 s) o Ultra (15 s partidos activos torneo) al inicio del torneo **11/06/2026**.
 
 **Gatillo de registro en Ollin Deportes:**
 - Ver partidos y estadísticas: **libre, sin cuenta**
@@ -102,7 +114,15 @@ Al registrarse el usuario acepta recibir:
 2. **Nunca crear sistema de auth propio** — siempre usar Supabase Auth con JWT compartido
 3. **El `user_id` es el mismo** en todas las apps — es el vínculo universal
 4. **Al detectar usuario sin cuenta** → redirigir a jeeljel.com/registro, no crear registro local
-5. **Ikan Naat ya tiene auth propio** → migrar progresivamente a jeeljel_users en sprint dedicado post-Mundial
+5. **Ikan Naat ya tiene auth propio** → migrar progresivamente a jeeljel_users en sprint dedicado **post-torneo selecciones 2026**
+
+### SSO pendiente (09/06/2026)
+
+| Item | Descripción | Estado |
+|------|-------------|--------|
+| SSO-1 | Página `jeeljel.com/registro` con Supabase Auth | ⏳ Pendiente |
+| SSO-2 | Modal de registro en chat Ollin Deportes | ⏳ Pendiente |
+| SSO-3 | Migración auth Ikan Naat → `jeeljel_users` | ⏳ Post-torneo |
 
 ---
 
@@ -229,16 +249,35 @@ Esta tabla es el **piso de precios** para todo el ecosistema. Ninguna app puede 
 
 ## 8. TABLA DE PRECIOS — OLLIN DEPORTES (NUEVO v13)
 
-Ollin Deportes está **en producción** (09/06/2026) con backend Node.js `:10001`, Redis, PM2, Socket.io y API-Sports. Es **gratuito** en su versión base. Los JC aplican solo para funciones premium futuras.
+Ollin Deportes está **completamente funcional en producción** (09/06/2026): https://jeeljel.com/ollin-deportes · backend Node.js `:10001` + Redis + PM2 + Socket.io + API-Sports · moderación chat activa · cumplimiento legal implementado.
 
 | Servicio | JC | MXN | Notas |
 |----------|----|-----|-------|
-| Ver partidos + estadísticas | 0 JC | Gratis | ✅ En producción — funnel de adquisición |
-| Listado fútbol + béisbol MLB | 0 JC | Gratis | ✅ Columnas EN VIVO / HOY / PASADOS / PRÓXIMOS |
-| Chat en vivo | 0 JC | Gratis | Requiere cuenta JeelJel (SSO) — backend moderado activo; UI chat pendiente |
-| Tablas de posiciones | 0 JC | Gratis | ⏳ Pendiente de implementar |
-| Vista partido individual | 0 JC | Gratis | ⏳ Stub `/ollin-deportes/partido/:id` — pendiente desarrollo |
-| Ollin Deportes Premium (futuro) | TBD | TBD | Decisión CEO pendiente post-torneo selecciones 2026 |
+| Ver partidos + estadísticas (torneo 2026) | 0 JC | Gratis | ✅ Durante torneo — adquisición SSO |
+| Marcadores básicos (post-torneo) | 0 JC | Gratis | ✅ Tier libre permanente |
+| Estadísticas completas + live detallado + ligas premium (post-torneo) | 0 JC* | Incluido en Pro | *Requiere suscripción Pro activa en cualquier app JeelJel — no se cobra JC extra |
+| Listado fútbol + béisbol MLB | 0 JC | Gratis | ✅ Columnas actuales EN VIVO / HOY / PASADOS / PRÓXIMOS |
+| Chat en vivo | 0 JC | Gratis | Requiere cuenta JeelJel (SSO) — backend moderado activo; UI pendiente |
+| Tab POSICIONES (standings + grupos) | 0 JC | Gratis | ⏳ Próxima sesión — rediseño UI 3 zonas |
+| Vista partido individual | 0 JC | Gratis | ⏳ Stub `/ollin-deportes/partido/:id` |
+| Rediseño UI Sofascore/Bet365 | — | — | ⏳ Próxima sesión |
+| Ollin Deportes Premium (futuro JC) | TBD | TBD | Funciones IA/analista post-torneo |
+
+---
+
+## 8b. CATÁLOGO DE LIGAS OLLIN — PRÓXIMA SESIÓN
+
+Referencia para polling backend y navegador sidebar UI. Nombres en UI siempre vía `compliance.js` (sin términos prohibidos).
+
+**Fútbol internacional:** Torneo selecciones (ID 1), Eurocopa (3), Copa América (4), Copa Africana, Copa Asiática, Concacaf Centroamericana, amistosos selecciones/clubes.
+
+**Clubes Europa:** Champions League (2), Europa League, Mundial de Clubes, Premier + FA Cup, La Liga + Copa del Rey + Supercopa, Serie A + Copa Italia, Ligue 1 + Copa Francia, Bundesliga + Copa Alemania, Eredivisie + Copa Holanda, Portugal + Copa Portugal, Primeira Liga.
+
+**Clubes LATAM:** Libertadores (11), Sudamericana (13), Liga MX + Copa MX (262, 9), Argentina, Serie A/B Brasil, Colombia, Chile, Perú, Ecuador, Venezuela, Uruguay, Bolivia, Paraguay, Honduras, Guatemala, Costa Rica, MLS + Leagues Cup.
+
+**Béisbol:** MLB (1), LMB, NPB, LVBP, Serie Nacional Cuba.
+
+**Fase 2 futura:** NBA, NFL, NHL, F1.
 
 ---
 
@@ -351,7 +390,7 @@ El sistema muestra el precio en la moneda local del usuario — solo informativo
 | 1 video corto 5s (bono WOW) | $0.500 | ⚠️ Principal — escalar con cuidado |
 | **TOTAL CAC /usuario** | **$0.516** | Se paga UNA VEZ al registrar |
 
-**Estrategia Mundial 2026:** CAC de Ollin Deportes = $0 (no hay bono de bienvenida para registro vía chat) — el usuario ya aportó su correo y teléfono como valor.
+**Estrategia torneo selecciones 2026:** CAC de Ollin Deportes = $0 durante el torneo — el usuario aporta correo y teléfono como valor al registrarse para chat.
 
 ---
 
@@ -417,7 +456,11 @@ DLOCAL_WEBHOOK_SECRET=...
 | TC revisión | 1ro de cada mes — no afecta ancla |
 | Argentina ARS | dLocal gestiona — no fijar TC |
 | **SSO hub** | **jeeljel.com — Opción B — inamovible** |
-| **Registro en Ollin** | **Chat requiere cuenta JeelJel — ver gratis sin cuenta** |
+| **Registro en Ollin** | **Chat requiere cuenta JeelJel — ver gratis sin cuenta durante torneo** |
+| **Ollin acceso torneo 2026** | **Público gratuito — adquisición SSO** |
+| **Ollin acceso post-torneo** | **Marcadores básicos libres; premium = suscriptor Pro cualquier app JeelJel** |
+| **Ollin flag PREMIUM_ONLY** | **Por liga — frontend preparado, activar post-torneo** |
+| **API-Sports upgrade** | **PRO/Ultra al inicio torneo 11/06/2026** |
 | **Comunicaciones** | **Solo con consentimiento explícito al registrarse** |
 
 ---
@@ -440,10 +483,15 @@ DLOCAL_WEBHOOK_SECRET=...
 | **OLLIN-5** | 🟡 | UI chat en vivo (backend + moderación ya activos) | Ollin Deportes | ⏳ Pendiente |
 | **OLLIN-6** | — | Cumplimiento legal (compliance + sanitize + disclaimer) | Ollin Deportes | ✅ Completado |
 | **OLLIN-7** | — | Polling próximos ligas 1/2/3/4 season 2026 | Ollin Deportes | ✅ Completado |
+| **OLLIN-8** | 🔴 | Rediseño UI 3 zonas (Sofascore/Bet365) + tab POSICIONES | Ollin Deportes | ⏳ Próxima sesión |
+| **OLLIN-9** | 🔴 | Catálogo completo ligas/deportes (sección 8b) | Ollin Deportes | ⏳ Próxima sesión |
+| **OLLIN-10** | 🔴 | Upgrade API-Sports PRO/Ultra (11/06/2026) | Ollin Deportes | ⏳ Pendiente |
+| **OLLIN-11** | 🟡 | Activar modelo premium post-torneo (`PREMIUM_ONLY`) | Ollin Deportes | ⏳ Post-torneo |
+| **OLLIN-12** | — | Deploy manual VPS backend + PM2 | Ollin Deportes | ✅ Completado |
 
 ---
 
 *Documento generado: 09/06/2026 | Versión: v13 | Autor: JeelJel Kaanab*
 *Cambios v13: SSO unificado (Sección 0), tablas de precios por app (Secciones 8-11), estrategia torneo selecciones 2026 como funnel de registro*
-*Actualización 09/06/2026: Ollin Deportes en producción (frontend + backend :10001); SSO, tablas de posiciones y vista de partido pendientes*
+*Actualización 09/06/2026: Ollin Deportes en producción; modelo premium post-torneo; catálogo ligas; rediseño UI Sofascore/Bet365; plan API-Sports PRO/Ultra; SSO pendiente*
 *Próxima revisión: 01/07/2026 (TC mensual + post-torneo)*

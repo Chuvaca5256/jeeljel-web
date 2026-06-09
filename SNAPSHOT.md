@@ -8,11 +8,56 @@
 ✅ **Béisbol MLB** — partidos en vivo vía API-Baseball
 ✅ **Fútbol próximos** — ligas **1, 2, 3, 4** season 2026 (`next=10` por liga) combinadas en `ollin:futbol:proximos`
 ✅ **Hook `useOllinData`** — fetch `/api/ollin/fixtures/{live,hoy,proximos}` + evento Socket.io `ollin:update`
-✅ **Moderación de chat activa** — `chatFilter` + `chatModeration` + reincidencia Redis + rutas `/chat/messages` y `/chat/status`
+✅ **Moderación de chat activa** — homofobia, racismo, groserías, spam; `chatFilter` + `chatModeration` + reincidencia Redis + rutas `/chat/messages` y `/chat/status`
 ✅ **Cumplimiento legal** — `compliance.js` + `sanitize.js` (backend y frontend), `OllinLegalDisclaimer`, sin logos oficiales ni términos prohibidos en UI; redirect `/mundial-2026` → `/ollin-deportes`
-⏳ **SSO jeeljel.com** — registro unificado pendiente de implementar
-⏳ **Tablas de posiciones** — pendiente
-⏳ **`/ollin-deportes/partido/:id`** — stub en producción; vista de partido individual pendiente de desarrollar
+✅ **Deploy manual VPS** — backend Ollin (`:10001`) + Redis + PM2 funcionando en VPS; frontend vía GitHub Actions → `/var/www/jeeljel-web/dist`
+⏳ **Rediseño UI completo** — layout 3 zonas tipo Sofascore/Bet365 pendiente para **próxima sesión**
+⏳ **SSO jeeljel.com/registro** — Supabase Auth + modal en chat Ollin; migración auth Ikan Naat post-torneo
+⏳ **Tablas de posiciones** — tab POSICIONES con standings y grupos del torneo de selecciones
+⏳ **`/ollin-deportes/partido/:id`** — stub en producción; vista de partido individual pendiente
+
+### Plan API-Sports (09/06/2026)
+
+| Plan | Requests/día | Polling | Cuándo |
+|------|--------------|---------|--------|
+| **FREE** (actual) | 100 req/día | cada **10 min** | Hasta inicio torneo selecciones |
+| **PRO** | 7,500 req/día | cada **60 s** | Upgrade al inicio del torneo (**11/06/2026**) |
+| **Ultra** | según plan | cada **15 s** | Partidos activos del torneo de selecciones |
+
+### Decisión CEO — Modelo de acceso post-torneo
+
+| Fase | Acceso |
+|------|--------|
+| **Durante torneo selecciones 2026** | Público y **gratuito** — estrategia de adquisición SSO |
+| **Post-torneo** | Marcadores básicos: **libre**. Estadísticas completas, partidos en vivo detallados y ligas premium: **exclusivo suscriptores Pro** de cualquier app JeelJel (Ikan Naat, Izydra OS, Virtyou, Inkógnito) |
+| **Arquitectura** | Flag `PREMIUM_ONLY` por liga ya preparado en frontend — activable sin rediseño |
+
+### Ligas y deportes — próxima sesión
+
+**Fútbol internacional:** Torneo selecciones (ID **1**), Eurocopa (ID **3**), Copa América (ID **4**), Copa Africana de Naciones, Copa Asiática, Copa Centroamericana Concacaf, amistosos selecciones y clubes.
+
+**Clubes Europa:** Champions League (ID **2**), Europa League, Mundial de Clubes, Premier League + FA Cup, La Liga + Copa del Rey + Supercopa España, Serie A + Copa Italia, Ligue 1 + Copa Francia, Bundesliga + Copa Alemania, Eredivisie + Copa Holanda, Liga Portuguesa + Copa Portugal, Primeira Liga.
+
+**Clubes LATAM:** Copa Libertadores (ID **11**), Copa Sudamericana (ID **13**), Liga MX + Copa MX (ID **262**, **9**), Liga Argentina, Serie A Brasil + Serie B Brasil, Liga Colombia, Liga Chile, Liga Perú, Liga Ecuador, Liga Venezuela, Liga Uruguay, Liga Bolivia, Liga Paraguay, Liga Honduras, Liga Guatemala, Liga Costa Rica, MLS + Leagues Cup.
+
+**Béisbol:** MLB (ID **1**), Liga Mexicana de Béisbol, Liga Japonesa NPB, Liga Venezolana LVBP, Serie Nacional Cuba.
+
+**Futuro Fase 2:** NBA, NFL, NHL, Fórmula 1.
+
+### Rediseño UI — próxima sesión
+
+Layout **3 zonas** tipo Sofascore/Bet365:
+
+1. **Columna izquierda fija** — navegador de ligas agrupadas por región + badges EN VIVO
+2. **Panel central** — tabs EN VIVO · HOY · PRÓXIMOS · PASADOS · **POSICIONES** + buscador global
+3. **Tab POSICIONES** — standings y grupos del torneo de selecciones
+4. **Móvil** — menú hamburguesa + una columna visible
+
+### SSO pendiente
+
+- Página **jeeljel.com/registro** con Supabase Auth
+- Modal de registro al intentar chatear en Ollin Deportes
+- Migración auth Ikan Naat → `jeeljel_users` **post-torneo**
 
 ## SNAPSHOT v4 — Ollin Deportes en arranque (09/06/2026) — SUPERSEDIDO por v5
 
@@ -316,6 +361,10 @@ El servidor tiene **DOS sitios** corriendo simultáneamente:
 - **Backend Redis keys:** `ollin:futbol:live`, `ollin:futbol:hoy`, `ollin:futbol:proximos`, `ollin:beisbol:hoy`
 - **Fútbol próximos:** polling adicional ligas API **1, 2, 3, 4** season **2026** (`next=10` c/u)
 - **Cumplimiento legal:** capa `compliance.js` + `sanitize.js` + `OllinLegalDisclaimer`; sin logos oficiales ni términos FIFA/Mundial/World Cup en UI
-- **Moderación chat:** filtros de contenido, anti-evasión, mute/ban por reincidencia (Redis)
-- **Pendiente:** SSO jeeljel.com · tablas de posiciones · página `/ollin-deportes/partido/:id` completa · campo 2D PixiJS · afiliados
+- **Moderación chat:** homofobia, racismo, groserías, spam — filtros anti-evasión, mute/ban por reincidencia (Redis)
+- **Deploy:** manual VPS backend + PM2; frontend GitHub Actions
+- **API-Sports:** plan FREE (100 req/día, 10 min) → upgrade PRO/Ultra al **11/06/2026**
+- **Modelo acceso:** gratuito durante torneo selecciones 2026; post-torneo marcadores básicos libres, premium para suscriptores Pro ecosistema; flag `PREMIUM_ONLY` por liga en frontend
+- **Próxima sesión:** rediseño UI 3 zonas (Sofascore/Bet365), catálogo completo de ligas, tab POSICIONES, SSO
+- **Pendiente:** jeeljel.com/registro · modal chat · migración Ikan Naat post-torneo · `/partido/:id` · campo 2D PixiJS · afiliados
 - **Puerto backend Ollin Deportes:** 10001 (nunca 10000, ese es Ikan Naat)
