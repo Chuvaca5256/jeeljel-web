@@ -41,6 +41,31 @@
 - ✅ Figuras geométricas `/apps` reducidas a 58 elementos
 - ✅ Página `/mision` responsiva — layout flex 100vh, contenido centrado en todas las pantallas
 
+## 🔴 Ollin Deportes — Proyecto activo (deadline: 11 junio 2026)
+
+**Documento de referencia:** [`CURSOR_OllinDeportes_v1.md`](./CURSOR_OllinDeportes_v1.md) — DOC-JEL-2026-OLLIN-001
+
+| Área | Estado |
+|------|--------|
+| Página `/ollin-deportes` | ⏳ Pendiente de construir (stub con mosaico Macuilxochitl en producción) |
+| Página `/ollin-deportes/partido/:id` | ⏳ Pendiente |
+| Backend Node.js (puerto **10001**) | ⏳ Pendiente |
+| Redis + Socket.io + polling API-Sports | ⏳ Pendiente — spec en documento CURSOR |
+| Chat en vivo (Supabase) | ⏳ Pendiente — fase Día 2 |
+| Nginx `/api/ollin/` → `:10001` | ⏳ Pendiente — regla en sección 7 del documento |
+
+**Stack definido:** React + Vite + Tailwind (frontend en `jeeljel-web`) · Node.js + Express + Redis + Socket.io (backend `:10001`) · API-Sports · Supabase chat
+
+**Deportes fase 1:** Fútbol (ligas LATAM + principales + Mundial 2026) · Béisbol (MLB)
+
+**Orden de construcción:** sección 9 de `CURSOR_OllinDeportes_v1.md` (Día 1 → backend + listado + partido; Día 2 → campo 2D + chat + deploy; Día 3+ → polling Mundial + afiliados)
+
+**Reglas críticas:**
+- Puerto **10001** — nunca 10000 (Ikan Naat)
+- Frontend **nunca** llama API-Sports directo — solo Socket.io desde backend
+- Nginx: modificar solo `jeeljel-landing`, **nunca** `ikannaat`
+- Producto **independiente** de Ikan Naat IA
+
 ## Infraestructura
 
 ### Acceso VPS
@@ -87,12 +112,12 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 
 ## Pendientes próxima sesión
 
-- [ ] 🔴 **URGENTE** — Ollin Deportes completo — deadline 11 junio 2026
+- [ ] 🔴 **URGENTE** — Ollin Deportes completo — deadline 11 junio 2026 → ver sección activa arriba y `CURSOR_OllinDeportes_v1.md`
 - [ ] Registrarse en API-Football Ultra y obtener API key
 - [ ] Registrarse en afiliados: 1xBet Partners, Bet365 Affiliates
 - [ ] Crear ruta `/mundial-2026` en React dentro de jeeljel-web
 - [x] Página `/apps` — tarjetas 04 Izydra OS y 05 Inkógnito completadas
-- [ ] Página Ollin Deportes (`/ollin-deportes`) completa con features y CTA
+- [ ] Página Ollin Deportes (`/ollin-deportes`) — en construcción; seguir `CURSOR_OllinDeportes_v1.md`
 - [ ] Página Misión con contenido real
 - [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:`)
 - [ ] Footer global: ampliar sección de contacto si hace falta más allá del scroll desde Stats

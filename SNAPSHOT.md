@@ -1,5 +1,11 @@
 # SNAPSHOT — Estado actual del proyecto
 
+## SNAPSHOT v4 — Ollin Deportes en arranque (09/06/2026)
+
+⏳ Página `/ollin-deportes` — **pendiente de construir** (stub actual: título + mosaico Macuilxochitl)
+✅ Documento de arquitectura creado — `CURSOR_OllinDeportes_v1.md` (DOC-JEL-2026-OLLIN-001)
+🔴 Deadline construcción completa: **11 junio 2026**
+
 ## SNAPSHOT v3 — Actualización visual (09/06/2026)
 
 ✅ Logo Ikan Naat actualizado — nuevo quetzal neón turquesa (`Logo_Ika_Naat_sin_fondo_sin_letras.png`)
@@ -113,7 +119,7 @@ ARCHIVOS CLAVE:
 |------|--------|
 | `/` | Home (landing completa) |
 | `/apps` | Catálogo expandible (5 apps) + fondo mosaico Viracoch + 90 formas wireframe SVG (cuadrados turquesa, triángulos dorados, hexágonos azules) |
-| `/ollin-deportes` | Stub — título **OLLIN DEPORTES** (renombrado desde `/hub-bionico`, redirect 301 activo) — fondo mosaico Macuilxochitl |
+| `/ollin-deportes` | **Pendiente de construir** — stub actual (título + mosaico Macuilxochitl); arquitectura en `CURSOR_OllinDeportes_v1.md` — deadline 11 jun 2026 |
 | `/mision` | Stub — pendiente contenido — fondo mosaico Tlaloc |
 | `/organizaciones` | Completa — 5 causas: PETA, UNESCO, Cruz Roja, UNICEF, WWF — fondo mosaico Dios Tupa — tarjetas semitransparentes |
 | `/contacto` | Stub — pendiente contenido |
