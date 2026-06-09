@@ -120,3 +120,38 @@ export function sportHasMatches(categorized, sport) {
     filterBySport(categorized.proximos, sport).length > 0
   )
 }
+
+export function filterBySearch(matches, query) {
+  const q = query.trim().toLowerCase()
+  if (!q) return matches
+  return matches.filter(
+    (m) =>
+      m.homeTeam.name.toLowerCase().includes(q) ||
+      m.awayTeam.name.toLowerCase().includes(q) ||
+      m.leagueName.toLowerCase().includes(q)
+  )
+}
+
+export function formatMatchDateTime(dateStr) {
+  if (!dateStr) return null
+  const d = new Date(dateStr)
+  if (Number.isNaN(d.getTime())) return null
+
+  const now = new Date()
+  const isToday =
+    d.getDate() === now.getDate() &&
+    d.getMonth() === now.getMonth() &&
+    d.getFullYear() === now.getFullYear()
+
+  const time = d.toLocaleTimeString('es-MX', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  })
+
+  if (isToday) return time
+
+  const day = String(d.getDate()).padStart(2, '0')
+  const month = String(d.getMonth() + 1).padStart(2, '0')
+  return `${day}/${month} · ${time}`
+}

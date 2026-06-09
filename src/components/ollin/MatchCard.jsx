@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { formatMatchDateTime } from '../../ollin/matchUtils'
 import TeamDisplay from './TeamDisplay'
 
 export default function MatchCard({ match }) {
@@ -6,6 +7,7 @@ export default function MatchCard({ match }) {
 
   const showScore = match.homeScore != null && match.awayScore != null
   const scoreText = showScore ? `${match.homeScore} - ${match.awayScore}` : 'vs'
+  const dateTime = formatMatchDateTime(match.date)
 
   return (
     <Link
@@ -28,6 +30,7 @@ export default function MatchCard({ match }) {
             {match.status === 'live' && <span className="ollin-live-dot" aria-hidden />}
             {match.status === 'live' ? 'LIVE' : match.statusLabel}
           </span>
+          {dateTime && <span className="ollin-match-card__datetime">{dateTime}</span>}
         </div>
 
         <div className="ollin-match-card__team ollin-match-card__team--away">

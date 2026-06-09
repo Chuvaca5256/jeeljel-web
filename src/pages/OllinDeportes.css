@@ -63,30 +63,137 @@
   text-align: center;
 }
 
+.ollin-sports-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
 .ollin-sports {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 12px;
-  margin-bottom: 24px;
 }
 
 .ollin-sports__btn {
   font-family: 'DM Sans', sans-serif;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
-  padding: 10px 20px;
+  padding: 12px 28px;
   border-radius: 999px;
   border: 1px solid rgba(255, 255, 255, 0.15);
   background: rgba(0, 0, 0, 0.35);
   color: #ffffff;
   cursor: pointer;
-  transition: border-color 0.2s ease, background 0.2s ease;
+  transition: border-color 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
 .ollin-sports__btn.is-active {
-  border-color: #4ecdc4;
-  background: rgba(78, 205, 196, 0.1);
+  border-color: #f0c030;
+  background: #f0c030;
+  color: #000000;
+}
+
+.ollin-panel-toggle {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.ollin-panel-toggle__arrow {
+  font-size: 22px;
+  line-height: 1;
   color: #4ecdc4;
+  animation: ollin-arrow-blink 1.4s ease-in-out infinite;
+}
+
+.ollin-panel-toggle__arrow.is-open {
+  animation: none;
+}
+
+.ollin-panel-toggle__label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #4ecdc4;
+  letter-spacing: 0.04em;
+}
+
+@keyframes ollin-arrow-blink {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.35;
+    transform: translateY(4px);
+  }
+}
+
+.ollin-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.45s ease;
+}
+
+.ollin-panel.is-open {
+  grid-template-rows: 1fr;
+}
+
+.ollin-panel__inner {
+  overflow: hidden;
+  min-height: 0;
+  padding-top: 0;
+  transition: padding-top 0.45s ease;
+}
+
+.ollin-panel.is-open .ollin-panel__inner {
+  padding-top: 20px;
+}
+
+.ollin-search {
+  margin-bottom: 16px;
+}
+
+.ollin-search__wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(78, 205, 196, 0.25);
+  background: rgba(255, 255, 255, 0.06);
+  cursor: text;
+}
+
+.ollin-search__icon {
+  flex-shrink: 0;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.ollin-search__input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: #ffffff;
+}
+
+.ollin-search__input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
 }
 
 .ollin-mobile-tabs {
@@ -306,6 +413,13 @@
 .ollin-match-card__badge--finished {
   color: #6b9e7a;
   background: rgba(107, 158, 122, 0.12);
+}
+
+.ollin-match-card__datetime {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.02em;
 }
 
 .ollin-skeleton {
