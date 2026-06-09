@@ -59,25 +59,40 @@ const S = {
     position: 'relative',
     width: '100%',
     height: '100vh',
+    display: 'flex',
+    flexDirection: 'column',
     overflow: 'hidden',
+  },
+  slideStage: {
+    flex: 1,
+    position: 'relative',
+    minHeight: 0,
+    width: '100%',
   },
   slide: (visible) => ({
     position: 'absolute',
     inset: 0,
     display: visible ? 'flex' : 'none',
     flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '80px 40px 40px',
+    padding: '0 40px 40px',
     textAlign: 'center',
     overflowY: 'auto',
     zIndex: 1,
   }),
+  slideMain: {
+    flex: 1,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    minHeight: 0,
+    width: '100%',
+  },
   header: {
-    position: 'absolute',
-    top: '80px',
-    left: 0,
-    right: 0,
+    flexShrink: 0,
+    paddingTop: '80px',
+    paddingLeft: '40px',
+    paddingRight: '40px',
+    paddingBottom: '12px',
     textAlign: 'center',
     zIndex: 10,
     pointerEvents: 'none',
@@ -98,7 +113,7 @@ const S = {
     margin: 0,
   },
   sceneNav: {
-    marginTop: '32px',
+    marginTop: '16px',
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
@@ -706,7 +721,7 @@ export default function Mision() {
     switch (sceneIndex) {
       case 0:
         return (
-          <div className="m-scene-center" style={S.sceneCenter}>
+          <div style={S.sceneCenter}>
             <p className="m-eyebrow" style={S.eyebrow}>
               Nuestra razón de existir
             </p>
@@ -723,7 +738,7 @@ export default function Mision() {
 
       case 1:
         return (
-          <div className="m-scene-center" style={S.sceneCenter}>
+          <div style={S.sceneCenter}>
             <p className="m-eyebrow" style={S.eyebrow}>
               El problema
             </p>
@@ -764,7 +779,7 @@ export default function Mision() {
 
       case 2:
         return (
-          <div className="m-scene-center" style={{ ...S.sceneCenter, maxWidth: '900px' }}>
+          <div style={{ ...S.sceneCenter, maxWidth: '900px' }}>
             <p className="m-eyebrow" style={S.eyebrow}>
               La respuesta
             </p>
@@ -798,7 +813,7 @@ export default function Mision() {
 
       case 3:
         return (
-          <div className="m-scene-center" style={S.sceneCenter}>
+          <div style={S.sceneCenter}>
             <p className="m-eyebrow" style={S.eyebrow}>
               El ecosistema
             </p>
@@ -823,7 +838,7 @@ export default function Mision() {
         const part2 = 'original'
         const part3 = 'que estaba faltando.'
         return (
-          <div className="m-scene-center" style={S.sceneCenter}>
+          <div style={S.sceneCenter}>
             <div style={S.cierreBlock}>
               <p style={S.cierreText}>
                 {part1.split(' ').map((w, i) => (
@@ -873,19 +888,6 @@ export default function Mision() {
       }}
     >
       <style>{`
-        .m-scene-center {
-          padding-top: 8rem;
-        }
-        @media (min-width: 769px) and (max-width: 1024px) {
-          .m-scene-center {
-            padding-top: 6rem;
-          }
-        }
-        @media (min-width: 1025px) {
-          .m-scene-center {
-            padding-top: 4rem;
-          }
-        }
         @media (max-width: 640px) {
           .m-chip {
             font-size: 12px !important;
@@ -912,17 +914,19 @@ export default function Mision() {
             <p style={S.headerSub}>La razón por la que JeelJel Kaanab existe.</p>
           </div>
 
-          {Array.from({ length: TOTAL }, (_, n) => (
-            <div
-              key={n}
-              ref={setSceneRef(n)}
-              data-scene={n}
-              style={S.slide(current === n)}
-            >
-              {renderSceneBody(n)}
-              {renderSceneNav(n)}
-            </div>
-          ))}
+          <div style={S.slideStage}>
+            {Array.from({ length: TOTAL }, (_, n) => (
+              <div
+                key={n}
+                ref={setSceneRef(n)}
+                data-scene={n}
+                style={S.slide(current === n)}
+              >
+                <div style={S.slideMain}>{renderSceneBody(n)}</div>
+                {renderSceneNav(n)}
+              </div>
+            ))}
+          </div>
         </div>
 
         {openPilar !== null && (
