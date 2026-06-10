@@ -1,6 +1,6 @@
 require('dotenv').config()
 
-const POLLING_INTERVAL_MS = parseInt(process.env.POLLING_INTERVAL_MS || '600000', 10)
+const POLLING_INTERVAL_MS = parseInt(process.env.POLLING_INTERVAL_MS || '180000', 10)
 const rawPort = parseInt(process.env.OLLIN_PORT || '10001', 10)
 
 if (rawPort === 10000) {
@@ -14,8 +14,8 @@ const config = {
   pollingIntervalMs: Number.isFinite(POLLING_INTERVAL_MS) ? POLLING_INTERVAL_MS : 600000,
   port: Number.isFinite(rawPort) ? rawPort : 10001,
   cacheTtlMs: (Number.isFinite(POLLING_INTERVAL_MS) ? POLLING_INTERVAL_MS : 600000) * 2,
-  apiDailyLimit: 100,
-  apiDailyPauseAt: 95,
+  apiDailyLimit: 7500,
+  apiDailyPauseAt: 7400,
   footballBaseUrl: 'https://v3.football.api-sports.io',
   baseballBaseUrl: 'https://v1.baseball.api-sports.io',
   corsOrigins: ['https://jeeljel.com', 'http://localhost:5173'],
