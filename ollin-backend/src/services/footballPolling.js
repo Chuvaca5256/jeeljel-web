@@ -56,6 +56,23 @@ function sortFixturesByDate(fixtures) {
   })
 }
 
+async function pollFootballProximos(redis) {
+  const torneoProximos = await fetchProximosTorneoSelecciones(redis)
+  const combinedProximos = dedupeFixtures(torneoProximos)
+  return {
+    proximos: combinedProximos.length ? sortFixturesByDate(combinedProximos) : null,
+  }
+}
+
+async function pollFootballLive(redis) {
+  const liveResult = await fetchLiveFixtures(redis)
+  const liveFixtures = liveResult.ok
+    ? sanitizeFootballFixtures(filterAllowedLeagues(liveResult.data))
+    : null
+
+  return { live: liveFixtures }
+}
+
 async function pollFootball(redis) {
   const dates = nextDates(4)
   const [today] = dates
@@ -91,5 +108,9 @@ async function pollFootball(redis) {
 
 module.exports = {
   filterAllowedLeagues,
+  fetchLiveFixtures,
   pollFootball,
+  pollFootballLive,
+  pollFootballProximos,
+  TORNEO_SELECCIONES_LIGAS,
 }

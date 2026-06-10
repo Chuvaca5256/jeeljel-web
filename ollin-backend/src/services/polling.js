@@ -1,14 +1,41 @@
 const config = require('../config/env')
 const { KEYS, setJson, getJson, setMeta } = require('../lib/redis')
 const { isPollingPaused, setPollingPaused, getRequestCount } = require('../lib/requestCounter')
-const { pollFootball } = require('./footballPolling')
+const { FOOTBALL_LIVE_STATUSES } = require('../config/leagues')
+const { footballClient, apiGet } = require('./apiClient')
+const {
+  pollFootballLive,
+  pollFootballProximos,
+  TORNEO_SELECCIONES_LIGAS,
+} = require('./footballPolling')
 const { pollBaseball, isBaseballLive } = require('./baseballPolling')
+const { fetchStandings } = require('./standingsService')
+
+const LIVE_INTERVAL_MS = 15000
+const IDLE_INTERVAL_MS = 180000
 
 let pollingTimer = null
 let ioRef = null
+let currentIntervalMs = IDLE_INTERVAL_MS
 
 function attachSocketIO(io) {
   ioRef = io
+}
+
+function eventsKey(fixtureId) {
+  return `ollin:futbol:events:${fixtureId}`
+}
+
+function hasAnyLiveFixture(futbolLive, beisbolHoy) {
+  const futbolActive =
+    Array.isArray(futbolLive) &&
+    futbolLive.some((f) => {
+      const short = f?.fixture?.status?.short
+      return short && FOOTBALL_LIVE_STATUSES.has(short)
+    })
+  const beisbolActive =
+    Array.isArray(beisbolHoy) && beisbolHoy.some((g) => isBaseballLive(g))
+  return futbolActive || beisbolActive
 }
 
 function computeDeportesActivos(futbolLive, futbolHoy, beisbolHoy) {
@@ -27,22 +54,118 @@ async function emitUpdate(deporte, tipo, data) {
   ioRef.emit('ollin:update', { deporte, tipo, data, at: new Date().toISOString() })
 }
 
+async function pollLiveFixtureEvents(redis, liveFixtures, ttl) {
+  if (!Array.isArray(liveFixtures) || liveFixtures.length === 0) return
+
+  for (const fixture of liveFixtures) {
+    const fixtureId = fixture?.fixture?.id
+    if (!fixtureId) continue
+
+    const result = await apiGet(
+      footballClient,
+      '/fixtures/events',
+      { fixture: fixtureId },
+      redis
+    )
+
+    if (!result.ok) {
+      console.warn(`[ollin][polling] Events falló fixture=${fixtureId}`)
+      continue
+    }
+
+    await setJson(eventsKey(fixtureId), result.data, ttl)
+
+    if (ioRef) {
+      ioRef.emit(`ollin:partido:${fixtureId}`, {
+        events: result.data,
+        at: new Date().toISOString(),
+      })
+    }
+  }
+}
+
+async function pollStandingsBatch(redis) {
+  for (const ligaId of TORNEO_SELECCIONES_LIGAS) {
+    try {
+      await fetchStandings(ligaId, redis)
+    } catch (err) {
+      console.warn(`[ollin][polling] Standings falló liga=${ligaId}:`, err.message)
+    }
+  }
+}
+
+async function runLiveCycle(redis, ttl) {
+  console.log('[ollin][polling] Modo LIVE — live + events')
+
+  const football = await pollFootballLive(redis)
+  if (football.live !== null) {
+    await setJson(KEYS.futbolLive, football.live, ttl)
+    await emitUpdate('futbol', 'live', football.live)
+    await pollLiveFixtureEvents(redis, football.live, ttl)
+  } else {
+    console.warn('[ollin][polling] Fútbol live sin actualizar — conservando caché')
+  }
+
+  const baseball = await pollBaseball(redis)
+  if (baseball.hoy !== null) {
+    await setJson(KEYS.beisbolHoy, baseball.hoy, ttl)
+    await emitUpdate('beisbol', 'hoy', baseball.hoy)
+  }
+}
+
+async function runIdleCycle(redis, ttl) {
+  console.log('[ollin][polling] Modo IDLE — próximos + standings')
+
+  const football = await pollFootballProximos(redis)
+  if (football.proximos !== null) {
+    await setJson(KEYS.futbolProximos, football.proximos, ttl)
+    await emitUpdate('futbol', 'proximos', football.proximos)
+  }
+
+  await pollStandingsBatch(redis)
+}
+
+async function detectLiveTransition(redis, ttl) {
+  const football = await pollFootballLive(redis)
+  if (football.live !== null) {
+    await setJson(KEYS.futbolLive, football.live, ttl)
+  }
+
+  const baseball = await pollBaseball(redis)
+  if (baseball.hoy !== null) {
+    await setJson(KEYS.beisbolHoy, baseball.hoy, ttl)
+  }
+}
+
+function scheduleNextCycle(redis, intervalMs) {
+  if (pollingTimer) clearTimeout(pollingTimer)
+  currentIntervalMs = intervalMs
+  console.log(`[ollin][polling] Intervalo: ${intervalMs}ms`)
+  pollingTimer = setTimeout(() => {
+    runPollingCycle(redis).catch((err) => {
+      console.error('[ollin][polling] Error en ciclo:', err.message)
+      scheduleNextCycle(redis, currentIntervalMs)
+    })
+  }, intervalMs)
+}
+
 async function runPollingCycle(redis) {
   const pause = await isPollingPaused(redis)
   if (pause.paused) {
     console.warn(
       `[ollin][polling] Pausado (${pause.reason}) — requests hoy: ${pause.count}/${config.apiDailyLimit}`
     )
+    scheduleNextCycle(redis, IDLE_INTERVAL_MS)
     return
   }
 
   const countBefore = await getRequestCount(redis)
-  const maxNewRequests = 6
-  if (countBefore + maxNewRequests > config.apiDailyPauseAt) {
+  if (countBefore >= config.apiDailyPauseAt) {
     console.warn(
       `[ollin][polling] Ciclo omitido — ${countBefore} requests hoy, límite pausa en ${config.apiDailyPauseAt}`
     )
     await setPollingPaused(redis, true)
+    scheduleNextCycle(redis, IDLE_INTERVAL_MS)
     return
   }
 
@@ -50,66 +173,52 @@ async function runPollingCycle(redis) {
   const ttl = config.cacheTtlMs
   const now = new Date().toISOString()
 
-  const football = await pollFootball(redis)
-  if (football.live !== null) {
-    await setJson(KEYS.futbolLive, football.live, ttl)
-    await emitUpdate('futbol', 'live', football.live)
+  const cachedLive = (await getJson(KEYS.futbolLive, [])) || []
+  const cachedBeisbol = (await getJson(KEYS.beisbolHoy, [])) || []
+  const cachedHoy = (await getJson(KEYS.futbolHoy, [])) || []
+  const inLiveMode = hasAnyLiveFixture(cachedLive, cachedBeisbol)
+
+  if (inLiveMode) {
+    await runLiveCycle(redis, ttl)
   } else {
-    console.warn('[ollin][polling] Fútbol live sin actualizar — conservando caché')
+    await runIdleCycle(redis, ttl)
+    await detectLiveTransition(redis, ttl)
   }
 
-  if (football.hoy !== null) {
-    await setJson(KEYS.futbolHoy, football.hoy, ttl)
-    await emitUpdate('futbol', 'hoy', football.hoy)
-  }
-
-  if (football.proximos !== null) {
-    await setJson(KEYS.futbolProximos, football.proximos, ttl)
-    await emitUpdate('futbol', 'proximos', football.proximos)
-  }
-
-  const baseball = await pollBaseball(redis)
-  if (baseball.hoy !== null) {
-    await setJson(KEYS.beisbolHoy, baseball.hoy, ttl)
-    await emitUpdate('beisbol', 'hoy', baseball.hoy)
-  } else {
-    console.warn('[ollin][polling] Béisbol sin actualizar — conservando caché')
-  }
-
-  const cachedLive = football.live ?? (await getJson(KEYS.futbolLive, []))
-  const cachedHoy = football.hoy ?? (await getJson(KEYS.futbolHoy, []))
-  const cachedBeisbol = baseball.hoy ?? (await getJson(KEYS.beisbolHoy, []))
-  const deportesActivos = computeDeportesActivos(cachedLive, cachedHoy, cachedBeisbol)
+  const liveAfter = (await getJson(KEYS.futbolLive, [])) || []
+  const beisbolAfter = (await getJson(KEYS.beisbolHoy, [])) || []
+  const hoyAfter = (await getJson(KEYS.futbolHoy, [])) || []
+  const deportesActivos = computeDeportesActivos(liveAfter, hoyAfter, beisbolAfter)
   await setMeta(now, deportesActivos)
 
   const countAfter = await getRequestCount(redis)
-  console.log(`[ollin][polling] Ciclo OK — requests hoy: ${countAfter}/${config.apiDailyLimit}`)
+  const nextLive = hasAnyLiveFixture(liveAfter, beisbolAfter)
+  const nextInterval = nextLive ? LIVE_INTERVAL_MS : IDLE_INTERVAL_MS
+
+  console.log(
+    `[ollin][polling] Ciclo OK — modo ${nextLive ? 'LIVE' : 'IDLE'} — requests hoy: ${countAfter}/${config.apiDailyLimit}`
+  )
 
   if (countAfter >= config.apiDailyPauseAt) {
     await setPollingPaused(redis, true)
     console.warn('[ollin][polling] Límite diario alcanzado — pausado hasta mañana')
   }
+
+  scheduleNextCycle(redis, nextInterval)
 }
 
 function startPolling(redis) {
-  if (pollingTimer) clearInterval(pollingTimer)
+  if (pollingTimer) clearTimeout(pollingTimer)
 
   runPollingCycle(redis).catch((err) => {
     console.error('[ollin][polling] Error en ciclo inicial:', err.message)
+    scheduleNextCycle(redis, IDLE_INTERVAL_MS)
   })
-
-  pollingTimer = setInterval(() => {
-    runPollingCycle(redis).catch((err) => {
-      console.error('[ollin][polling] Error en ciclo:', err.message)
-    })
-  }, config.pollingIntervalMs)
-
-  console.log(`[ollin][polling] Intervalo: ${config.pollingIntervalMs}ms`)
 }
 
 function stopPolling() {
   if (pollingTimer) {
-    clearInterval(pollingTimer)
+    clearTimeout(pollingTimer)
     pollingTimer = null
   }
 }
@@ -120,4 +229,6 @@ module.exports = {
   startPolling,
   stopPolling,
   isBaseballLive,
+  LIVE_INTERVAL_MS,
+  IDLE_INTERVAL_MS,
 }
