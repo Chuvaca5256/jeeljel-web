@@ -23,6 +23,10 @@ export default function Registro() {
   const [nombre, setNombre] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [confirmPasswordError, setConfirmPasswordError] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [phone, setPhone] = useState('')
   const [acceptTerms, setAcceptTerms] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -39,6 +43,7 @@ export default function Registro() {
   async function handleSubmit(e) {
     e.preventDefault()
     setError('')
+    setConfirmPasswordError('')
 
     if (!acceptTerms) {
       setError('Debes aceptar los Términos de Uso y el Aviso de Privacidad para continuar.')
@@ -47,6 +52,11 @@ export default function Registro() {
 
     if (password.length < 8) {
       setError('La contraseña debe tener al menos 8 caracteres.')
+      return
+    }
+
+    if (password !== confirmPassword) {
+      setConfirmPasswordError('Las contraseñas no coinciden')
       return
     }
 
@@ -89,7 +99,7 @@ export default function Registro() {
       if (insertError) {
         console.error('[registro] Error insert users:', insertError.message)
         setError(
-          'Tu cuenta se creó, pero hubo un problema al guardar tu perfil. Contacta a proyectos@jeeljel.com si persiste.'
+          'Tu cuenta se creó, pero hubo un problema al guardar tu perfil. Contacta a hola@jeeljel.com si persiste.'
         )
         return
       }
@@ -166,16 +176,59 @@ export default function Registro() {
                 <label className="auth-form__label" htmlFor="registro-password">
                   Contraseña (mínimo 8 caracteres)
                 </label>
-                <input
-                  id="registro-password"
-                  className="auth-form__input"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  required
-                  minLength={8}
-                  autoComplete="new-password"
-                />
+                <div className="auth-form__input-wrap">
+                  <input
+                    id="registro-password"
+                    className="auth-form__input"
+                    type={showPassword ? 'text' : 'password'}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                    minLength={8}
+                    autoComplete="new-password"
+                  />
+                  <button
+                    type="button"
+                    className="auth-form__eye"
+                    onClick={() => setShowPassword((v) => !v)}
+                    aria-label={showPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                  >
+                    {showPassword ? '🙈' : '👁'}
+                  </button>
+                </div>
+              </div>
+
+              <div className="auth-form__field">
+                <label className="auth-form__label" htmlFor="registro-confirm-password">
+                  Confirmar contraseña
+                </label>
+                <div className="auth-form__input-wrap">
+                  <input
+                    id="registro-confirm-password"
+                    className="auth-form__input"
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    value={confirmPassword}
+                    onChange={(e) => {
+                      setConfirmPassword(e.target.value)
+                      if (confirmPasswordError) setConfirmPasswordError('')
+                    }}
+                    required
+                    autoComplete="new-password"
+                  />
+                  <button
+                    type="button"
+                    className="auth-form__eye"
+                    onClick={() => setShowConfirmPassword((v) => !v)}
+                    aria-label={showConfirmPassword ? 'Ocultar contraseña' : 'Mostrar contraseña'}
+                  >
+                    {showConfirmPassword ? '🙈' : '👁'}
+                  </button>
+                </div>
+                {confirmPasswordError && (
+                  <p className="auth-form__field-error" role="alert">
+                    {confirmPasswordError}
+                  </p>
+                )}
               </div>
 
               <div className="auth-form__field">
