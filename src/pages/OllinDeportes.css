@@ -413,6 +413,10 @@
   background: rgba(78, 205, 196, 0.1);
 }
 
+.ollin-tabs__label--mobile {
+  display: none;
+}
+
 /* Match groups */
 .ollin-match-groups {
   display: flex;
@@ -708,7 +712,7 @@
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.25s ease;
-    z-index: 40;
+    z-index: 105;
   }
 
   .ollin-layout__overlay.is-visible {
@@ -718,13 +722,16 @@
 
   .ollin-layout__sidebar {
     position: fixed;
-    top: 0;
+    top: 72px;
     left: 0;
     bottom: 0;
-    z-index: 50;
+    z-index: 110;
+    width: min(280px, 85vw);
     transform: translateX(-100%);
     transition: transform 0.28s ease;
     box-shadow: 4px 0 24px rgba(0, 0, 0, 0.45);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 
   .ollin-layout__sidebar.is-open {
@@ -733,6 +740,19 @@
 
   .ollin-layout__main {
     width: 100%;
+  }
+
+  .ollin-tabs__label--desktop {
+    display: none;
+  }
+
+  .ollin-tabs__label--mobile {
+    display: inline;
+  }
+
+  .ollin-tabs__btn {
+    padding: 8px 10px;
+    font-size: 10px;
   }
 }
 
