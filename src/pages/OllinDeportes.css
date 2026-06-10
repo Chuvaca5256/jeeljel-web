@@ -628,6 +628,16 @@
   white-space: nowrap;
 }
 
+.ollin-standings-team-link {
+  color: inherit;
+  text-decoration: none;
+  transition: opacity 0.15s ease;
+}
+
+.ollin-standings-team-link:hover {
+  opacity: 0.75;
+}
+
 .ollin-standings-table tbody tr:hover {
   background: rgba(255, 255, 255, 0.03);
 }

@@ -2,6 +2,32 @@ import PremiumLockNotice from './PremiumLockNotice'
 import { formatStandingsGroupTitle } from '../../ollin/standingsLabels'
 import { translateTeamName } from '../../ollin/teamDisplay'
 
+function buildTeamGoogleSearchUrl(spanishName) {
+  const name = String(spanishName || '').trim()
+  if (!name) return null
+  const q = `seleccion de futbol ${name}`.replace(/\s+/g, '+')
+  return `https://www.google.com/search?q=${q}`
+}
+
+function StandingsTeamName({ name }) {
+  const displayName = translateTeamName(name)
+  const href = buildTeamGoogleSearchUrl(displayName)
+
+  if (!displayName) return '—'
+  if (!href) return displayName
+
+  return (
+    <a
+      href={href}
+      className="ollin-standings-team-link"
+      target="_blank"
+      rel="noopener noreferrer"
+    >
+      {displayName}
+    </a>
+  )
+}
+
 function StandingsTable({ rows }) {
   return (
     <table className="ollin-standings-table">
@@ -22,7 +48,7 @@ function StandingsTable({ rows }) {
         {rows.map((row) => (
           <tr key={`${row.team?.id}-${row.rank}`}>
             <td>{row.rank}</td>
-            <td>{translateTeamName(row.team?.name)}</td>
+            <td><StandingsTeamName name={row.team?.name} /></td>
             <td>{row.all?.played ?? '—'}</td>
             <td>{row.all?.win ?? '—'}</td>
             <td>{row.all?.draw ?? '—'}</td>
