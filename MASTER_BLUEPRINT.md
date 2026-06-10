@@ -24,7 +24,7 @@
 - ✅ **Hero:** logo estático `Logo_JeelJel_Kanaabcon_balon_sin_fondo.png` (reemplazó `ajolote_final.webm`)
 - ✅ **Hero:** espaciado reducido en móvil y desktop (sin `min-h-screen` en móvil)
 - ✅ **Renombre global:** Hub Biónico / Hub Biónico Deportivo → **Ollin Deportes** (UI, navbar, docs, metadata)
-- ✅ **Stats:** franja descriptiva del ecosistema + botón «Contáctanos» con scroll al footer (`#contacto`)
+- ✅ **Stats:** franja descriptiva del ecosistema + botón «Contáctanos» → `mailto:proyectos@jeeljel.com`
 - ✅ **El Ecosistema:** descripciones actualizadas en las 5 tarjetas + logos 36 px por app
 - ✅ **Countdown Ollin Deportes:** sin segundos — solo días, horas y minutos en una fila
 - ✅ **Deploy workflow corregido:** sin `ssh-keyscan`, validación de llave, reintentos rsync (5×), `workflow_dispatch`, Node 22
@@ -46,6 +46,14 @@
 - ✅ **Ollin Deportes — moderación de chat** — chatFilter, chatModeration, reincidencia Redis, Supabase
 - ✅ **Ollin Deportes — capa de cumplimiento legal** — sanitize + compliance + disclaimer; redirect `/mundial-2026`
 - ✅ Ruta `/ollin-deportes/partido/:id` registrada (stub)
+- ✅ **Rediseño UI Ollin Deportes** — layout 3 zonas Sofascore/Bet365 (`77a556e`): sidebar ligas, tabs centrales, buscador, POSICIONES
+- ✅ **Catálogo ligas Ollin** — `leagueCatalog.js` + backend `leagues.js` (~50 IDs), agrupadas por región
+- ✅ **Standings API Ollin** — `GET /api/ollin/standings/:ligaId` + `StandingsView` + `useStandings`
+- ✅ **Menú desplegable ligas por deporte** — flecha ↓/↑ parpadeante (`74b1d7a`)
+- ✅ **Ajustes móvil Ollin** — tab TABLA en móvil; drawer sidebar con Fútbol visible (`dfd3550`)
+- ✅ **Espaciado Ollin** — sin padding-top extra bajo navbar sticky (`3b161e5`)
+- ✅ **Espaciado `/apps`** — padding superior 12px; sin `min-height: 100vh` ni hueco inferior (`0d04357`, `27594d1`)
+- ✅ **Footer global** — enlace `proyectos@jeeljel.com` (`mailto:`) en todas las páginas (`2d85308`)
 
 ## 🟡 Ollin Deportes — Fase 2 (post-lanzamiento página principal)
 
@@ -53,18 +61,18 @@
 
 | Área | Estado |
 |------|--------|
-| Página `/ollin-deportes` | ✅ **En producción** — https://jeeljel.com/ollin-deportes |
+| Página `/ollin-deportes` | ✅ **En producción** — layout 3 zonas, sidebar ligas, tabs, POSICIONES — https://jeeljel.com/ollin-deportes |
 | Backend Node.js (puerto **10001**) | ✅ **Activo** — PM2 + Redis + Socket.io |
 | Polling API-Sports (fútbol + béisbol MLB) | ✅ **Activo** — próximos ligas 1/2/3/4 season 2026 |
 | Moderación chat | ✅ **Activo** — filtros + mute/ban reincidencia |
 | Cumplimiento legal | ✅ **Implementado** — backend + frontend |
 | Nginx `/api/ollin/` → `:10001` | ✅ Configurado en `jeeljel-landing` |
+| Rediseño UI 3 zonas (Sofascore/Bet365) | ✅ **En producción** — sidebar + tabs + buscador + POSICIONES |
+| Catálogo completo de ligas/deportes | ✅ **Frontend + backend IDs** — ~50 ligas; NBA/NFL Fase 2 deshabilitados |
+| Tab POSICIONES (UI + API) | ✅ **Implementado** — datos reales pendientes verificar PM2 VPS |
 | Página `/ollin-deportes/partido/:id` | ⏳ **Stub** — pendiente desarrollo completo |
-| Tablas de posiciones | ⏳ Pendiente |
 | SSO jeeljel.com/registro | ⏳ Pendiente de implementar |
 | Chat en vivo UI (frontend) | ⏳ Pendiente — backend y moderación listos |
-| Rediseño UI 3 zonas (Sofascore/Bet365) | ⏳ **Próxima sesión** — sidebar ligas + tabs centrales + POSICIONES |
-| Catálogo completo de ligas/deportes | ⏳ **Próxima sesión** — ver SNAPSHOT v5 |
 | Upgrade API-Sports PRO/Ultra | ⏳ Al inicio torneo selecciones **11/06/2026** |
 | Modelo premium post-torneo (`PREMIUM_ONLY`) | ⏳ Flag frontend listo; activación post-torneo |
 | Campo 2D PixiJS + modo apostador | ⏳ Pendiente — fase Día 2+ |
@@ -89,14 +97,14 @@
 - **Post-torneo:** marcadores básicos libres; estadísticas completas, live detallado y ligas premium → suscriptores Pro de cualquier app JeelJel
 - Flag `PREMIUM_ONLY` por liga preparado en arquitectura frontend
 
-### Rediseño UI — próxima sesión
+### Rediseño UI — en producción (SNAPSHOT v6)
 
-- **Zona izquierda:** navegador ligas por región + badges EN VIVO
-- **Zona central:** tabs EN VIVO · HOY · PRÓXIMOS · PASADOS · POSICIONES + buscador global
-- **Tab POSICIONES:** standings y grupos torneo selecciones
-- **Móvil:** menú hamburguesa
+- **Zona izquierda:** deportes + ligas por región + badges EN VIVO + panel colapsable ↓/↑ por deporte activo
+- **Zona central:** tabs EN VIVO · HOY · PRÓXIMOS · PASADOS · POSICIONES (+ **TABLA** en móvil) + buscador global
+- **Tab POSICIONES:** `StandingsView` + API standings; grupos torneo selecciones cuando haya datos
+- **Móvil:** menú hamburguesa; drawer bajo navbar; Fútbol visible al abrir menú
 
-### Ligas a implementar — próxima sesión
+### Ligas en catálogo — implementadas (frontend + backend IDs)
 
 **Fútbol internacional:** Torneo selecciones (1), Eurocopa (3), Copa América (4), Copa Africana, Copa Asiática, Concacaf Centroamericana, amistosos selecciones/clubes.
 
@@ -167,12 +175,23 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 
 ## Pendientes próxima sesión
 
-- [ ] 🔴 **Rediseño UI Ollin Deportes** — layout 3 zonas Sofascore/Bet365 (sidebar ligas + tabs + POSICIONES + hamburguesa móvil)
-- [ ] 🔴 **Catálogo completo ligas/deportes** — fútbol internacional + clubes Europa/LATAM + béisbol (ver SNAPSHOT v5)
-- [ ] 🔴 **Upgrade API-Sports PRO/Ultra** — al inicio torneo selecciones 11/06/2026 (FREE: 100 req/día 10 min → PRO: 7,500 req/día 60s → Ultra: 15s torneo)
-- [ ] 🔴 **SSO jeeljel.com/registro** — Supabase Auth + modal chat Ollin (ver `JEELJEL_MASTER.md` Parte I §1)
-- [ ] 🔴 **Ollin Deportes — tab POSICIONES** — standings y grupos torneo selecciones
 - [ ] 🔴 **Ollin Deportes — página de partido** (`/ollin-deportes/partido/:id`) — desarrollar vista completa (stub actual)
+- [ ] 🔴 **SSO jeeljel.com/registro** — Supabase Auth + modal chat Ollin (ver `JEELJEL_MASTER.md` Parte I §1)
+- [ ] 🔴 **Upgrade API-Sports PRO/Ultra** — al inicio torneo selecciones 11/06/2026 (FREE: 100 req/día 10 min → PRO: 7,500 req/día 60s → Ultra: 15s torneo)
+- [ ] 🟡 **Tab POSICIONES — datos reales VPS** — verificar PM2 + endpoint standings en producción
+- [ ] 🟡 **Modelo premium post-torneo** — activar flag `PREMIUM_ONLY` por liga post-torneo (decisión CEO documentada)
+- [ ] 🟡 **Ollin Deportes — chat UI frontend** — conectar a backend moderado ya activo
+- [ ] 🟡 **Migración auth Ikan Naat** → `jeeljel_users` post-torneo
+- [ ] 🟡 **Ollin Deportes — campo 2D PixiJS + modo apostador** — fase Día 2+
+- [ ] 🟡 **Deportes Fase 2** — NBA, NFL, NHL, F1
+- [ ] Habilitar CTA activo en tarjeta Ollin Deportes en `/apps`
+- [ ] Registrarse en afiliados: 1xBet Partners, Bet365 Affiliates
+- [x] **Rediseño UI Ollin Deportes** — layout 3 zonas Sofascore/Bet365
+- [x] **Catálogo ligas/deportes** — leagueCatalog + backend leagues (~50 IDs)
+- [x] **Tab POSICIONES UI + standings API** — StandingsView + useStandings
+- [x] **Ajustes móvil Ollin** — TABLA + menú Fútbol visible
+- [x] **Espaciado `/apps`** — superior e inferior corregido
+- [x] **Contacto proyectos@jeeljel.com** — footer global + botón Contáctanos Home
 - [ ] 🟡 **Modelo premium post-torneo** — activar flag `PREMIUM_ONLY` por liga post-torneo (decisión CEO documentada)
 - [ ] 🟡 **Ollin Deportes — chat UI frontend** — conectar a backend moderado ya activo
 - [ ] 🟡 **Migración auth Ikan Naat** → `jeeljel_users` post-torneo
@@ -185,13 +204,13 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - [x] Página Ollin Deportes principal (`/ollin-deportes`) — en producción
 - [x] Backend Ollin (`ollin-backend/`) — puerto 10001 + Redis + PM2 + Socket.io
 - [ ] Página Misión con contenido real
-- [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:`)
-- [ ] Footer global: ampliar sección de contacto si hace falta más allá del scroll desde Stats
+- [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:` hola + proyectos)
+- [x] Footer global: `proyectos@jeeljel.com` + botón Contáctanos → mailto proyectos
 - [ ] Nombre latinoamericano para Virtyou
 - [ ] Rebrandear Izydra OS bajo JeelJel Kaanab
 - [ ] Pagar paquete 5 buzones en Hostinger y crear correos:
   - hola@jeeljel.com — quejas y sugerencias de clientes
-  - proyectos@jeeljel.com — colaboraciones, desarrollo y negocios
+  - proyectos@jeeljel.com — colaboraciones, desarrollo y negocios — **en footer y botón Home ✅**
   - compras@jeeljel.com — pagos y suscripciones (contador)
   - direccion@jeeljel.com — contacto personal y negocios de la empresa
   - equipo@jeeljel.com — comunicación interna y colaboradores

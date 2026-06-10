@@ -1,9 +1,48 @@
 # SNAPSHOT — Estado actual del proyecto
 
-## SNAPSHOT v5 — Ollin Deportes en producción (09/06/2026)
+## SNAPSHOT v6 — Rediseño Ollin + UX sitio (10/06/2026)
+
+✅ **Rediseño UI Ollin Deportes en producción** — layout **3 zonas** tipo Sofascore/Bet365: sidebar deportes/ligas (240px) + panel central con tabs + buscador global
+✅ **Sidebar ligas** — `LeagueSidebar.jsx`, catálogo `leagueCatalog.js` (~50 IDs API-Football/Baseball), agrupadas por región, badge EN VIVO, flag `premiumOnly` (estructura)
+✅ **Menú desplegable por deporte** — flecha ↓/↑ parpadeante al cerrar; panel scrollable de ligas bajo ⚽ Fútbol / ⚾ Béisbol
+✅ **Panel central** — tabs **EN VIVO · HOY · PRÓXIMOS · PASADOS · POSICIONES** + `MatchGroupList` + `MatchCardCompact` agrupados por liga
+✅ **Tab POSICIONES** — `StandingsView` + hook `useStandings` + endpoint backend `GET /api/ollin/standings/:ligaId` (cache Redis 1h)
+✅ **Ajustes móvil Ollin** — tab **TABLA** (≤900px) en lugar de POSICIONES; menú ☰ con **Fútbol visible** (drawer bajo navbar, z-index corregido)
+✅ **Espaciado Ollin** — eliminado padding-top extra bajo navbar sticky (`ollin-shell` 12px)
+✅ **Página `/apps` — espaciado corregido** — `padding-top` 120px→12px; eliminado `min-height: 100vh` y exceso inferior antes del footer
+✅ **Contacto proyectos** — botón **Contáctanos** (Home) abre `mailto:proyectos@jeeljel.com`; footer global incluye enlace **proyectos@jeeljel.com** en todas las páginas
+✅ **Deploy GitHub Actions** — workflow con reintentos SSH/rsync; re-run manual disponible si timeout VPS (~17 s en condiciones normales)
+
+⏳ **Tab POSICIONES — datos en VPS** — standings API en backend; verificar PM2/reinicio backend en VPS para datos reales (mock offline si falla)
+⏳ **`/ollin-deportes/partido/:id`** — stub en producción; vista de partido individual pendiente
+⏳ **SSO jeeljel.com/registro** — Supabase Auth + modal en chat Ollin; migración auth Ikan Naat post-torneo
+⏳ **Chat UI frontend** — backend y moderación activos; conectar interfaz
+⏳ **CTA tarjeta Ollin en `/apps`** — habilitar enlace «¡Ingresa aquí!»
+
+### Archivos clave — rediseño Ollin (frontend)
+
+| Archivo | Rol |
+|---------|-----|
+| `src/pages/OllinDeportes.jsx` + `.css` | Página principal, layout 3 zonas, tabs, buscador |
+| `src/components/ollin/LeagueSidebar.jsx` | Deportes + panel ligas colapsable |
+| `src/components/ollin/MatchGroupList.jsx` | Partidos agrupados por liga |
+| `src/components/ollin/MatchCardCompact.jsx` | Tarjeta partido compacta |
+| `src/components/ollin/StandingsView.jsx` | Tab POSICIONES |
+| `src/ollin/leagueCatalog.js` | Catálogo ligas, tabs, deportes |
+| `src/hooks/useOllinData.js` / `useStandings.js` | Datos partidos y standings |
+
+### Backend standings (VPS)
+
+- `ollin-backend/src/services/standingsService.js`
+- `ollin-backend/src/routes/standings.js`
+- Redis: `ollin:standings:{ligaId}` TTL 1h
+
+## SNAPSHOT v5 — Ollin Deportes en producción (09/06/2026) — SUPERSEDIDO por v6
+
+~~⏳ **Rediseño UI completo** — layout 3 zonas tipo Sofascore/Bet365 pendiente para **próxima sesión**~~ → **completado** (ver SNAPSHOT v6)
 
 ✅ **`/ollin-deportes` funcional en producción** — https://jeeljel.com/ollin-deportes
-✅ **Frontend completo** — selector ⚽/⚾, panel colapsable «Ver partidos», buscador en tiempo real, 4 columnas (EN VIVO · HOY · PASADOS · PRÓXIMOS), `MatchCard` + `TeamDisplay`, skeletons, fallback mock offline
+✅ **Frontend completo** — layout 3 zonas, sidebar ligas colapsable, tabs EN VIVO · HOY · PRÓXIMOS · PASADOS · POSICIONES, buscador, `MatchCardCompact`, standings UI
 ✅ **Backend `ollin-backend/`** — Node.js Express puerto **10001** + Redis + PM2 + Socket.io + polling API-Sports
 ✅ **Béisbol MLB** — partidos en vivo vía API-Baseball
 ✅ **Fútbol próximos** — ligas **1, 2, 3, 4** season 2026 (`next=10` por liga) combinadas en `ollin:futbol:proximos`
@@ -13,7 +52,7 @@
 ✅ **Deploy manual VPS** — backend Ollin (`:10001`) + Redis + PM2 funcionando en VPS; frontend vía GitHub Actions → `/var/www/jeeljel-web/dist`
 ⏳ **Rediseño UI completo** — layout 3 zonas tipo Sofascore/Bet365 pendiente para **próxima sesión**
 ⏳ **SSO jeeljel.com/registro** — Supabase Auth + modal en chat Ollin; migración auth Ikan Naat post-torneo
-⏳ **Tablas de posiciones** — tab POSICIONES con standings y grupos del torneo de selecciones
+⏳ **Tab POSICIONES — datos reales en VPS** — UI + API listos; verificar backend PM2 en producción
 ⏳ **`/ollin-deportes/partido/:id`** — stub en producción; vista de partido individual pendiente
 
 ### Plan API-Sports (09/06/2026)
@@ -44,14 +83,14 @@
 
 **Futuro Fase 2:** NBA, NFL, NHL, Fórmula 1.
 
-### Rediseño UI — próxima sesión
+### Rediseño UI — completado (v6)
 
-Layout **3 zonas** tipo Sofascore/Bet365:
+Layout **3 zonas** tipo Sofascore/Bet365 — **en producción** desde commit `77a556e`:
 
-1. **Columna izquierda fija** — navegador de ligas agrupadas por región + badges EN VIVO
-2. **Panel central** — tabs EN VIVO · HOY · PRÓXIMOS · PASADOS · **POSICIONES** + buscador global
-3. **Tab POSICIONES** — standings y grupos del torneo de selecciones
-4. **Móvil** — menú hamburguesa + una columna visible
+1. **Columna izquierda fija** — deportes + ligas por región + badges EN VIVO + menú desplegable ↓/↑
+2. **Panel central** — tabs EN VIVO · HOY · PRÓXIMOS · PASADOS · **POSICIONES** (+ **TABLA** en móvil) + buscador global
+3. **Tab POSICIONES** — `StandingsView`; grupos torneo selecciones pendientes de datos reales
+4. **Móvil** — menú hamburguesa; drawer bajo navbar; scroll en panel de ligas
 
 ### SSO pendiente
 
@@ -177,14 +216,14 @@ ARCHIVOS CLAVE:
 | Ruta | Estado |
 |------|--------|
 | `/` | Home (landing completa) |
-| `/apps` | Catálogo expandible (5 apps) + fondo mosaico Viracoch + 90 formas wireframe SVG (cuadrados turquesa, triángulos dorados, hexágonos azules) |
-| `/ollin-deportes` | **En producción** — selector deportes, panel colapsable, buscador, 4 columnas de partidos, Socket.io; disclaimer legal |
+| `/apps` | Catálogo expandible (5 apps) + fondo mosaico Viracoch + 58 formas wireframe; espaciado superior/inferior corregido |
+| `/ollin-deportes` | **En producción** — layout 3 zonas, sidebar ligas, tabs, buscador, POSICIONES, Socket.io; disclaimer legal |
 | `/ollin-deportes/partido/:id` | **Stub** — ruta registrada; vista de partido pendiente de desarrollar |
 | `/mision` | Stub — pendiente contenido — fondo mosaico Tlaloc |
 | `/organizaciones` | Completa — 5 causas: PETA, UNESCO, Cruz Roja, UNICEF, WWF — fondo mosaico Dios Tupa — tarjetas semitransparentes |
 | `/contacto` | Stub — pendiente contenido |
 
-**Navbar:** APPS · OLLIN DEPORTES · MISIÓN · ORGANIZACIONES · CONTACTO
+**Navbar:** APPS · OLLIN DEPORTES · MISIÓN · ORGANIZACIONES (sin Contacto — contacto vía footer y botón Home)
 
 ## Home — orden de secciones
 
@@ -242,7 +281,7 @@ Reemplazó la cuadrícula «5 Plataformas · 30+ Agentes IA · …». Ahora mues
 
 - Dos párrafos con typewriter (ecosistema + «¿Tienes una idea?»)
 - Fila de **20 banderas** clickeables (flagcdn, sin nombre) que abren búsqueda Google en pestaña nueva
-- CTA **Contáctanos** → scroll suave a `#contacto` (footer)
+- CTA **Contáctanos** → abre cliente de correo **`mailto:proyectos@jeeljel.com`**
 
 ## El Ecosistema (`src/components/AppsGrid.jsx`)
 
@@ -271,15 +310,15 @@ Reemplazó la cuadrícula «5 Plataformas · 30+ Agentes IA · …». Ahora mues
 - **Countdown:** solo Días, Horas y Minutos (sin Segundos); una fila con `flex-nowrap`
 - Actualización cada 60 s; deadline: 11 junio 2026, 23:00 UTC
 
-## Correos corporativos (pendiente configurar)
+## Correos corporativos
 
-| Correo | Uso |
-|--------|-----|
-| hola@jeeljel.com | Quejas y sugerencias de clientes |
-| proyectos@jeeljel.com | Colaboraciones, desarrollo y negocios |
-| compras@jeeljel.com | Pagos y suscripciones — contador |
-| direccion@jeeljel.com | Contacto personal y negocios de la empresa |
-| equipo@jeeljel.com | Comunicación interna y colaboradores |
+| Correo | Uso | En sitio |
+|--------|-----|----------|
+| hola@jeeljel.com | Quejas y sugerencias de clientes | Footer `mailto:` ✅ |
+| proyectos@jeeljel.com | Colaboraciones, desarrollo y negocios | Footer `mailto:` ✅ + botón Contáctanos (Home) ✅ |
+| compras@jeeljel.com | Pagos y suscripciones — contador | Pendiente crear buzón Hostinger |
+| direccion@jeeljel.com | Contacto personal y negocios de la empresa | Pendiente |
+| equipo@jeeljel.com | Comunicación interna y colaboradores | Pendiente |
 
 ## Infraestructura
 
@@ -356,7 +395,7 @@ El servidor tiene **DOS sitios** corriendo simultáneamente:
 - **Nombre en app:** Ollin Deportes (renombrado desde Hub Biónico Deportivo)
 - **URL final:** https://jeeljel.com/ollin-deportes — **EN PRODUCCIÓN**
 - **Mascota:** Ajolote JeelJel con balón (`Logo_JeelJel_Kanaabcon_balon_sin_fondo.png`)
-- **Qué es:** Web app dentro de jeeljel.com para seguir fútbol y béisbol (MLB) en tiempo real: columnas EN VIVO / HOY / PASADOS / PRÓXIMOS, chat en vivo moderado (Supabase), modo apostador y campo 2D isométrico (PixiJS) planeados en fases siguientes.
+- **Qué es:** Web app dentro de jeeljel.com para seguir fútbol y béisbol (MLB) en tiempo real: layout 3 zonas, tabs EN VIVO / HOY / PRÓXIMOS / PASADOS / POSICIONES, chat en vivo moderado (Supabase), modo apostador y campo 2D isométrico (PixiJS) planeados en fases siguientes.
 - **Stack en producción:** React + Vite + Tailwind + Socket.io (frontend) · Node.js + Express + Redis + PM2 + Socket.io + API-Sports (backend `:10001`) · Supabase (chat)
 - **Backend Redis keys:** `ollin:futbol:live`, `ollin:futbol:hoy`, `ollin:futbol:proximos`, `ollin:beisbol:hoy`
 - **Fútbol próximos:** polling adicional ligas API **1, 2, 3, 4** season **2026** (`next=10` c/u)
@@ -365,6 +404,6 @@ El servidor tiene **DOS sitios** corriendo simultáneamente:
 - **Deploy:** manual VPS backend + PM2; frontend GitHub Actions
 - **API-Sports:** plan FREE (100 req/día, 10 min) → upgrade PRO/Ultra al **11/06/2026**
 - **Modelo acceso:** gratuito durante torneo selecciones 2026; post-torneo marcadores básicos libres, premium para suscriptores Pro ecosistema; flag `PREMIUM_ONLY` por liga en frontend
-- **Próxima sesión:** rediseño UI 3 zonas (Sofascore/Bet365), catálogo completo de ligas, tab POSICIONES, SSO
-- **Pendiente:** jeeljel.com/registro · modal chat · migración Ikan Naat post-torneo · `/partido/:id` · campo 2D PixiJS · afiliados
+- **Próxima sesión:** partido individual `/partido/:id`, chat UI, SSO, datos standings VPS, CTA tarjeta `/apps`
+- **Pendiente:** jeeljel.com/registro · modal chat · migración Ikan Naat post-torneo · campo 2D PixiJS · afiliados
 - **Puerto backend Ollin Deportes:** 10001 (nunca 10000, ese es Ikan Naat)
