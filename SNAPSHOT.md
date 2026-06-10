@@ -62,7 +62,7 @@ Layout **3 zonas** tipo Sofascore/Bet365:
 ## SNAPSHOT v4 — Ollin Deportes en arranque (09/06/2026) — SUPERSEDIDO por v5
 
 ~~⏳ Página `/ollin-deportes` — **pendiente de construir**~~ → **completada** (ver SNAPSHOT v5)
-✅ Documento de arquitectura creado — `CURSOR_OllinDeportes_v1.md` (DOC-JEL-2026-OLLIN-001)
+✅ Documento maestro unificado — [`JEELJEL_MASTER.md`](./JEELJEL_MASTER.md) (DOC-JEL-2026-MASTER-001; reemplaza Coins v13 + CURSOR Ollin)
 ✅ Deadline construcción página principal: **11 junio 2026** — página principal entregada; partido individual y tablas pendientes
 
 ## SNAPSHOT v3 — Actualización visual (09/06/2026)

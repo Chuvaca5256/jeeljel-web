@@ -1,24 +1,20 @@
-# JeelJel Coins (JC) — Economía Universal del Ecosistema
-## JeelJel Kaanab | Documento Maestro | v13 — 09/06/2026
+# JEELJEL MASTER — Documento Maestro del Ecosistema
+## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.0 — 09/06/2026
 
----
-
-## ¿QUÉ ES ESTE DOCUMENTO?
-
-Este documento es la fuente de verdad única sobre cómo funciona la economía de tokens (JC) y la identidad unificada de usuarios en todo el ecosistema JeelJel Kaanab. Aplica a **todas las apps** — actuales y futuras. Cualquier equipo que construya una nueva app bajo JeelJel Kaanab debe leer este documento antes de definir precios, cobros, autenticación o integraciones de pago.
+> **Este documento reemplaza y unifica:** `JeelJel_Coins_Ecosistema_Master_v13.md`, `JeelJel_Coins_Ecosistema_Master.md` (alias) y `CURSOR_OllinDeportes_v1.md`. Es la fuente de verdad única sobre economía (JC), identidad unificada (SSO), arquitectura de Ollin Deportes, decisiones permanentes del CEO y pendientes técnicos. Los documentos `SNAPSHOT.md` (estado actual) y `MASTER_BLUEPRINT.md` (hoja de ruta) se mantienen separados.
 
 **Apps del ecosistema:**
-- ✅ **Ikan Naat IA** — plataforma de agentes expertos IA (en producción)
+- ✅ **Ikan Naat IA** — plataforma de agentes expertos IA (en producción — https://ikannaat.jeeljel.com)
 - ✅ **Ollin Deportes** — hub deportivo en tiempo real (en producción — https://jeeljel.com/ollin-deportes)
 - 🔲 **Izydra OS** — pendiente
 - 🔲 **Virtyou** — pendiente
 - 🔲 **Inkógnito** — pendiente
 
-**Estado SSO (09/06/2026):** Ollin Deportes operativo en producción; **SSO jeeljel.com/registro pendiente** — requisito para chat en vivo con cuenta unificada.
-
 ---
 
-## 0. IDENTIDAD UNIFICADA — SSO DEL ECOSISTEMA (NUEVO v13)
+# PARTE I — ECONOMÍA JEELJEL COINS (JC) E IDENTIDAD UNIFICADA
+
+## 1. IDENTIDAD UNIFICADA — SSO DEL ECOSISTEMA
 
 ### Decisión del CEO — 09/06/2026
 
@@ -57,7 +53,7 @@ El hub de identidad es **jeeljel.com** (Opción B). El usuario se registra una s
 - Al registrarse en Ollin Deportes durante el torneo → ya tienen cuenta en todo el ecosistema
 - Post-torneo: se les presenta Ikan Naat, Izydra OS, Virtyou, Inkógnito
 
-### Decisión CEO — Modelo de acceso post-torneo (09/06/2026)
+### Modelo de acceso Ollin Deportes — Decisión CEO 09/06/2026
 
 | Fase | Qué ve el usuario | Requisito |
 |------|-------------------|-----------|
@@ -66,8 +62,6 @@ El hub de identidad es **jeeljel.com** (Opción B). El usuario se registra una s
 | **Post-torneo — tier completo** | Estadísticas completas, partidos en vivo detallados, ligas premium | **Suscriptor Pro activo** de cualquier app JeelJel (Ikan Naat, Izydra OS, Virtyou, Inkógnito) |
 
 **Implementación técnica:** flag `PREMIUM_ONLY` por liga ya preparado en arquitectura frontend — activable post-torneo sin rediseño.
-
-**Plan API-Sports:** FREE actual (100 req/día, polling 10 min) → upgrade PRO (7,500 req/día, 60 s) o Ultra (15 s partidos activos torneo) al inicio del torneo **11/06/2026**.
 
 **Gatillo de registro en Ollin Deportes:**
 - Ver partidos y estadísticas: **libre, sin cuenta**
@@ -108,7 +102,7 @@ Al registrarse el usuario acepta recibir:
 }
 ```
 
-### Reglas de implementación por app
+### Reglas de implementación SSO por app
 
 1. **Nunca crear tabla de usuarios propia** — siempre usar `jeeljel_users` de Supabase
 2. **Nunca crear sistema de auth propio** — siempre usar Supabase Auth con JWT compartido
@@ -116,17 +110,9 @@ Al registrarse el usuario acepta recibir:
 4. **Al detectar usuario sin cuenta** → redirigir a jeeljel.com/registro, no crear registro local
 5. **Ikan Naat ya tiene auth propio** → migrar progresivamente a jeeljel_users en sprint dedicado **post-torneo selecciones 2026**
 
-### SSO pendiente (09/06/2026)
-
-| Item | Descripción | Estado |
-|------|-------------|--------|
-| SSO-1 | Página `jeeljel.com/registro` con Supabase Auth | ⏳ Pendiente |
-| SSO-2 | Modal de registro en chat Ollin Deportes | ⏳ Pendiente |
-| SSO-3 | Migración auth Ikan Naat → `jeeljel_users` | ⏳ Post-torneo |
-
 ---
 
-## 1. QUÉ SON LOS JC (JeelJel Coins)
+## 2. QUÉ SON LOS JC (JeelJel Coins)
 
 Los JC son la moneda virtual universal del ecosistema JeelJel Kaanab. Funcionan como créditos prepagados que el usuario compra una vez y puede gastar en cualquier app del ecosistema.
 
@@ -139,7 +125,7 @@ Los JC son la moneda virtual universal del ecosistema JeelJel Kaanab. Funcionan 
 
 ---
 
-## 2. ANCLA MONETARIA — REGLA INAMOVIBLE
+## 3. ANCLA MONETARIA — REGLA INAMOVIBLE
 
 ```
 1 JC = $1.00 MXN = $0.0578 USD
@@ -150,7 +136,7 @@ TC referencia: $17.30 MXN/USD (revisar el 1ro de cada mes)
 
 ---
 
-## 3. CÓMO SE COMPRAN LOS JC — FLUJO TÉCNICO
+## 4. CÓMO SE COMPRAN LOS JC — FLUJO TÉCNICO
 
 ### El usuario NO paga con Stripe. Usa dLocal Go.
 
@@ -180,7 +166,7 @@ TC referencia: $17.30 MXN/USD (revisar el 1ro de cada mes)
 
 ---
 
-## 4. MÍNIMO DE RECARGA Y BLOQUES SUGERIDOS
+## 5. MÍNIMO DE RECARGA Y BLOQUES SUGERIDOS
 
 **Mínimo obligatorio: 100 JC = $100 MXN**
 
@@ -193,7 +179,7 @@ TC referencia: $17.30 MXN/USD (revisar el 1ro de cada mes)
 
 ---
 
-## 5. ESTRUCTURA DE FEES — dLocal Go por País
+## 6. ESTRUCTURA DE FEES — dLocal Go por País
 
 | País | Fee fijo | Fee % | Impuesto local | Fee total aprox |
 |------|---------|-------|----------------|----------------|
@@ -206,7 +192,7 @@ TC referencia: $17.30 MXN/USD (revisar el 1ro de cada mes)
 
 ---
 
-## 6. MARGEN NETO REAL POR PAÍS
+## 7. MARGEN NETO REAL POR PAÍS
 
 Después de descontar: fee dLocal + IVA al SAT + RESICO 2% + ISR 30%.
 
@@ -226,7 +212,7 @@ Después de descontar: fee dLocal + IVA al SAT + RESICO 2% + ISR 30%.
 
 ---
 
-## 7. TABLA DE PRECIOS BASE — IKAN NAAT IA
+## 8. TABLA DE PRECIOS BASE — IKAN NAAT IA
 
 Esta tabla es el **piso de precios** para todo el ecosistema. Ninguna app puede cobrar menos por servicios equivalentes.
 
@@ -247,7 +233,7 @@ Esta tabla es el **piso de precios** para todo el ecosistema. Ninguna app puede 
 
 ---
 
-## 8. TABLA DE PRECIOS — OLLIN DEPORTES (NUEVO v13)
+## 9. TABLA DE PRECIOS — OLLIN DEPORTES
 
 Ollin Deportes está **completamente funcional en producción** (09/06/2026): https://jeeljel.com/ollin-deportes · backend Node.js `:10001` + Redis + PM2 + Socket.io + API-Sports · moderación chat activa · cumplimiento legal implementado.
 
@@ -265,23 +251,7 @@ Ollin Deportes está **completamente funcional en producción** (09/06/2026): ht
 
 ---
 
-## 8b. CATÁLOGO DE LIGAS OLLIN — PRÓXIMA SESIÓN
-
-Referencia para polling backend y navegador sidebar UI. Nombres en UI siempre vía `compliance.js` (sin términos prohibidos).
-
-**Fútbol internacional:** Torneo selecciones (ID 1), Eurocopa (3), Copa América (4), Copa Africana, Copa Asiática, Concacaf Centroamericana, amistosos selecciones/clubes.
-
-**Clubes Europa:** Champions League (2), Europa League, Mundial de Clubes, Premier + FA Cup, La Liga + Copa del Rey + Supercopa, Serie A + Copa Italia, Ligue 1 + Copa Francia, Bundesliga + Copa Alemania, Eredivisie + Copa Holanda, Portugal + Copa Portugal, Primeira Liga.
-
-**Clubes LATAM:** Libertadores (11), Sudamericana (13), Liga MX + Copa MX (262, 9), Argentina, Serie A/B Brasil, Colombia, Chile, Perú, Ecuador, Venezuela, Uruguay, Bolivia, Paraguay, Honduras, Guatemala, Costa Rica, MLS + Leagues Cup.
-
-**Béisbol:** MLB (1), LMB, NPB, LVBP, Serie Nacional Cuba.
-
-**Fase 2 futura:** NBA, NFL, NHL, F1.
-
----
-
-## 9. TABLA DE PRECIOS — IZYDRA OS (pendiente definir)
+## 10. TABLA DE PRECIOS — IZYDRA OS (pendiente definir)
 
 Izydra OS opera con modelo B2B. Los precios se cobran por empresa/tenant, no por usuario individual.
 
@@ -295,7 +265,7 @@ Izydra OS opera con modelo B2B. Los precios se cobran por empresa/tenant, no por
 
 ---
 
-## 10. TABLA DE PRECIOS — INKÓGNITO (pendiente definir)
+## 11. TABLA DE PRECIOS — INKÓGNITO (pendiente definir)
 
 | Servicio | JC | MXN | Notas |
 |----------|----|-----|-------|
@@ -308,7 +278,7 @@ Izydra OS opera con modelo B2B. Los precios se cobran por empresa/tenant, no por
 
 ---
 
-## 11. TABLA DE PRECIOS — VIRTYOU (pendiente definir)
+## 12. TABLA DE PRECIOS — VIRTYOU (pendiente definir)
 
 | Servicio | JC | MXN | Notas |
 |----------|----|-----|-------|
@@ -320,7 +290,7 @@ Izydra OS opera con modelo B2B. Los precios se cobran por empresa/tenant, no por
 
 ---
 
-## 12. PUNTO DE EQUILIBRIO DEL ECOSISTEMA
+## 13. PUNTO DE EQUILIBRIO DEL ECOSISTEMA
 
 | Métrica | Valor |
 |---------|-------|
@@ -342,7 +312,7 @@ Izydra OS opera con modelo B2B. Los precios se cobran por empresa/tenant, no por
 
 ---
 
-## 13. CONVERSIÓN LATAM — DISPLAY AL USUARIO
+## 14. CONVERSIÓN LATAM — DISPLAY AL USUARIO
 
 El sistema muestra el precio en la moneda local del usuario — solo informativo. La transacción siempre es en JC.
 
@@ -357,7 +327,7 @@ El sistema muestra el precio en la moneda local del usuario — solo informativo
 
 ---
 
-## 14. RÉGIMEN FISCAL MÉXICO
+## 15. RÉGIMEN FISCAL MÉXICO
 
 | Concepto | Tasa | Base | Nota |
 |----------|------|------|------|
@@ -367,7 +337,7 @@ El sistema muestra el precio en la moneda local del usuario — solo informativo
 
 ---
 
-## 15. MOTORES DE IA — COSTOS DE REFERENCIA
+## 16. MOTORES DE IA — COSTOS DE REFERENCIA
 
 | Motor | Costo/uso USD | Uso recomendado |
 |-------|--------------|-----------------|
@@ -381,7 +351,7 @@ El sistema muestra el precio en la moneda local del usuario — solo informativo
 
 ---
 
-## 16. CAC — COSTO DE ADQUISICIÓN POR USUARIO NUEVO
+## 17. CAC — COSTO DE ADQUISICIÓN POR USUARIO NUEVO
 
 | Concepto | Costo USD | Nota |
 |----------|-----------|------|
@@ -394,7 +364,7 @@ El sistema muestra el precio en la moneda local del usuario — solo informativo
 
 ---
 
-## 17. IMPLEMENTACIÓN TÉCNICA SSO + JC
+## 18. IMPLEMENTACIÓN TÉCNICA SSO + JC
 
 ```python
 # Verificar autenticación SSO en cualquier app
@@ -429,69 +399,318 @@ DLOCAL_WEBHOOK_SECRET=...
 
 ---
 
-## 18. REGLAS PARA NUEVAS APPS
+## 19. REGLAS PARA NUEVAS APPS
 
 1. **SSO obligatorio** — usar jeeljel_users de Supabase, nunca tabla propia
 2. **Mismo ancla:** 1 JC = $1 MXN — inamovible
 3. **Mismo mínimo:** recarga mínima $100 MXN = 100 JC
 4. **Margen mínimo 85%** sobre costo de infraestructura/API
-5. **Precio referencia Ikan Naat:** tabla sección 7 como piso
+5. **Precio referencia Ikan Naat:** tabla sección 8 como piso
 6. **Mismo procesador:** dLocal Go — no Stripe
 7. **Transparencia:** mostrar precio en JC + MXN + moneda local
 8. **Comunicaciones:** solo a usuarios con consentimiento explícito
 
 ---
 
-## 19. DECISIONES PERMANENTES DEL CEO
+# PARTE II — ARQUITECTURA OLLIN DEPORTES
 
-| Decisión | Valor |
-|----------|-------|
-| Ancla JC | 1 JC = $1 MXN — inamovible |
-| Procesador LATAM | dLocal Go — no Stripe |
-| Mínimo recarga | $100 MXN = 100 JC |
-| Psicólogo | SIEMPRE IA — nunca humano |
-| Taxímetro N2 | 5 JC/min universal — sin excepciones |
-| Sesión psicólogo | 150 JC / 45 min — prepago al iniciar |
-| JC cross-app | Válidos en todas las apps JeelJel |
-| TC revisión | 1ro de cada mes — no afecta ancla |
-| Argentina ARS | dLocal gestiona — no fijar TC |
-| **SSO hub** | **jeeljel.com — Opción B — inamovible** |
-| **Registro en Ollin** | **Chat requiere cuenta JeelJel — ver gratis sin cuenta durante torneo** |
-| **Ollin acceso torneo 2026** | **Público gratuito — adquisición SSO** |
-| **Ollin acceso post-torneo** | **Marcadores básicos libres; premium = suscriptor Pro cualquier app JeelJel** |
-| **Ollin flag PREMIUM_ONLY** | **Por liga — frontend preparado, activar post-torneo** |
-| **API-Sports upgrade** | **PRO/Ultra al inicio torneo 11/06/2026** |
-| **Comunicaciones** | **Solo con consentimiento explícito al registrarse** |
+## 20. QUÉ ES OLLIN DEPORTES
+
+Ollin Deportes es el hub deportivo en tiempo real de JeelJel Kaanab. Vive en `jeeljel.com/ollin-deportes`. Es un producto **independiente** de Ikan Naat IA — no es un agente dentro de Ikan Naat. El Agente de Apuestas dentro de Ikan Naat (slug `telarana`) es un producto **separado** — Ollin Deportes no lo reemplaza.
+
+**Estado (09/06/2026): EN PRODUCCIÓN** — https://jeeljel.com/ollin-deportes
+
+**Objetivo principal:** Que cualquier persona pueda seguir partidos en vivo con estadísticas granulares, al estilo de casas de apuestas como Bet365 y Caliente, desde la web de JeelJel Kaanab — sin pagar, sin registrarse (durante el torneo selecciones 2026).
+
+**Objetivo secundario:** Funcionar como funnel de adquisición orgánico (SSO) para todo el ecosistema JeelJel Kaanab.
 
 ---
 
-## 20. PENDIENTES DE IMPLEMENTACIÓN
+## 21. STACK Y FLUJO DE DATOS
+
+### Stack en producción
+- **Frontend:** React + Vite + Tailwind (repo `jeeljel-web`)
+- **Backend:** Node.js + Express — puerto **10001** (NUNCA el 10000, ese es Ikan Naat)
+- **Caché:** Redis — todos los datos de la API se cachean en Redis; los usuarios nunca golpean la API directamente
+- **Proceso:** PM2 (`ollin-deportes`) con auto-arranque systemd
+- **Tiempo real:** Socket.io — el backend emite evento `ollin:update` a los clientes conectados
+- **Chat en vivo:** Supabase (tablas `ollin_chat` y `ollin_chat_moderacion`) — backend moderado activo; UI pendiente
+- **API de datos:** API-Football / API-Baseball (API-Sports) — `API_SPORTS_KEY` del VPS
+
+### Flujo de datos
+```
+API-Sports → Backend Node.js (polling) → Redis (caché) → Socket.io / REST → Frontend React
+```
+
+### Reglas de oro de arquitectura
+- **NUNCA** hacer polling desde el frontend directamente a API-Sports
+- **SIEMPRE** el frontend recibe datos vía Socket.io o endpoints REST del backend
+- **NUNCA** exponer la `API_SPORTS_KEY` en el frontend ni en logs
+- El backend es el único que habla con API-Sports
+- Redis es la fuente de verdad en tiempo real — si Redis tiene el dato, no se consulta la API
+- Backend usa `/fixtures?live=all` para obtener TODOS los partidos en vivo en **1 sola request** por ciclo — nunca una request por partido
+
+### Endpoints REST en producción
+- `GET /api/ollin/fixtures/live` — partidos en vivo (fútbol + béisbol combinados)
+- `GET /api/ollin/fixtures/hoy` — partidos de hoy
+- `GET /api/ollin/fixtures/proximos` — próximos 3 días + ligas torneo
+- `GET /api/ollin/health` — status, última actualización, deportes activos, contador de requests
+- `POST /chat/messages` y `GET /chat/status` — chat moderado
+
+### Claves Redis
+`ollin:futbol:live` · `ollin:futbol:hoy` · `ollin:futbol:proximos` · `ollin:beisbol:hoy` · `ollin:api:requests:YYYY-MM-DD` — TTL = 2× intervalo de polling
+
+---
+
+## 22. INTERVALOS DE POLLING POR PLAN API-SPORTS
+
+| Plan API | Requests/día | Intervalo polling | Cuándo |
+|----------|--------------|-------------------|--------|
+| FREE (actual) | 100 | 10 minutos (`600000` ms) | Desarrollo — hasta inicio torneo |
+| PRO | 7,500 | 60 segundos (`60000` ms) | Producción — upgrade al inicio del torneo **11/06/2026** |
+| Ultra | según plan | 15 segundos (`15000` ms) | Partidos activos del torneo de selecciones |
+
+**Variable de entorno:** `POLLING_INTERVAL_MS` — cambiar sin tocar código.
+**Protección de límite:** contador diario en Redis; al llegar a 95 requests se pausa el polling hasta el día siguiente.
+
+---
+
+## 23. DEPORTES Y LIGAS
+
+### En producción hoy
+| Deporte | Cobertura actual |
+|---------|------------------|
+| ⚽ Fútbol | Live ligas permitidas + próximos ligas 1, 2, 3, 4 season 2026 |
+| ⚾ Béisbol | MLB en vivo (API-Baseball, liga id 1) |
+
+### Catálogo completo a implementar — próxima sesión (rediseño UI)
+
+**Fútbol internacional:** Torneo selecciones (ID 1), Eurocopa (3), Copa América (4), Copa Africana, Copa Asiática, Concacaf Centroamericana, amistosos selecciones/clubes.
+
+**Clubes Europa:** Champions League (2), Europa League, Mundial de Clubes, Premier + FA Cup, La Liga + Copa del Rey + Supercopa, Serie A + Copa Italia, Ligue 1 + Copa Francia, Bundesliga + Copa Alemania, Eredivisie + Copa Holanda, Portugal + Copa Portugal, Primeira Liga.
+
+**Clubes LATAM:** Libertadores (11), Sudamericana (13), Liga MX + Copa MX (262, 9), Argentina, Serie A/B Brasil, Colombia, Chile, Perú, Ecuador, Venezuela, Uruguay, Bolivia, Paraguay, Honduras, Guatemala, Costa Rica, MLS + Leagues Cup.
+
+**Béisbol:** MLB (1), Liga Mexicana de Béisbol (LMB), Liga Japonesa NPB, Liga Venezolana LVBP, Serie Nacional Cuba.
+
+**Fase 2 futura:** NBA, NFL, NHL, Fórmula 1.
+
+### Ligas de fútbol permitidas actuales (`LIGAS_PERMITIDAS`)
+```javascript
+const LIGAS_PERMITIDAS = [
+  1,    // Fútbol internacional — torneo selecciones 2026
+  2,    // Champions League / selecciones (según temporada API)
+  3,    // UEFA European Championship
+  4,    // Copa América
+  9,    // Copa MX
+  11,   // CONMEBOL Libertadores
+  13,   // CONMEBOL Sudamericana
+  140,  // La Liga (España)
+  39,   // Premier League (Inglaterra)
+  135,  // Serie A (Italia)
+  78,   // Bundesliga (Alemania)
+  61,   // Ligue 1 (Francia)
+  262,  // Liga MX (México)
+  // Catálogo completo de la sección 23 se agrega en el rediseño UI
+];
+```
+
+---
+
+## 24. ESTRUCTURA DE PÁGINAS
+
+### 24.1 Página principal — `/ollin-deportes` (EN PRODUCCIÓN)
+
+**Layout actual:**
+```
+[Navbar JeelJel Kaanab]
+[Header Ollin Deportes — logo ajolote+balón + tagline]
+[Selector de deportes centrado — botón activo amarillo #f0c030]
+[Panel colapsable — flecha ↓ parpadeante al estar cerrado]
+[Buscador 🔍 'Buscar equipo o liga...']
+[4 columnas: EN VIVO | HOY | PASADOS | PRÓXIMOS — tabs en móvil]
+[OllinLegalDisclaimer]
+[Footer JeelJel Kaanab]
+```
+
+- Tarjetas con `TeamDisplay` (banderas o iniciales — nunca escudos oficiales), fecha `DD/MM · HH:MM`, badges LIVE/hora/FT
+- Hook `useOllinData` — fetch REST + Socket.io `ollin:update` + fallback mock ('Modo demo')
+- Solo se muestran deportes con partidos ese día
+
+### 24.2 Rediseño UI — PRÓXIMA SESIÓN (tipo Sofascore/Bet365)
+
+**Layout 3 zonas:**
+1. **Columna izquierda fija (240px):** navegador de deportes y ligas agrupadas por región + badge rojo con número de partidos EN VIVO por liga + liga seleccionada resaltada en turquesa
+2. **Panel central:** tabs EN VIVO · HOY · PRÓXIMOS · PASADOS · **POSICIONES** + partidos agrupados por liga + buscador global
+3. **Tab POSICIONES:** standings (Pos · Equipo · PJ · G · E · P · GF · GC · Pts); para torneo de selecciones: grupos A-H
+4. **Móvil:** menú hamburguesa, una columna
+
+**Monetización futura (estructura, no activar):** flag `PREMIUM_ONLY` por liga — candado + mensaje 'Disponible para suscriptores Pro de JeelJel Kaanab'.
+
+### 24.3 Página de partido individual — `/ollin-deportes/partido/:id` (STUB — pendiente)
+
+**Layout desktop (3 columnas):**
+```
+[Header: Equipos + Marcador + Tiempo + Mini-stats]
+[Col 1: Campo 2D / Diamond 2D]  [Col 2: Estadísticas]  [Col 3: Chat en vivo]
+[Tabs: EN VIVO | ESTADÍSTICAS | JUGADORES | ALINEACIONES | H2H]
+```
+
+- **Campo 2D fútbol:** SVG isométrico propio, zona iluminada de posesión, eventos flotantes (GOL ⚽, FALTA, TARJETA), overlay de gol — SIN imágenes con copyright
+- **Diamante 2D béisbol:** SVG visto desde arriba, bases iluminadas, inning (top/bottom), outs, bolas, strikes, eventos (STRIKE, HIT, HOME RUN)
+- **Tab Estadísticas:** barras comparativas bidireccionales; fútbol: posesión, tiros, corners, faltas, tarjetas, etc.; béisbol: carreras, hits, errores, pitcher actual, bateo
+- **Tab Jugadores:** tabla ordenable; fútbol: goles, asistencias, tiros, pases, minutos; béisbol: AB, H, R, RBI, BB, K, AVG / IP, ER, ERA
+- **Tab Alineaciones:** formación visual (fútbol) / lineup de bateo (béisbol)
+- **Tab H2H:** últimos 5 enfrentamientos
+- **Chat en vivo:** público con cuenta SSO, nombre 'Aficionado_XXXX' o nombre de cuenta, máximo 200 caracteres, rate limit 1 mensaje/5 segundos
+
+---
+
+## 25. MODERACIÓN DE CHAT (ACTIVA EN BACKEND)
+
+- **Categorías bloqueadas:** groserías ES/EN, homofobia (siempre), racismo directo (siempre), racismo contextual ('negro'/'mono'/'chango' solo con insulto o como mensaje solo), URLs/spam, mensaje repetido 3+
+- **Normalización anti-evasión:** minúsculas, sin acentos, leet (p0t0, m4ric0n), letras repetidas, puntos/espacios intercalados
+- **Contexto:** 'juega de negro' / 'el jersey negro' → pasa; 'pinche negro' → bloquea
+- **Acción:** mensaje no se publica + aviso 'Tu mensaje no fue enviado. En Ollin Deportes fomentamos la convivencia sana — sin insultos ni discriminación.' + log en `ollin_chat_moderacion`
+- **Reincidencia:** 3 bloqueos en 10 min → mute 15 min; 3 mutes en un día → ban 24 h (Redis)
+- **Términos FIFA/Mundial en chat de usuarios: PERMITIDOS** — es expresión de particulares, no uso comercial de JeelJel (decisión legal 09/06/2026)
+- Lista de términos editable en `chatFilter.terms.js`; filtro corre SIEMPRE en backend
+
+---
+
+## 26. CUMPLIMIENTO LEGAL (OBLIGATORIO — IMPLEMENTADO)
+
+**Lenguaje neutro — prohibido invocar marcas del torneo:** En UI, textos, metadatos, títulos y URLs de JeelJel **NUNCA** usar: `FIFA`, `World Cup`, `Copa del Mundo`, `Copa Mundial`, `Mundial 2026` ni logo/trofeo/mascotas. Sustituir por: **Fútbol internacional**, **Selecciones nacionales** o nombre sanitizado. Ruta `/mundial-2026` redirige a `/ollin-deportes`.
+
+**Identificadores visuales:**
+- Selecciones nacionales → **bandera del país** (flagcdn)
+- Clubes → **círculo con iniciales y color propio** — NUNCA escudo oficial
+- Backend sanitiza fixtures (`sanitize.js`) antes de Redis; elimina `team.logo` / `league.logo`
+
+**Disclaimer legal** (texto exacto, vía `OllinLayout` + `OllinLegalDisclaimer` en `/ollin-deportes` y cada página de partido):
+
+> "Ollin Deportes es un servicio informativo independiente de estadísticas deportivas. No está afiliado, patrocinado ni respaldado por FIFA, ligas, federaciones, clubes ni organizadores de eventos. Todas las marcas, nombres y logotipos pertenecen a sus respectivos titulares y se mencionan únicamente con fines informativos y de identificación. Ollin Deportes no transmite video ni audio de ningún evento."
+
+**Sin audiovisual:** no incrustar, enlazar ni mostrar video, audio, clips ni highlights. Campo 2D = SVG propio con datos.
+
+**Afiliados apuestas:** solo lenguaje propio — **Momios en vivo**, **Modo Apostador**. Prohibido nombrar el torneo o «Mundial».
+
+**Permitido:** nombres de equipos/selecciones como texto informativo (ej. «México vs Brasil»).
+
+**Módulos:** `src/ollin/compliance.js`, `src/ollin/teamDisplay.js`, `src/components/ollin/*`, `ollin-backend/src/lib/compliance.js`, `ollin-backend/src/lib/sanitize.js`
+
+---
+
+## 27. VARIABLES DE ENTORNO — OLLIN BACKEND (VPS)
+
+Archivo: `/var/www/ollin-backend/.env`
+
+```bash
+API_SPORTS_KEY=<en el VPS — misma key que Ikan Naat>
+REDIS_URL=redis://localhost:6379
+POLLING_INTERVAL_MS=600000    # 10 min FREE · 60000 PRO · 15000 Ultra torneo
+OLLIN_PORT=10001
+SUPABASE_URL=<en el VPS>
+SUPABASE_SERVICE_KEY=<en el VPS>
+```
+
+---
+
+## 28. NGINX — REGLA CRÍTICA
+
+El archivo de Nginx a modificar es **ÚNICAMENTE** `/etc/nginx/sites-enabled/jeeljel-landing`.
+
+Location ya configurado en producción:
+```nginx
+location /api/ollin/ {
+    proxy_pass http://localhost:10001/;
+    proxy_http_version 1.1;
+    proxy_set_header Upgrade $http_upgrade;
+    proxy_set_header Connection 'upgrade';
+    proxy_cache_bypass $http_upgrade;
+}
+```
+
+**NUNCA tocar** `/etc/nginx/sites-enabled/ikannaat`. **NUNCA** hacer `proxy_pass` a `localhost:10000` en `jeeljel-landing`.
+
+---
+
+## 29. MONETIZACIÓN OLLIN DEPORTES
+
+- **Afiliados casas de apuestas:** banner contextual por deporte. 1xBet Partners (40% rev share), Bet365 Affiliates (30%). Estimado conservador torneo: $3,000–3,500 USD.
+- **AdSense:** integrar una vez que haya tráfico orgánico
+- **Acceso premium post-torneo:** estadísticas completas, live detallado y ligas premium = exclusivo suscriptores Pro de cualquier app JeelJel (ver Parte I, sección 1)
+
+---
+
+## 30. REGLAS DE CONTENIDO Y MARCA — OLLIN
+
+- El nombre visible siempre es **Ollin Deportes** — nunca "Hub Biónico" ni "Hub Deportivo"
+- Logo: ajolote JeelJel con balón (`Logo_JeelJel_Kanaabcon_balon_sin_fondo.png`)
+- Paleta: fondo `#1a0400` + mosaico Macuilxochitl + turquesa `#4ecdc4` + amarillo activo `#f0c030`
+- **NUNCA mencionar** motores de IA externos ni el nombre de la API en el frontend
+- En fútbol mostrar solo ligas principales e internacionales del catálogo — no ligas amateur
+
+---
+
+# PARTE III — DECISIONES PERMANENTES DEL CEO
+
+Estas decisiones no se revisan — son arquitectura de negocio:
+
+| # | Decisión | Valor |
+|---|----------|-------|
+| 1 | Ancla JC | 1 JC = $1 MXN — inamovible |
+| 2 | Procesador LATAM | dLocal Go — no Stripe |
+| 3 | Mínimo recarga | $100 MXN = 100 JC |
+| 4 | Psicólogo | SIEMPRE IA — nunca humano |
+| 5 | Taxímetro N2 | 5 JC/min universal — sin excepciones |
+| 6 | Sesión psicólogo | 150 JC / 45 min — prepago al iniciar |
+| 7 | JC cross-app | Válidos en todas las apps JeelJel |
+| 8 | TC revisión | 1ro de cada mes — no afecta ancla |
+| 9 | Argentina ARS | dLocal gestiona — no fijar TC |
+| 10 | SSO hub | jeeljel.com — Opción B — inamovible |
+| 11 | Registro en Ollin | Chat requiere cuenta JeelJel — ver gratis sin cuenta durante torneo |
+| 12 | Ollin acceso torneo 2026 | Público gratuito — adquisición SSO |
+| 13 | Ollin acceso post-torneo | Marcadores básicos libres; premium = suscriptor Pro cualquier app JeelJel |
+| 14 | Ollin flag PREMIUM_ONLY | Por liga — frontend preparado, activar post-torneo |
+| 15 | API-Sports upgrade | PRO/Ultra al inicio torneo 11/06/2026 |
+| 16 | Comunicaciones | Solo con consentimiento explícito al registrarse |
+| 17 | Ollin puerto backend | 10001 — nunca 10000 (Ikan Naat) |
+| 18 | Ollin independiente | Producto separado de Ikan Naat; Agente Apuestas (`telarana`) sigue en Ikan Naat |
+| 19 | Chat usuarios y marcas | Términos FIFA/Mundial permitidos en chat de usuarios (UGC); prohibidos en copy propio de JeelJel |
+| 20 | Lista negra chat | Groserías + homofobia + racismo + spam — moderación backend siempre activa |
+
+---
+
+# PARTE IV — PENDIENTES TÉCNICOS ACTIVOS
 
 | ID | Prioridad | Descripción | App | Estado |
 |----|-----------|-------------|-----|--------|
 | **SSO-1** | 🔴 URGENTE | Crear página jeeljel.com/registro con SSO Supabase | jeeljel.com | ⏳ Pendiente |
 | **SSO-2** | 🔴 URGENTE | Modal de registro en Ollin Deportes al intentar chatear | Ollin Deportes | ⏳ Pendiente |
 | **SSO-3** | 🟡 | Migrar auth Ikan Naat a jeeljel_users (post-torneo) | Ikan Naat | ⏳ Pendiente |
-| **SSO-4** | 🟡 | Tabla jeeljel_users en Supabase con campos origen_registro y consentimiento | jeeljel.com | ⏳ Pendiente |
+| **SSO-4** | 🟡 | Tabla jeeljel_users en Supabase con origen_registro y consentimiento | jeeljel.com | ⏳ Pendiente |
 | **FIN-4** | 🔴 | Display moneda local automático por país | Todas | ⏳ Pendiente |
 | **FIN-5** | 🟡 | Argentina ARS dinámico vía dLocal | Todas | ⏳ Pendiente |
 | **FIN-6** | 🟡 | Verificar cross-app jeeljel_coins entre apps | Todas | ⏳ Pendiente |
 | **OLLIN-1** | — | Backend Node.js puerto 10001 + Redis + PM2 + Socket.io | Ollin Deportes | ✅ Completado |
 | **OLLIN-2** | — | Frontend fútbol + béisbol MLB operativo | Ollin Deportes | ✅ Completado |
 | **OLLIN-3** | 🔴 | Página `/ollin-deportes/partido/:id` completa (stub actual) | Ollin Deportes | ⏳ Pendiente |
-| **OLLIN-4** | 🔴 | Tablas de posiciones | Ollin Deportes | ⏳ Pendiente |
+| **OLLIN-4** | 🔴 | Tablas de posiciones (tab POSICIONES) | Ollin Deportes | ⏳ Pendiente |
 | **OLLIN-5** | 🟡 | UI chat en vivo (backend + moderación ya activos) | Ollin Deportes | ⏳ Pendiente |
 | **OLLIN-6** | — | Cumplimiento legal (compliance + sanitize + disclaimer) | Ollin Deportes | ✅ Completado |
 | **OLLIN-7** | — | Polling próximos ligas 1/2/3/4 season 2026 | Ollin Deportes | ✅ Completado |
-| **OLLIN-8** | 🔴 | Rediseño UI 3 zonas (Sofascore/Bet365) + tab POSICIONES | Ollin Deportes | ⏳ Próxima sesión |
-| **OLLIN-9** | 🔴 | Catálogo completo ligas/deportes (sección 8b) | Ollin Deportes | ⏳ Próxima sesión |
+| **OLLIN-8** | 🔴 | Rediseño UI 3 zonas (Sofascore/Bet365) + sidebar ligas | Ollin Deportes | ⏳ Próxima sesión |
+| **OLLIN-9** | 🔴 | Catálogo completo ligas/deportes (sección 23) | Ollin Deportes | ⏳ Próxima sesión |
 | **OLLIN-10** | 🔴 | Upgrade API-Sports PRO/Ultra (11/06/2026) | Ollin Deportes | ⏳ Pendiente |
 | **OLLIN-11** | 🟡 | Activar modelo premium post-torneo (`PREMIUM_ONLY`) | Ollin Deportes | ⏳ Post-torneo |
 | **OLLIN-12** | — | Deploy manual VPS backend + PM2 | Ollin Deportes | ✅ Completado |
+| **OLLIN-13** | 🟡 | Campo 2D SVG fútbol + diamante 2D béisbol con eventos | Ollin Deportes | ⏳ Pendiente |
+| **OLLIN-14** | 🟡 | Afiliados: registro 1xBet Partners + Bet365 Affiliates | Ollin Deportes | ⏳ Pendiente |
 
 ---
 
-*Documento generado: 09/06/2026 | Versión: v13 | Autor: JeelJel Kaanab*
-*Cambios v13: SSO unificado (Sección 0), tablas de precios por app (Secciones 8-11), estrategia torneo selecciones 2026 como funnel de registro*
-*Actualización 09/06/2026: Ollin Deportes en producción; modelo premium post-torneo; catálogo ligas; rediseño UI Sofascore/Bet365; plan API-Sports PRO/Ultra; SSO pendiente*
+*Documento generado: 09/06/2026 | Versión: v1.0 | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
+*Unifica: JeelJel_Coins_Ecosistema_Master_v13.md + CURSOR_OllinDeportes_v1.md + alias Coins Master*
+*Documentos hermanos: SNAPSHOT.md (estado actual) · MASTER_BLUEPRINT.md (hoja de ruta)*
 *Próxima revisión: 01/07/2026 (TC mensual + post-torneo)*

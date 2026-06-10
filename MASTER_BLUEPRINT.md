@@ -49,7 +49,7 @@
 
 ## 🟡 Ollin Deportes — Fase 2 (post-lanzamiento página principal)
 
-**Documento de referencia:** [`CURSOR_OllinDeportes_v1.md`](./CURSOR_OllinDeportes_v1.md) — DOC-JEL-2026-OLLIN-001
+**Documento de referencia:** [`JEELJEL_MASTER.md`](./JEELJEL_MASTER.md) — DOC-JEL-2026-MASTER-001 (Parte II: Ollin Deportes)
 
 | Área | Estado |
 |------|--------|
@@ -170,7 +170,7 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - [ ] 🔴 **Rediseño UI Ollin Deportes** — layout 3 zonas Sofascore/Bet365 (sidebar ligas + tabs + POSICIONES + hamburguesa móvil)
 - [ ] 🔴 **Catálogo completo ligas/deportes** — fútbol internacional + clubes Europa/LATAM + béisbol (ver SNAPSHOT v5)
 - [ ] 🔴 **Upgrade API-Sports PRO/Ultra** — al inicio torneo selecciones 11/06/2026 (FREE: 100 req/día 10 min → PRO: 7,500 req/día 60s → Ultra: 15s torneo)
-- [ ] 🔴 **SSO jeeljel.com/registro** — Supabase Auth + modal chat Ollin (ver Coins v13 sección 0)
+- [ ] 🔴 **SSO jeeljel.com/registro** — Supabase Auth + modal chat Ollin (ver `JEELJEL_MASTER.md` Parte I §1)
 - [ ] 🔴 **Ollin Deportes — tab POSICIONES** — standings y grupos torneo selecciones
 - [ ] 🔴 **Ollin Deportes — página de partido** (`/ollin-deportes/partido/:id`) — desarrollar vista completa (stub actual)
 - [ ] 🟡 **Modelo premium post-torneo** — activar flag `PREMIUM_ONLY` por liga post-torneo (decisión CEO documentada)
