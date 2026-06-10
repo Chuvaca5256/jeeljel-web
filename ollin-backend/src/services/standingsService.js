@@ -1,7 +1,7 @@
 const { STANDINGS_SEASON } = require('../config/leagues')
 const { footballClient, apiGet } = require('./apiClient')
-const { getJson, setJson } = require('./redis')
-const { sanitizeText, leagueDisplayName } = require('./compliance')
+const { getJson, setJson } = require('../lib/redis')
+const { sanitizeText, leagueDisplayName } = require('../lib/compliance')
 
 const STANDINGS_TTL_MS = 60 * 60 * 1000
 
@@ -76,7 +76,21 @@ async function fetchStandings(ligaId, redis) {
 
   if (!result.ok) return null
 
-  const sanitized = sanitizeStandingsResponse(result.data, Number(ligaId))
+  const apiRows = result.data
+  const standingsNested = apiRows?.[0]?.league?.standings
+  const hasStandings =
+    Array.isArray(standingsNested) &&
+    standingsNested.length > 0 &&
+    standingsNested.some((group) => Array.isArray(group) && group.length > 0)
+
+  if (!hasStandings) {
+    console.warn(
+      `[standings] API-Sports devolvió standings vacíos — liga=${ligaId}, season=${STANDINGS_SEASON}. ` +
+        'Nota: el plan FREE solo cubre temporadas 2021–2023; los datos reales llegarán con el upgrade PRO.'
+    )
+  }
+
+  const sanitized = sanitizeStandingsResponse(apiRows, Number(ligaId))
   await setJson(key, sanitized, STANDINGS_TTL_MS)
   return sanitized
 }
