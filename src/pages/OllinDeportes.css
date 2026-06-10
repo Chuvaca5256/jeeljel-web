@@ -19,14 +19,15 @@
   z-index: 1;
   max-width: 1440px;
   margin: 0 auto;
-  padding: 88px 0 32px;
+  /* Navbar sticky ya reserva altura — sin padding-top extra */
+  padding: 12px 0 32px;
 }
 
 .ollin-topbar {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 0 16px 16px;
+  padding: 0 16px 12px;
 }
 
 .ollin-topbar__menu {
@@ -645,8 +646,8 @@
 @media (min-width: 901px) {
   .ollin-layout__sidebar {
     position: sticky;
-    top: 88px;
-    height: calc(100vh - 100px);
+    top: 72px;
+    height: calc(100vh - 80px);
     align-self: flex-start;
   }
 }
