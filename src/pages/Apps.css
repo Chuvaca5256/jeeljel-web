@@ -2,7 +2,6 @@
 
 .apps-page {
   position: relative;
-  min-height: 100vh;
   background-color: #1a0400;
 }
 
@@ -31,7 +30,7 @@
   max-width: 960px;
   margin: 0 auto;
   /* Navbar sticky ya reserva altura — sin padding-top extra */
-  padding: 12px 24px 64px;
+  padding: 12px 24px 24px;
 }
 
 .apps-header {
