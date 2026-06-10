@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import { MOCK_STANDINGS } from '../ollin/mockData'
+import { MOCK_STANDINGS, MOCK_SCORERS } from '../ollin/mockData'
 
 async function fetchJson(url) {
   const res = await fetch(url)
@@ -10,25 +10,49 @@ async function fetchJson(url) {
 export default function useStandings(leagueId, enabled) {
   const [loading, setLoading] = useState(false)
   const [data, setData] = useState(null)
+  const [scorers, setScorers] = useState(null)
   const [usingMock, setUsingMock] = useState(false)
 
   const load = useCallback(async () => {
     if (!enabled || leagueId == null) {
       setData(null)
+      setScorers(null)
       return
     }
 
     setLoading(true)
     try {
-      const result = await fetchJson(`/api/ollin/standings/${leagueId}`)
-      setData(result)
-      setUsingMock(false)
-    } catch {
-      if (leagueId === 1) {
+      const [standingsResult, scorersResult] = await Promise.allSettled([
+        fetchJson(`/api/ollin/standings/${leagueId}`),
+        fetchJson(`/api/ollin/standings/${leagueId}/scorers`),
+      ])
+
+      if (standingsResult.status === 'fulfilled') {
+        setData(standingsResult.value)
+        setUsingMock(false)
+      } else if (leagueId === 1) {
         setData(MOCK_STANDINGS)
         setUsingMock(true)
       } else {
         setData(null)
+        setUsingMock(false)
+      }
+
+      if (scorersResult.status === 'fulfilled') {
+        setScorers(scorersResult.value)
+      } else if (leagueId === 1 && standingsResult.status !== 'fulfilled') {
+        setScorers(MOCK_SCORERS)
+      } else {
+        setScorers(scorersResult.status === 'fulfilled' ? scorersResult.value : { scorers: [] })
+      }
+    } catch {
+      if (leagueId === 1) {
+        setData(MOCK_STANDINGS)
+        setScorers(MOCK_SCORERS)
+        setUsingMock(true)
+      } else {
+        setData(null)
+        setScorers(null)
         setUsingMock(false)
       }
     } finally {
@@ -40,5 +64,5 @@ export default function useStandings(leagueId, enabled) {
     load()
   }, [load])
 
-  return { loading, data, usingMock, refresh: load }
+  return { loading, data, scorers, usingMock, refresh: load }
 }

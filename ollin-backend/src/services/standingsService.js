@@ -4,9 +4,32 @@ const { getJson, setJson } = require('../lib/redis')
 const { sanitizeText, leagueDisplayName } = require('../lib/compliance')
 
 const STANDINGS_TTL_MS = 60 * 60 * 1000
+const SCORERS_TTL_MS = 60 * 60 * 1000
+
+const GROUP_LABEL_ES = {
+  'Ranking of third-placed teams': 'Clasificación de terceros',
+  'Third-placed teams': 'Clasificación de terceros',
+  'Ranking of the best third-placed teams': 'Clasificación de terceros',
+  'Best third-placed teams': 'Clasificación de terceros',
+  'Knockout stage': 'Fase eliminatoria',
+}
+
+function translateGroupLabel(label) {
+  if (label == null || label === '') return label
+  const str = String(label).trim()
+  if (GROUP_LABEL_ES[str]) return GROUP_LABEL_ES[str]
+  const groupMatch = str.match(/^Group\s+([A-Za-z0-9]+)$/i)
+  if (groupMatch) return `Grupo ${groupMatch[1].toUpperCase()}`
+  if (/^[A-H]$/i.test(str)) return `Grupo ${str.toUpperCase()}`
+  return sanitizeText(str)
+}
 
 function standingsKey(ligaId) {
   return `ollin:standings:${ligaId}`
+}
+
+function scorersKey(ligaId) {
+  return `ollin:scorers:${ligaId}`
 }
 
 function sanitizeTeamRow(row) {
@@ -43,11 +66,14 @@ function sanitizeStandingsResponse(apiRows, leagueId) {
   const standingsNested = entry?.league?.standings || []
 
   const groups = standingsNested.map((groupRows, index) => {
-    const groupLabel =
-      groupRows[0]?.group || String.fromCharCode(65 + index)
+    const rawLabel = groupRows[0]?.group || String.fromCharCode(65 + index)
+    const groupLabel = translateGroupLabel(rawLabel)
     return {
       group: groupLabel,
-      rows: groupRows.map(sanitizeTeamRow),
+      rows: groupRows.map((row) => ({
+        ...sanitizeTeamRow(row),
+        group: translateGroupLabel(row.group || rawLabel),
+      })),
     }
   })
 
@@ -95,8 +121,58 @@ async function fetchStandings(ligaId, redis) {
   return sanitized
 }
 
+function sanitizeScorersResponse(apiRows, leagueId) {
+  if (!Array.isArray(apiRows)) return { leagueId, season: STANDINGS_SEASON, scorers: [] }
+
+  const scorers = apiRows.map((entry, index) => {
+    const stats = entry.statistics?.[0] || {}
+    const goals = stats.goals || {}
+    return {
+      rank: index + 1,
+      playerName: sanitizeText(entry.player?.name || 'Jugador'),
+      teamName: sanitizeText(stats.team?.name || '—'),
+      goals: goals.total ?? 0,
+      assists: goals.assists ?? 0,
+    }
+  })
+
+  return {
+    leagueId,
+    season: STANDINGS_SEASON,
+    scorers,
+  }
+}
+
+async function fetchTopScorers(ligaId, redis) {
+  const key = scorersKey(ligaId)
+  const cached = await getJson(key)
+  if (cached) return cached
+
+  const result = await apiGet(
+    footballClient,
+    '/players/topscorers',
+    { league: ligaId, season: STANDINGS_SEASON },
+    redis
+  )
+
+  if (!result.ok) return null
+
+  if (!Array.isArray(result.data) || result.data.length === 0) {
+    console.warn(
+      `[standings] API-Sports devolvió goleadores vacíos — liga=${ligaId}, season=${STANDINGS_SEASON}.`
+    )
+  }
+
+  const sanitized = sanitizeScorersResponse(result.data, Number(ligaId))
+  await setJson(key, sanitized, SCORERS_TTL_MS)
+  return sanitized
+}
+
 module.exports = {
   fetchStandings,
+  fetchTopScorers,
   standingsKey,
+  scorersKey,
   STANDINGS_TTL_MS,
+  SCORERS_TTL_MS,
 }

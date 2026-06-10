@@ -87,3 +87,13 @@ export const MOCK_STANDINGS = {
   })),
   flat: [],
 }
+
+export const MOCK_SCORERS = {
+  leagueId: 1,
+  season: 2026,
+  scorers: [
+    { rank: 1, playerName: 'Delantero A', teamName: 'Selección A1', goals: 4, assists: 1 },
+    { rank: 2, playerName: 'Delantero B', teamName: 'Selección B2', goals: 3, assists: 2 },
+    { rank: 3, playerName: 'Mediocampista C', teamName: 'Selección C1', goals: 2, assists: 3 },
+  ],
+}

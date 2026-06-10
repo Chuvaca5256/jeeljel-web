@@ -28,7 +28,7 @@ export default function OllinDeportes() {
 
   const standingsLeagueId =
     selectedLeagueId ?? (sport === 'futbol' ? 1 : null)
-  const { loading: standingsLoading, data: standingsData, usingMock: standingsMock } =
+  const { loading: standingsLoading, data: standingsData, scorers: scorersData, usingMock: standingsMock } =
     useStandings(standingsLeagueId, activeTab === 'posiciones' && sport === 'futbol')
 
   useEffect(() => {
@@ -60,7 +60,9 @@ export default function OllinDeportes() {
   const hasSearch = searchQuery.trim().length > 0
   const emptyLabel = hasSearch
     ? 'Sin resultados para tu búsqueda'
-    : 'Sin partidos en este momento'
+    : activeTab === 'proximos'
+      ? 'Próximos partidos no disponibles temporalmente — limitación del plan FREE de API-Sports. Se activará mañana con el upgrade PRO.'
+      : 'Sin partidos en este momento'
 
   const selectedLeagueMeta = getLeagueMeta(selectedLeagueId, sport)
 
@@ -163,6 +165,7 @@ export default function OllinDeportes() {
                 <StandingsView
                   loading={standingsLoading}
                   data={standingsData}
+                  scorers={scorersData}
                   usingMock={standingsMock}
                   leagueMeta={selectedLeagueMeta}
                 />

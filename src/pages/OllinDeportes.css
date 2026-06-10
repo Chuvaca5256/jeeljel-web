@@ -581,6 +581,24 @@
   margin: 0 0 8px;
 }
 
+.ollin-scorers-section {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(78, 205, 196, 0.2);
+}
+
+.ollin-standings__empty-section {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0;
+}
+
+.ollin-scorers-table td:nth-child(2),
+.ollin-scorers-table td:nth-child(3) {
+  text-align: left;
+}
+
 .ollin-standings-table {
   width: 100%;
   border-collapse: collapse;
