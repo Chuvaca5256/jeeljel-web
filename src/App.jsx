@@ -11,6 +11,8 @@ import Organizaciones from './pages/Organizaciones'
 import Contacto from './pages/Contacto'
 import Privacidad from './pages/Privacidad'
 import Terminos from './pages/Terminos'
+import Registro from './pages/Registro'
+import Login from './pages/Login'
 
 export default function App() {
   return (
@@ -30,6 +32,8 @@ export default function App() {
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/privacidad" element={<Privacidad />} />
           <Route path="/terminos" element={<Terminos />} />
+          <Route path="/registro" element={<Registro />} />
+          <Route path="/login" element={<Login />} />
         </Routes>
       </main>
       <Footer />

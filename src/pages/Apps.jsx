@@ -11,6 +11,7 @@ const APPS = [
   {
     id: 'ikan-naat',
     name: 'Ikan Naat IA',
+    badge: 'Beta',
     logo: logoIkanNaat,
     accent: '#4ecdc4',
     subtitle: 'Ecosistema IA latinoamericano',
@@ -50,7 +51,7 @@ const APPS = [
       'Narrador comunitario con rating',
       'IA analista (Ikan Naat) conectada al partido',
     ],
-    cta: { label: '¡Ingresa aquí!', disabled: true },
+    cta: { label: '¡Ingresa aquí!', href: 'https://jeeljel.com/ollin-deportes' },
     comingSoon: false,
   },
   {
@@ -269,6 +270,9 @@ export default function Apps() {
                       <div className="apps-row-left-text">
                         <h2 className="apps-row-name" style={{ color: app.accent }}>
                           {app.name}
+                          {app.badge && (
+                            <span className="apps-row-badge">{app.badge}</span>
+                          )}
                         </h2>
                         <p className="apps-row-subtitle">{app.subtitle}</p>
                       </div>

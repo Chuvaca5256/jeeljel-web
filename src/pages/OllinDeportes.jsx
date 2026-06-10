@@ -4,6 +4,7 @@ import LeagueSidebar from '../components/ollin/LeagueSidebar'
 import MatchGroupList from '../components/ollin/MatchGroupList'
 import StandingsView from '../components/ollin/StandingsView'
 import OllinLayout from '../components/ollin/OllinLayout'
+import OllinChat from '../components/ollin/OllinChat'
 import useOllinData from '../hooks/useOllinData'
 import useStandings from '../hooks/useStandings'
 import { CENTRAL_TABS, getLeagueMeta } from '../ollin/leagueCatalog'
@@ -177,6 +178,8 @@ export default function OllinDeportes() {
                   emptyLabel={emptyLabel}
                 />
               )}
+
+              <OllinChat />
             </main>
           </div>
         </div>

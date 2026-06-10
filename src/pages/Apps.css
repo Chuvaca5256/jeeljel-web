@@ -192,6 +192,22 @@
   text-overflow: ellipsis;
 }
 
+.apps-row-badge {
+  display: inline-block;
+  margin-left: 8px;
+  vertical-align: middle;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.45);
+  color: #f97316;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.2;
+}
+
 .apps-row--open .apps-row-name {
   white-space: normal;
   overflow: visible;
