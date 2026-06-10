@@ -1,4 +1,5 @@
 import { getLeagueDisplayName } from './compliance'
+import { translateTeamName } from './teamDisplay'
 
 const FOOTBALL_LIVE = new Set(['1H', '2H', 'HT', 'ET', 'BT', 'P', 'LIVE', 'INT'])
 const FOOTBALL_FINISHED = new Set(['FT', 'AET', 'PEN', 'AWD', 'WO'])
@@ -36,12 +37,12 @@ export function normalizeFootballFixture(raw) {
     sport: 'futbol',
     leagueId,
     homeTeam: {
-      name: home.name || 'Local',
+      name: translateTeamName(home.name || 'Local'),
       national: Boolean(home.national),
       country: home.country || home.code,
     },
     awayTeam: {
-      name: away.name || 'Visitante',
+      name: translateTeamName(away.name || 'Visitante'),
       national: Boolean(away.national),
       country: away.country || away.code,
     },

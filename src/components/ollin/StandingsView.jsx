@@ -1,5 +1,6 @@
 import PremiumLockNotice from './PremiumLockNotice'
 import { formatStandingsGroupTitle } from '../../ollin/standingsLabels'
+import { translateTeamName } from '../../ollin/teamDisplay'
 
 function StandingsTable({ rows }) {
   return (
@@ -21,7 +22,7 @@ function StandingsTable({ rows }) {
         {rows.map((row) => (
           <tr key={`${row.team?.id}-${row.rank}`}>
             <td>{row.rank}</td>
-            <td>{row.team?.name}</td>
+            <td>{translateTeamName(row.team?.name)}</td>
             <td>{row.all?.played ?? '—'}</td>
             <td>{row.all?.win ?? '—'}</td>
             <td>{row.all?.draw ?? '—'}</td>
@@ -57,7 +58,7 @@ function ScorersTable({ rows }) {
           <tr key={`${row.rank}-${row.playerName}`}>
             <td>{row.rank}</td>
             <td>{row.playerName}</td>
-            <td>{row.teamName}</td>
+            <td>{translateTeamName(row.teamName)}</td>
             <td>{row.goals ?? '—'}</td>
             <td>{row.assists ?? '—'}</td>
           </tr>

@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { formatMatchDateTime } from '../../ollin/matchUtils'
+import { translateTeamName } from '../../ollin/teamDisplay'
 import TeamDisplay from './TeamDisplay'
 
 export default function MatchCard({ match }) {
@@ -19,7 +20,7 @@ export default function MatchCard({ match }) {
       <div className="ollin-match-card__teams">
         <div className="ollin-match-card__team">
           <TeamDisplay team={match.homeTeam} size={36} />
-          <span className="ollin-match-card__name">{match.homeTeam.name}</span>
+          <span className="ollin-match-card__name">{translateTeamName(match.homeTeam.name)}</span>
         </div>
 
         <div className="ollin-match-card__center">
@@ -35,7 +36,7 @@ export default function MatchCard({ match }) {
 
         <div className="ollin-match-card__team ollin-match-card__team--away">
           <TeamDisplay team={match.awayTeam} size={36} />
-          <span className="ollin-match-card__name">{match.awayTeam.name}</span>
+          <span className="ollin-match-card__name">{translateTeamName(match.awayTeam.name)}</span>
         </div>
       </div>
     </Link>
