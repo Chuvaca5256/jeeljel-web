@@ -30,7 +30,8 @@
   width: 100%;
   max-width: 960px;
   margin: 0 auto;
-  padding: 120px 24px 64px;
+  /* Navbar sticky ya reserva altura — sin padding-top extra */
+  padding: 12px 24px 64px;
 }
 
 .apps-header {
