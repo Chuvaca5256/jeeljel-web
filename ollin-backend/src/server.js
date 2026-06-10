@@ -4,6 +4,7 @@ const { Server } = require('socket.io')
 const config = require('./config/env')
 const { connectRedis, getClient } = require('./lib/redis')
 const { router: fixturesRouter, healthHandler } = require('./routes/fixtures')
+const partidoRouter = require('./routes/partido')
 const standingsRouter = require('./routes/standings')
 const { attachSocketIO, startPolling, stopPolling } = require('./services/polling')
 const { createChatRouter } = require('./routes/chat')
@@ -26,11 +27,13 @@ async function main() {
 
   // Rutas internas — Nginx: /api/ollin/* → http://localhost:OLLIN_PORT/*
   app.use('/fixtures', fixturesRouter)
+  app.use('/fixtures', partidoRouter)
   app.use('/standings', standingsRouter)
   app.get('/health', healthHandler)
 
   // Alias desarrollo local
   app.use('/api/ollin/fixtures', fixturesRouter)
+  app.use('/api/ollin/fixtures', partidoRouter)
   app.use('/api/ollin/standings', standingsRouter)
   app.get('/api/ollin/health', healthHandler)
 
