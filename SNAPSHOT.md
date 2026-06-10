@@ -1,20 +1,17 @@
 # SNAPSHOT — Estado actual del proyecto
 
-## SNAPSHOT v9 — SSO completo + Supabase unificado + Telaraña × Ollin (sesión actual)
+## SNAPSHOT v9 — SSO registro + decisión Ikan Naat picks en chat Ollin (sesión actual)
 
-✅ SSO jeeljel.com/registro — formulario completo: confirmar contraseña, mostrar/ocultar 👁, trigger `on_auth_user_created`
-✅ RLS tabla `users` deshabilitado temporalmente — re-habilitar post-torneo con políticas correctas
-✅ Modal chat Ollin — input bloqueado sin sesión + modal CTA a `/registro`
-✅ Badge Beta Ikan Naat — landing, chat y header móvil
-✅ Enlace jeeljel.com/registro en `login.html` y `register.html` de Ikan Naat
-✅ CTA tarjeta Ollin en `/apps` habilitado
-✅ Llave SSH VPS regenerada + secret `VPS_SSH_KEY` actualizado en GitHub
-✅ Deploy manual jeeljel.com e Ikan Naat confirmados vía terminal VPS
-✅ Supabase unificado — jeeljel.com y futuras apps usan proyecto `ikan-nat-prod`
+✅ **SSO jeeljel.com/registro desplegado** — formulario completo: confirmar contraseña, mostrar/ocultar 👁; trigger Supabase `on_auth_user_created` inserta automáticamente en tabla `users` al crear usuario en auth
+✅ **Supabase unificado** — jeeljel.com usa proyecto `ikan-nat-prod`; tabla `users` con columnas `origen_registro` y `consentimiento_comunicaciones`
+✅ **RLS tabla `users` deshabilitado temporalmente** — re-habilitar post-torneo con políticas correctas
+✅ Modal chat Ollin con CTA a `/registro` · Badge Beta Ikan Naat · CTA tarjeta Ollin habilitado · enlaces a jeeljel.com/registro en `login.html` / `register.html` de Ikan Naat
+✅ Deploys manuales jeeljel.com e Ikan Naat vía terminal VPS (GitHub Actions SSH bloqueado por Hostinger)
 
-⏳ **Confirmar registro end-to-end** — rate limit Supabase temporalmente activo; verificar cuando se libere
-⏳ **Chat frontend** — conectar a backend (`POST /chat/messages`, `GET /chat/status`, tabla `ollin_chat`)
-⏳ **Workflow auto-deploy backend** — GitHub Actions `git pull` + `pm2 restart ollin-deportes` (SSH bloqueado por Hostinger)
+🔴 **Confirmar registro end-to-end mañana** — bloqueado hoy por email rate limit de Supabase
+🔴 **Chat UI frontend** — conectar a backend (`POST /chat/messages`, `GET /chat/status`, tabla `ollin_chat`)
+🟡 **Re-habilitar RLS en tabla `users`** con políticas correctas post-torneo
+🟡 **Workflow auto-deploy backend** GitHub Actions (fix SSH Hostinger)
 
 ## SNAPSHOT v8 — Backend migrado + límites PRO + traducciones ES + links Google — SUPERSEDIDO por v9
 

@@ -165,8 +165,9 @@
 
 - **Campo `tipo`** en tabla `ollin_chat` — valores: `'usuario'` / `'bot'`
 - **Usuario especial** `Telaraña Bot` en Supabase — identificable por `tipo = 'bot'`
-- **Worker** que dispara picks automáticamente en los minutos **~20**, **~45** y **~70** de cada partido en vivo
+- **Scheduler de ventanas in-play** — dispara picks en los minutos **~20**, **~45** y **~70** de cada partido en vivo
 - **Variables disponibles en VPS** — `API_SPORTS_KEY` y `ODDS_API_KEY` ya activas en Ikan Naat
+- ⚠️ **El protocolo técnico del agente vive en el proyecto de Ikan Naat, no en jeeljel-web**
 
 ### Objetivo estratégico
 
