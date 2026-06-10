@@ -29,6 +29,7 @@ export default function Footer() {
             { label: 'jeejel.com', href: 'https://jeejel.com' },
             { label: 'ikannaat.jeeljel.com', href: 'https://ikannaat.jeeljel.com' },
             { label: 'hola@jeeljel.com', href: 'mailto:hola@jeeljel.com' },
+            { label: 'proyectos@jeeljel.com', href: 'mailto:proyectos@jeeljel.com' },
           ].map(({ label, href }) => (
             <a
               key={label}

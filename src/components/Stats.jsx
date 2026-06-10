@@ -1,8 +1,6 @@
 import { useTypewriter } from '../hooks/useTypewriter'
 
-function scrollToContacto() {
-  document.getElementById('contacto')?.scrollIntoView({ behavior: 'smooth' })
-}
+const PROYECTOS_EMAIL = 'proyectos@jeeljel.com'
 
 export default function Stats() {
   const statsRef = useTypewriter(
@@ -96,10 +94,9 @@ export default function Stats() {
             </a>
           ))}
         </div>
-        <button
-          type="button"
-          onClick={scrollToContacto}
-          className="boton-secundario font-dm font-medium text-sm tracking-widest px-8 py-3 rounded-lg transition-all duration-200"
+        <a
+          href={`mailto:${PROYECTOS_EMAIL}`}
+          className="boton-secundario font-dm font-medium text-sm tracking-widest px-8 py-3 rounded-lg transition-all duration-200 no-underline inline-block"
           style={{ letterSpacing: '0.15em', cursor: 'pointer' }}
           onMouseEnter={(e) => {
             e.currentTarget.style.background = 'rgba(78, 205, 196, 0.12)'
@@ -109,7 +106,7 @@ export default function Stats() {
           }}
         >
           Contáctanos
-        </button>
+        </a>
       </div>
     </section>
   )
