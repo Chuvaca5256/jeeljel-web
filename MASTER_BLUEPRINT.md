@@ -58,7 +58,9 @@
 - ✅ **API-Sports PRO activo** — $19 USD/mes, 7 500 req/día, season 2026
 - ✅ **Página partido individual** — `/ollin-deportes/partido/:id` completa: SVG + tabs EN VIVO/ESTADÍSTICAS/JUGADORES/ALINEACIONES/H2H (`b563917`)
 - ✅ **Standings grupos torneo** — tab POSICIONES con grupos funcionando (PRO)
-- ✅ **Goleadores + traducciones ES** — endpoint scorers + labels en español (`ebeebb4`); deploy VPS pendiente
+- ✅ **Goleadores + traducciones ES backend** — endpoint scorers + labels (`ebeebb4`); traducciones frontend pendientes
+- ✅ **Backend migrado a git en VPS** — `/var/www/jeeljel-repo/ollin-backend`; PM2 **`ollin-deportes`** (`fe09225`)
+- ✅ **Límites API-Sports PRO** — `apiDailyLimit` 7500, `apiDailyPauseAt` 7400, fallback polling 180000 ms
 
 ## 🟡 Ollin Deportes — Fase 2 (post-lanzamiento página principal)
 
@@ -67,10 +69,11 @@
 | Área | Estado |
 |------|--------|
 | Página `/ollin-deportes` | ✅ **En producción** — layout 3 zonas, sidebar ligas, tabs, POSICIONES — https://jeeljel.com/ollin-deportes |
-| Backend Node.js (puerto **10001**) | ✅ **Activo** — PM2 + Redis + Socket.io |
+| Backend Node.js (puerto **10001**) | ✅ **Activo** — PM2 **`ollin-deportes`** · código `/var/www/jeeljel-repo/ollin-backend` |
 | Polling API-Sports | ✅ **Inteligente** — **15 s** con en vivo · **3 min** idle (próximos + standings) |
 | Plan API-Sports | ✅ **PRO activo** — $19 USD/mes · 7 500 req/día |
-| Tab POSICIONES (grupos + goleadores) | ✅ **Grupos torneo funcionando** · goleadores/traducciones ES pendiente deploy VPS |
+| Límites API (`env.js`) | ✅ **`apiDailyLimit` 7500** · **`apiDailyPauseAt` 7400** · fallback **180000 ms** |
+| Tab POSICIONES (grupos + goleadores) | ✅ **Grupos torneo funcionando** · traducciones ES frontend pendientes (Grupo Group L) |
 | Página `/ollin-deportes/partido/:id` | ✅ **En producción** — SVG + 5 tabs + API partido |
 | SSO jeeljel.com/registro | ⏳ Pendiente |
 | Modal registro en chat | ⏳ Pendiente |
@@ -87,11 +90,11 @@
 
 ### Plan API-Sports
 
-| Plan | Requests/día | Polling | Cuándo |
-|------|--------------|---------|--------|
-| FREE (actual) | 100 | 10 min | Hasta 11/06/2026 |
-| PRO | 7,500 | 60 s | Inicio torneo selecciones |
-| Ultra | según plan | 15 s | Partidos activos del torneo |
+| Plan | Requests/día | Polling | Límite pausa | Estado |
+|------|--------------|---------|--------------|--------|
+| ~~FREE~~ | 100 | 10 min | 95 | ❌ Reemplazado |
+| **PRO** | **7,500** | **15 s live / 3 min idle** | **7400** (`apiDailyPauseAt`) | ✅ **Activo** — $19 USD/mes |
+| Ultra | según plan | 15 s fijo | según plan | Opcional futuro |
 
 ### Decisión CEO — Modelo de acceso
 
@@ -126,6 +129,9 @@
 
 **Reglas críticas:**
 - Puerto **10001** — nunca 10000 (Ikan Naat)
+- Ruta backend VPS: **`/var/www/jeeljel-repo/ollin-backend`** — NO `/var/www/ollin-backend` (obsoleta)
+- Deploy manual backend: `cd /var/www/jeeljel-repo && git pull && pm2 restart ollin-deportes`
+- PM2 process name: **`ollin-deportes`**
 - Frontend **nunca** llama API-Sports directo — solo vía backend + Socket.io
 - Nginx: modificar solo `jeeljel-landing`, **nunca** `ikannaat`
 - Producto **independiente** de Ikan Naat IA
@@ -140,9 +146,16 @@
 
 ### Deploy
 
-- Workflow: `.github/workflows/deploy.yml`
-- Destino: `root@187.77.196.169:/var/www/jeeljel-web/dist/`
+- **Frontend (automático):** workflow `.github/workflows/deploy.yml`
+- Destino frontend: `root@187.77.196.169:/var/www/jeeljel-web/dist/`
 - Re-disparar manualmente: GitHub → Actions → Deploy jeeljel.com → Run workflow
+
+- **Backend Ollin (manual):**
+  ```bash
+  cd /var/www/jeeljel-repo && git pull && pm2 restart ollin-deportes
+  ```
+- Código backend: `/var/www/jeeljel-repo/ollin-backend` — PM2 **`ollin-deportes`** — puerto **10001**
+- ⏳ Workflow GitHub Actions auto-deploy backend: pendiente
 
 ### Página /apps — jeeljel.com
 
@@ -180,7 +193,8 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - [ ] 🔴 **SSO jeeljel.com/registro** — Supabase Auth + modal chat Ollin (ver `JEELJEL_MASTER.md` Parte I §1)
 - [ ] 🔴 **Modal registro en chat** — al intentar escribir en chat Ollin
 - [ ] 🟡 **Ollin Deportes — chat UI frontend** — conectar a backend moderado ya activo
-- [ ] 🟡 **Deploy VPS backend** — goleadores + traducciones standings ES (`git pull` + `pm2 restart ollin-backend`)
+- [ ] 🟡 **Traducciones ES standings frontend** — corregir Grupo Group L y nombres selecciones
+- [ ] 🟡 **Workflow auto-deploy backend** — GitHub Actions para `git pull` + `pm2 restart ollin-deportes`
 - [ ] 🟡 **Modelo premium post-torneo** — activar flag `PREMIUM_ONLY` por liga post-torneo (decisión CEO documentada)
 - [ ] 🟡 **Migración auth Ikan Naat** → `jeeljel_users` post-torneo
 - [ ] 🟡 **Ollin Deportes — campo 2D PixiJS + modo apostador** — fase Día 2+ (SVG básico en partido ✅)
@@ -189,6 +203,8 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - [ ] Registrarse en afiliados: 1xBet Partners, Bet365 Affiliates
 - [x] **Polling inteligente Ollin** — 15 s live / 3 min idle
 - [x] **API-Sports PRO activo** — $19 USD/mes
+- [x] **Backend migrado a git VPS** — `/var/www/jeeljel-repo/ollin-backend` + PM2 `ollin-deportes` (`fe09225`)
+- [x] **Límites API-Sports PRO** — `apiDailyLimit` 7500, `apiDailyPauseAt` 7400
 - [x] **Página partido individual** — `/ollin-deportes/partido/:id` en producción
 - [x] **Standings grupos torneo** — tab POSICIONES funcionando
 - [x] **Rediseño UI Ollin Deportes** — layout 3 zonas Sofascore/Bet365
@@ -200,7 +216,7 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - [x] Ruta `/mundial-2026` → redirect a `/ollin-deportes`
 - [x] Página `/apps` — tarjetas 04 Izydra OS y 05 Inkógnito completadas
 - [x] Página Ollin Deportes principal (`/ollin-deportes`) — en producción
-- [x] Backend Ollin (`ollin-backend/`) — puerto 10001 + Redis + PM2 + Socket.io
+- [x] Backend Ollin — `/var/www/jeeljel-repo/ollin-backend` · PM2 **`ollin-deportes`** · puerto 10001
 - [ ] Página Misión con contenido real
 - [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:` hola + proyectos)
 - [x] Footer global: `proyectos@jeeljel.com` + botón Contáctanos → mailto proyectos

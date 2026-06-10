@@ -1,5 +1,5 @@
 # JEELJEL MASTER — Documento Maestro del Ecosistema
-## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.2 — 11/06/2026
+## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.3 — 25/05/2026
 
 > **Este documento reemplaza y unifica:** `JeelJel_Coins_Ecosistema_Master_v13.md`, `JeelJel_Coins_Ecosistema_Master.md` (alias) y `CURSOR_OllinDeportes_v1.md`. Es la fuente de verdad única sobre economía (JC), identidad unificada (SSO), arquitectura de Ollin Deportes, decisiones permanentes del CEO y pendientes técnicos. Los documentos `SNAPSHOT.md` (estado actual) y `MASTER_BLUEPRINT.md` (hoja de ruta) se mantienen separados.
 
@@ -475,8 +475,8 @@ API-Sports → Backend Node.js (polling) → Redis (caché) → Socket.io / REST
 
 **Polling inteligente (`polling.js`):** con ≥1 partido en vivo → ciclo **15 000 ms** (`/fixtures?live=all` + `/fixtures/events` por partido activo); sin en vivo → ciclo **180 000 ms** (próximos + standings). Log: `[ollin][polling] Intervalo: Xms`.
 
-**Variable de entorno:** `POLLING_INTERVAL_MS` — fallback si no hay lógica dinámica.
-**Protección de límite:** contador diario en Redis; al llegar a 95 requests se pausa el polling hasta el día siguiente.
+**Variable de entorno:** `POLLING_INTERVAL_MS` — fallback **180000 ms** (3 min idle) si no hay lógica dinámica.
+**Protección de límite:** contador diario en Redis; `apiDailyLimit` **7500** · pausa en **`apiDailyPauseAt` 7400** requests — polling se detiene hasta el día siguiente.
 
 ---
 
@@ -621,16 +621,23 @@ const LIGAS_PERMITIDAS = [
 
 ## 27. VARIABLES DE ENTORNO — OLLIN BACKEND (VPS)
 
-Archivo: `/var/www/ollin-backend/.env`
+Archivo: `/var/www/jeeljel-repo/ollin-backend/.env`
 
 ```bash
 API_SPORTS_KEY=<en el VPS — misma key que Ikan Naat>
 REDIS_URL=redis://localhost:6379
-POLLING_INTERVAL_MS=600000    # 10 min FREE · 60000 PRO · 15000 Ultra torneo
+POLLING_INTERVAL_MS=180000    # fallback 3 min idle · polling inteligente 15s live en polling.js
 OLLIN_PORT=10001
 SUPABASE_URL=<en el VPS>
 SUPABASE_SERVICE_KEY=<en el VPS>
 ```
+
+**Deploy manual backend (VPS):**
+```bash
+cd /var/www/jeeljel-repo && git pull && pm2 restart ollin-deportes
+```
+- Ruta código: `/var/www/jeeljel-repo/ollin-backend` — **NO** `/var/www/ollin-backend` (obsoleta)
+- PM2 process name: **`ollin-deportes`**
 
 ---
 
@@ -723,9 +730,10 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **OLLIN-9** | — | Catálogo ligas/deportes (sección 23) | Ollin Deportes | ✅ Completado |
 | **OLLIN-10** | — | Upgrade API-Sports PRO + polling inteligente | Ollin Deportes | ✅ Completado |
 | **OLLIN-11** | 🟡 | Activar modelo premium post-torneo (`PREMIUM_ONLY`) | Ollin Deportes | ⏳ Post-torneo |
-| **OLLIN-12** | — | Deploy manual VPS backend + PM2 | Ollin Deportes | ✅ Completado |
+| **OLLIN-12** | — | Deploy manual VPS backend + PM2 (`/var/www/jeeljel-repo`, `ollin-deportes`) | Ollin Deportes | ✅ Completado |
 | **OLLIN-13** | 🟡 | Campo 2D PixiJS + modo apostador (SVG básico en partido ✅) | Ollin Deportes | ⏳ Fase Día 2+ |
 | **OLLIN-14** | 🟡 | Afiliados: registro 1xBet Partners + Bet365 Affiliates | Ollin Deportes | ⏳ Pendiente |
+| **OLLIN-15** | 🟡 | Workflow GitHub Actions auto-deploy backend | Ollin Deportes | ⏳ Pendiente |
 | **WEB-1** | — | Espaciado `/apps` (navbar sticky + footer) | jeeljel.com | ✅ Completado |
 | **WEB-2** | — | Contacto `proyectos@jeeljel.com` — footer + botón Home | jeeljel.com | ✅ Completado |
 | **WEB-3** | — | Ajustes móvil Ollin (TABLA + menú Fútbol) | Ollin Deportes | ✅ Completado |
@@ -733,7 +741,7 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 
 ---
 
-*Documento generado: 10/06/2026 | Versión: **v1.2** (11/06/2026 — Ollin PRO + partido individual) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
+*Documento generado: 10/06/2026 | Versión: **v1.3** (25/05/2026 — backend VPS git + límites PRO) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
 *Unifica: JeelJel_Coins_Ecosistema_Master_v13.md + CURSOR_OllinDeportes_v1.md + alias Coins Master*
 
 *Documentos hermanos: SNAPSHOT.md (estado actual — v6) · MASTER_BLUEPRINT.md (hoja de ruta)*
