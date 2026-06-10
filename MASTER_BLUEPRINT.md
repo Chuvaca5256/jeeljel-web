@@ -45,7 +45,7 @@
 - ✅ **Ollin Deportes — béisbol MLB** en vivo + **fútbol próximos** ligas 1/2/3/4 season 2026
 - ✅ **Ollin Deportes — moderación de chat** — chatFilter, chatModeration, reincidencia Redis, Supabase
 - ✅ **Ollin Deportes — capa de cumplimiento legal** — sanitize + compliance + disclaimer; redirect `/mundial-2026`
-- ✅ Ruta `/ollin-deportes/partido/:id` registrada (stub)
+- ✅ **Ruta `/ollin-deportes/partido/:id`** — vista completa en producción (SVG + 5 tabs + API partido)
 - ✅ **Rediseño UI Ollin Deportes** — layout 3 zonas Sofascore/Bet365 (`77a556e`): sidebar ligas, tabs centrales, buscador, POSICIONES
 - ✅ **Catálogo ligas Ollin** — `leagueCatalog.js` + backend `leagues.js` (~50 IDs), agrupadas por región
 - ✅ **Standings API Ollin** — `GET /api/ollin/standings/:ligaId` + `StandingsView` + `useStandings`
@@ -54,6 +54,11 @@
 - ✅ **Espaciado Ollin** — sin padding-top extra bajo navbar sticky (`3b161e5`)
 - ✅ **Espaciado `/apps`** — padding superior 12px; sin `min-height: 100vh` ni hueco inferior (`0d04357`, `27594d1`)
 - ✅ **Footer global** — enlace `proyectos@jeeljel.com` (`mailto:`) en todas las páginas (`2d85308`)
+- ✅ **Polling inteligente Ollin** — 15 s live / 3 min idle, events por partido activo (`69a7174`)
+- ✅ **API-Sports PRO activo** — $19 USD/mes, 7 500 req/día, season 2026
+- ✅ **Página partido individual** — `/ollin-deportes/partido/:id` completa: SVG + tabs EN VIVO/ESTADÍSTICAS/JUGADORES/ALINEACIONES/H2H (`b563917`)
+- ✅ **Standings grupos torneo** — tab POSICIONES con grupos funcionando (PRO)
+- ✅ **Goleadores + traducciones ES** — endpoint scorers + labels en español (`ebeebb4`); deploy VPS pendiente
 
 ## 🟡 Ollin Deportes — Fase 2 (post-lanzamiento página principal)
 
@@ -63,19 +68,16 @@
 |------|--------|
 | Página `/ollin-deportes` | ✅ **En producción** — layout 3 zonas, sidebar ligas, tabs, POSICIONES — https://jeeljel.com/ollin-deportes |
 | Backend Node.js (puerto **10001**) | ✅ **Activo** — PM2 + Redis + Socket.io |
-| Polling API-Sports (fútbol + béisbol MLB) | ✅ **Activo** — próximos ligas 1/2/3/4 season 2026 |
-| Moderación chat | ✅ **Activo** — filtros + mute/ban reincidencia |
-| Cumplimiento legal | ✅ **Implementado** — backend + frontend |
-| Nginx `/api/ollin/` → `:10001` | ✅ Configurado en `jeeljel-landing` |
-| Rediseño UI 3 zonas (Sofascore/Bet365) | ✅ **En producción** — sidebar + tabs + buscador + POSICIONES |
-| Catálogo completo de ligas/deportes | ✅ **Frontend + backend IDs** — ~50 ligas; NBA/NFL Fase 2 deshabilitados |
-| Tab POSICIONES (UI + API) | ✅ **Implementado** — datos reales pendientes verificar PM2 VPS |
-| Página `/ollin-deportes/partido/:id` | ⏳ **Stub** — pendiente desarrollo completo |
-| SSO jeeljel.com/registro | ⏳ Pendiente de implementar |
+| Polling API-Sports | ✅ **Inteligente** — **15 s** con en vivo · **3 min** idle (próximos + standings) |
+| Plan API-Sports | ✅ **PRO activo** — $19 USD/mes · 7 500 req/día |
+| Tab POSICIONES (grupos + goleadores) | ✅ **Grupos torneo funcionando** · goleadores/traducciones ES pendiente deploy VPS |
+| Página `/ollin-deportes/partido/:id` | ✅ **En producción** — SVG + 5 tabs + API partido |
+| SSO jeeljel.com/registro | ⏳ Pendiente |
+| Modal registro en chat | ⏳ Pendiente |
 | Chat en vivo UI (frontend) | ⏳ Pendiente — backend y moderación listos |
-| Upgrade API-Sports PRO/Ultra | ⏳ Al inicio torneo selecciones **11/06/2026** |
+| CTA tarjeta Ollin en `/apps` | ⏳ Pendiente — habilitar «¡Ingresa aquí!» |
 | Modelo premium post-torneo (`PREMIUM_ONLY`) | ⏳ Flag frontend listo; activación post-torneo |
-| Campo 2D PixiJS + modo apostador | ⏳ Pendiente — fase Día 2+ |
+| Campo 2D PixiJS + modo apostador | ⏳ Pendiente — fase Día 2+ (SVG básico en partido ✅) |
 
 **Stack en producción:** React + Vite + Tailwind (frontend en `jeeljel-web`) · Node.js + Express + Redis + PM2 + Socket.io (backend `:10001`) · API-Sports · Supabase (chat)
 
@@ -175,30 +177,26 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 
 ## Pendientes próxima sesión
 
-- [ ] 🔴 **Ollin Deportes — página de partido** (`/ollin-deportes/partido/:id`) — desarrollar vista completa (stub actual)
 - [ ] 🔴 **SSO jeeljel.com/registro** — Supabase Auth + modal chat Ollin (ver `JEELJEL_MASTER.md` Parte I §1)
-- [ ] 🔴 **Upgrade API-Sports PRO/Ultra** — al inicio torneo selecciones 11/06/2026 (FREE: 100 req/día 10 min → PRO: 7,500 req/día 60s → Ultra: 15s torneo)
-- [ ] 🟡 **Tab POSICIONES — datos reales VPS** — verificar PM2 + endpoint standings en producción
-- [ ] 🟡 **Modelo premium post-torneo** — activar flag `PREMIUM_ONLY` por liga post-torneo (decisión CEO documentada)
+- [ ] 🔴 **Modal registro en chat** — al intentar escribir en chat Ollin
 - [ ] 🟡 **Ollin Deportes — chat UI frontend** — conectar a backend moderado ya activo
+- [ ] 🟡 **Deploy VPS backend** — goleadores + traducciones standings ES (`git pull` + `pm2 restart ollin-backend`)
+- [ ] 🟡 **Modelo premium post-torneo** — activar flag `PREMIUM_ONLY` por liga post-torneo (decisión CEO documentada)
 - [ ] 🟡 **Migración auth Ikan Naat** → `jeeljel_users` post-torneo
-- [ ] 🟡 **Ollin Deportes — campo 2D PixiJS + modo apostador** — fase Día 2+
+- [ ] 🟡 **Ollin Deportes — campo 2D PixiJS + modo apostador** — fase Día 2+ (SVG básico en partido ✅)
 - [ ] 🟡 **Deportes Fase 2** — NBA, NFL, NHL, F1
-- [ ] Habilitar CTA activo en tarjeta Ollin Deportes en `/apps`
+- [ ] Habilitar CTA activo en tarjeta Ollin Deportes en `/apps` («¡Ingresa aquí!»)
 - [ ] Registrarse en afiliados: 1xBet Partners, Bet365 Affiliates
+- [x] **Polling inteligente Ollin** — 15 s live / 3 min idle
+- [x] **API-Sports PRO activo** — $19 USD/mes
+- [x] **Página partido individual** — `/ollin-deportes/partido/:id` en producción
+- [x] **Standings grupos torneo** — tab POSICIONES funcionando
 - [x] **Rediseño UI Ollin Deportes** — layout 3 zonas Sofascore/Bet365
 - [x] **Catálogo ligas/deportes** — leagueCatalog + backend leagues (~50 IDs)
 - [x] **Tab POSICIONES UI + standings API** — StandingsView + useStandings
 - [x] **Ajustes móvil Ollin** — TABLA + menú Fútbol visible
 - [x] **Espaciado `/apps`** — superior e inferior corregido
 - [x] **Contacto proyectos@jeeljel.com** — footer global + botón Contáctanos Home
-- [ ] 🟡 **Modelo premium post-torneo** — activar flag `PREMIUM_ONLY` por liga post-torneo (decisión CEO documentada)
-- [ ] 🟡 **Ollin Deportes — chat UI frontend** — conectar a backend moderado ya activo
-- [ ] 🟡 **Migración auth Ikan Naat** → `jeeljel_users` post-torneo
-- [ ] 🟡 **Ollin Deportes — campo 2D PixiJS + modo apostador** — fase Día 2+
-- [ ] 🟡 **Deportes Fase 2** — NBA, NFL, NHL, F1
-- [ ] Habilitar CTA activo en tarjeta Ollin Deportes en `/apps`
-- [ ] Registrarse en afiliados: 1xBet Partners, Bet365 Affiliates
 - [x] Ruta `/mundial-2026` → redirect a `/ollin-deportes`
 - [x] Página `/apps` — tarjetas 04 Izydra OS y 05 Inkógnito completadas
 - [x] Página Ollin Deportes principal (`/ollin-deportes`) — en producción

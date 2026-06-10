@@ -1,6 +1,40 @@
 # SNAPSHOT — Estado actual del proyecto
 
-## SNAPSHOT v6 — Rediseño Ollin + UX sitio (10/06/2026)
+## SNAPSHOT v7 — Ollin torneo PRO + partido individual (11/06/2026)
+
+✅ **Polling inteligente backend** — modo **LIVE 15 s** (`/fixtures?live=all` + `/fixtures/events` por partido activo) · modo **IDLE 3 min** (próximos + standings); intervalo dinámico tras cada ciclo (`polling.js` commit `69a7174`)
+✅ **API-Sports PRO activo** — **$19 USD/mes** · 7 500 req/día · season 2026 · datos reales standings y fixtures
+✅ **Página `/ollin-deportes/partido/:id` en producción** — vista completa: header marcador, campo **SVG isométrico** (fútbol) / **diamante SVG** (béisbol), tabs **EN VIVO · ESTADÍSTICAS · JUGADORES · ALINEACIONES · H2H** · `GET /api/ollin/fixtures/partido/:id` + Socket.io `ollin:partido:{id}`
+✅ **Standings torneo selecciones** — grupos A–H funcionando en tab POSICIONES (API PRO + cache Redis)
+✅ **Goleadores + traducciones ES** — implementados en repo (`GET /standings/:ligaId/scorers`, `Group A`→`Grupo A`, sección **Goleadores**); **pendiente deploy backend en VPS** (`git pull` + `pm2 restart`)
+
+⏳ **Deploy VPS backend** — polling 15s/3min, partido API, goleadores y traducciones standings (frontend ya desplegado vía GitHub Actions)
+⏳ **SSO jeeljel.com/registro** — Supabase Auth + modal en chat Ollin
+⏳ **Chat UI frontend** — backend y moderación activos
+⏳ **CTA tarjeta Ollin en `/apps`** — habilitar enlace «¡Ingresa aquí!»
+
+### Plan API-Sports (actualizado v7)
+
+| Plan | Costo | Requests/día | Polling backend | Estado |
+|------|-------|--------------|-----------------|--------|
+| ~~FREE~~ | — | 100 | 10 min fijo | ❌ Reemplazado |
+| **PRO** | **$19 USD/mes** | 7 500 | **15 s live** / **3 min idle** | ✅ **Activo** |
+| Ultra | según plan | según plan | 15 s torneo intenso | Opcional futuro |
+
+### Archivos clave — partido individual (v7)
+
+| Archivo | Rol |
+|---------|-----|
+| `src/pages/OllinPartido.jsx` | Vista partido + tabs |
+| `src/hooks/usePartido.js` | Fetch partido + Socket.io |
+| `src/components/ollin/partido/*` | Header, campo SVG, stats, jugadores, alineaciones, H2H |
+| `ollin-backend/src/services/partidoService.js` | API partido + cache Redis 60 s |
+| `ollin-backend/src/services/polling.js` | Polling inteligente 15 s / 3 min |
+
+## SNAPSHOT v6 — Rediseño Ollin + UX sitio (10/06/2026) — SUPERSEDIDO por v7
+
+~~⏳ **`/ollin-deportes/partido/:id`** — stub~~ → **vista completa en producción** (ver SNAPSHOT v7)
+~~⏳ **Tab POSICIONES — datos en VPS**~~ → **standings grupos funcionando con PRO** (ver SNAPSHOT v7)
 
 ✅ **Rediseño UI Ollin Deportes en producción** — layout **3 zonas** tipo Sofascore/Bet365: sidebar deportes/ligas (240px) + panel central con tabs + buscador global
 ✅ **Sidebar ligas** — `LeagueSidebar.jsx`, catálogo `leagueCatalog.js` (~50 IDs API-Football/Baseball), agrupadas por región, badge EN VIVO, flag `premiumOnly` (estructura)
@@ -13,11 +47,12 @@
 ✅ **Contacto proyectos** — botón **Contáctanos** (Home) abre `mailto:proyectos@jeeljel.com`; footer global incluye enlace **proyectos@jeeljel.com** en todas las páginas
 ✅ **Deploy GitHub Actions** — workflow con reintentos SSH/rsync; re-run manual disponible si timeout VPS (~17 s en condiciones normales)
 
-⏳ **Tab POSICIONES — datos en VPS** — standings API en backend; verificar PM2/reinicio backend en VPS para datos reales (mock offline si falla)
-⏳ **`/ollin-deportes/partido/:id`** — stub en producción; vista de partido individual pendiente
 ⏳ **SSO jeeljel.com/registro** — Supabase Auth + modal en chat Ollin; migración auth Ikan Naat post-torneo
 ⏳ **Chat UI frontend** — backend y moderación activos; conectar interfaz
 ⏳ **CTA tarjeta Ollin en `/apps`** — habilitar enlace «¡Ingresa aquí!»
+
+~~⏳ **Tab POSICIONES — datos en VPS**~~ → ver SNAPSHOT v7
+~~⏳ **`/ollin-deportes/partido/:id`** — stub~~ → ver SNAPSHOT v7
 
 ### Archivos clave — rediseño Ollin (frontend)
 
@@ -218,7 +253,7 @@ ARCHIVOS CLAVE:
 | `/` | Home (landing completa) |
 | `/apps` | Catálogo expandible (5 apps) + fondo mosaico Viracoch + 58 formas wireframe; espaciado superior/inferior corregido |
 | `/ollin-deportes` | **En producción** — layout 3 zonas, sidebar ligas, tabs, buscador, POSICIONES, Socket.io; disclaimer legal |
-| `/ollin-deportes/partido/:id` | **Stub** — ruta registrada; vista de partido pendiente de desarrollar |
+| `/ollin-deportes/partido/:id` | **En producción** — campo SVG, tabs EN VIVO/ESTADÍSTICAS/JUGADORES/ALINEACIONES/H2H, API partido + Socket.io |
 | `/mision` | Stub — pendiente contenido — fondo mosaico Tlaloc |
 | `/organizaciones` | Completa — 5 causas: PETA, UNESCO, Cruz Roja, UNICEF, WWF — fondo mosaico Dios Tupa — tarjetas semitransparentes |
 | `/contacto` | Stub — pendiente contenido |
@@ -397,13 +432,10 @@ El servidor tiene **DOS sitios** corriendo simultáneamente:
 - **Mascota:** Ajolote JeelJel con balón (`Logo_JeelJel_Kanaabcon_balon_sin_fondo.png`)
 - **Qué es:** Web app dentro de jeeljel.com para seguir fútbol y béisbol (MLB) en tiempo real: layout 3 zonas, tabs EN VIVO / HOY / PRÓXIMOS / PASADOS / POSICIONES, chat en vivo moderado (Supabase), modo apostador y campo 2D isométrico (PixiJS) planeados en fases siguientes.
 - **Stack en producción:** React + Vite + Tailwind + Socket.io (frontend) · Node.js + Express + Redis + PM2 + Socket.io + API-Sports (backend `:10001`) · Supabase (chat)
-- **Backend Redis keys:** `ollin:futbol:live`, `ollin:futbol:hoy`, `ollin:futbol:proximos`, `ollin:beisbol:hoy`
-- **Fútbol próximos:** polling adicional ligas API **1, 2, 3, 4** season **2026** (`next=10` c/u)
-- **Cumplimiento legal:** capa `compliance.js` + `sanitize.js` + `OllinLegalDisclaimer`; sin logos oficiales ni términos FIFA/Mundial/World Cup en UI
-- **Moderación chat:** homofobia, racismo, groserías, spam — filtros anti-evasión, mute/ban por reincidencia (Redis)
-- **Deploy:** manual VPS backend + PM2; frontend GitHub Actions
-- **API-Sports:** plan FREE (100 req/día, 10 min) → upgrade PRO/Ultra al **11/06/2026**
-- **Modelo acceso:** gratuito durante torneo selecciones 2026; post-torneo marcadores básicos libres, premium para suscriptores Pro ecosistema; flag `PREMIUM_ONLY` por liga en frontend
-- **Próxima sesión:** partido individual `/partido/:id`, chat UI, SSO, datos standings VPS, CTA tarjeta `/apps`
-- **Pendiente:** jeeljel.com/registro · modal chat · migración Ikan Naat post-torneo · campo 2D PixiJS · afiliados
+- **Backend Redis keys:** `ollin:futbol:live`, `ollin:futbol:hoy`, `ollin:futbol:proximos`, `ollin:beisbol:hoy`, `ollin:standings:{ligaId}`, `ollin:scorers:{ligaId}`, `ollin:partido:{id}`, `ollin:futbol:events:{fixtureId}`
+- **Polling inteligente:** 15 s con partidos en vivo · 3 min sin en vivo (próximos + standings)
+- **API-Sports:** plan **PRO activo** — **$19 USD/mes** · 7 500 req/día · season 2026
+- **Partido individual:** `/ollin-deportes/partido/:id` — SVG isométrico + 5 tabs
+- **Standings:** grupos torneo selecciones + goleadores (traducciones ES en repo; deploy VPS pendiente)
+- **Pendiente:** chat UI · SSO jeeljel.com/registro · modal chat · CTA tarjeta `/apps` · deploy backend VPS (goleadores/traducciones)
 - **Puerto backend Ollin Deportes:** 10001 (nunca 10000, ese es Ikan Naat)

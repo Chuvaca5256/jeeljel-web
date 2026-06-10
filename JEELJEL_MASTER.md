@@ -1,5 +1,5 @@
 # JEELJEL MASTER — Documento Maestro del Ecosistema
-## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.1 — 10/06/2026
+## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.2 — 11/06/2026
 
 > **Este documento reemplaza y unifica:** `JeelJel_Coins_Ecosistema_Master_v13.md`, `JeelJel_Coins_Ecosistema_Master.md` (alias) y `CURSOR_OllinDeportes_v1.md`. Es la fuente de verdad única sobre economía (JC), identidad unificada (SSO), arquitectura de Ollin Deportes, decisiones permanentes del CEO y pendientes técnicos. Los documentos `SNAPSHOT.md` (estado actual) y `MASTER_BLUEPRINT.md` (hoja de ruta) se mantienen separados.
 
@@ -235,7 +235,7 @@ Esta tabla es el **piso de precios** para todo el ecosistema. Ninguna app puede 
 
 ## 9. TABLA DE PRECIOS — OLLIN DEPORTES
 
-Ollin Deportes está **completamente funcional en producción** (09/06/2026): https://jeeljel.com/ollin-deportes · backend Node.js `:10001` + Redis + PM2 + Socket.io + API-Sports · moderación chat activa · cumplimiento legal implementado.
+Ollin Deportes está **completamente funcional en producción** (11/06/2026): https://jeeljel.com/ollin-deportes · backend Node.js `:10001` + Redis + PM2 + Socket.io + **API-Sports PRO** · polling inteligente **15 s live / 3 min idle** · moderación chat activa · cumplimiento legal implementado · **partido individual en producción**.
 
 | Servicio | JC | MXN | Notas |
 |----------|----|-----|-------|
@@ -244,8 +244,8 @@ Ollin Deportes está **completamente funcional en producción** (09/06/2026): ht
 | Estadísticas completas + live detallado + ligas premium (post-torneo) | 0 JC* | Incluido en Pro | *Requiere suscripción Pro activa en cualquier app JeelJel — no se cobra JC extra |
 | Listado fútbol + béisbol MLB | 0 JC | Gratis | ✅ Layout 3 zonas + tabs EN VIVO / HOY / PRÓXIMOS / PASADOS / POSICIONES |
 | Chat en vivo | 0 JC | Gratis | Requiere cuenta JeelJel (SSO) — backend moderado activo; UI pendiente |
-| Tab POSICIONES (standings + grupos) | 0 JC | Gratis | ✅ UI + API implementados — datos reales pendientes verificar VPS/PM2 |
-| Vista partido individual | 0 JC | Gratis | ⏳ Stub `/ollin-deportes/partido/:id` |
+| Tab POSICIONES (standings + grupos) | 0 JC | Gratis | ✅ Grupos torneo funcionando (PRO) · goleadores/traducciones ES pendiente deploy VPS |
+| Vista partido individual | 0 JC | Gratis | ✅ **En producción** — `/ollin-deportes/partido/:id` · SVG + tabs EN VIVO/ESTADÍSTICAS/JUGADORES/ALINEACIONES/H2H |
 | Rediseño UI Sofascore/Bet365 | — | — | ✅ En producción (sidebar ligas, tabs, buscador, móvil TABLA) |
 | Ollin Deportes Premium (futuro JC) | TBD | TBD | Funciones IA/analista post-torneo |
 
@@ -418,7 +418,7 @@ DLOCAL_WEBHOOK_SECRET=...
 
 Ollin Deportes es el hub deportivo en tiempo real de JeelJel Kaanab. Vive en `jeeljel.com/ollin-deportes`. Es un producto **independiente** de Ikan Naat IA — no es un agente dentro de Ikan Naat. El Agente de Apuestas dentro de Ikan Naat (slug `telarana`) es un producto **separado** — Ollin Deportes no lo reemplaza.
 
-**Estado (09/06/2026): EN PRODUCCIÓN** — https://jeeljel.com/ollin-deportes
+**Estado (11/06/2026): EN PRODUCCIÓN** — https://jeeljel.com/ollin-deportes · polling **15 s** con en vivo · plan **API-Sports PRO** ($19 USD/mes) · partido individual `/ollin-deportes/partido/:id` en producción
 
 **Objetivo principal:** Que cualquier persona pueda seguir partidos en vivo con estadísticas granulares, al estilo de casas de apuestas como Bet365 y Caliente, desde la web de JeelJel Kaanab — sin pagar, sin registrarse (durante el torneo selecciones 2026).
 
@@ -454,11 +454,14 @@ API-Sports → Backend Node.js (polling) → Redis (caché) → Socket.io / REST
 - `GET /api/ollin/fixtures/live` — partidos en vivo (fútbol + béisbol combinados)
 - `GET /api/ollin/fixtures/hoy` — partidos de hoy
 - `GET /api/ollin/fixtures/proximos` — próximos 3 días + ligas torneo
+- `GET /api/ollin/fixtures/partido/:id` — detalle partido (stats, alineaciones, H2H, eventos)
+- `GET /api/ollin/standings/:ligaId` — tabla posiciones por liga (cache 1 h)
+- `GET /api/ollin/standings/:ligaId/scorers` — goleadores (cache 1 h; deploy VPS pendiente)
 - `GET /api/ollin/health` — status, última actualización, deportes activos, contador de requests
 - `POST /chat/messages` y `GET /chat/status` — chat moderado
 
 ### Claves Redis
-`ollin:futbol:live` · `ollin:futbol:hoy` · `ollin:futbol:proximos` · `ollin:beisbol:hoy` · `ollin:api:requests:YYYY-MM-DD` — TTL = 2× intervalo de polling
+`ollin:futbol:live` · `ollin:futbol:hoy` · `ollin:futbol:proximos` · `ollin:beisbol:hoy` · `ollin:standings:{ligaId}` · `ollin:scorers:{ligaId}` · `ollin:partido:{id}` · `ollin:futbol:events:{fixtureId}` · `ollin:api:requests:YYYY-MM-DD` — TTL = 2× intervalo de polling
 
 ---
 
@@ -466,11 +469,13 @@ API-Sports → Backend Node.js (polling) → Redis (caché) → Socket.io / REST
 
 | Plan API | Requests/día | Intervalo polling | Cuándo |
 |----------|--------------|-------------------|--------|
-| FREE (actual) | 100 | 10 minutos (`600000` ms) | Desarrollo — hasta inicio torneo |
-| PRO | 7,500 | 60 segundos (`60000` ms) | Producción — upgrade al inicio del torneo **11/06/2026** |
-| Ultra | según plan | 15 segundos (`15000` ms) | Partidos activos del torneo de selecciones |
+| ~~FREE~~ | 100 | 10 minutos | ❌ Reemplazado |
+| **PRO (activo)** | **7,500** | **15 s live** / **3 min idle** (inteligente) | ✅ **$19 USD/mes** — activo desde 11/06/2026 |
+| Ultra | según plan | 15 segundos fijo | Opcional futuro torneo intenso |
 
-**Variable de entorno:** `POLLING_INTERVAL_MS` — cambiar sin tocar código.
+**Polling inteligente (`polling.js`):** con ≥1 partido en vivo → ciclo **15 000 ms** (`/fixtures?live=all` + `/fixtures/events` por partido activo); sin en vivo → ciclo **180 000 ms** (próximos + standings). Log: `[ollin][polling] Intervalo: Xms`.
+
+**Variable de entorno:** `POLLING_INTERVAL_MS` — fallback si no hay lógica dinámica.
 **Protección de límite:** contador diario en Redis; al llegar a 95 requests se pausa el polling hasta el día siguiente.
 
 ---
@@ -553,9 +558,16 @@ const LIGAS_PERMITIDAS = [
 | Home `Stats.jsx` | Botón **Contáctanos** → `mailto:proyectos@jeeljel.com` |
 | `Footer.jsx` global | Enlaces `hola@jeeljel.com` + **`proyectos@jeeljel.com`** en todas las rutas |
 
-### 24.3 Página de partido individual — `/ollin-deportes/partido/:id` (STUB — pendiente)
+### 24.3 Página de partido individual — `/ollin-deportes/partido/:id` (EN PRODUCCIÓN)
 
-**Layout desktop (3 columnas):**
+**Implementado (11/06/2026):**
+- Header marcador + estado en vivo
+- Campo **SVG isométrico** (fútbol) / **diamante SVG** (béisbol) con eventos en tab EN VIVO
+- Tabs: **EN VIVO · ESTADÍSTICAS · JUGADORES · ALINEACIONES · H2H**
+- `GET /api/ollin/fixtures/partido/:id` + Socket.io `ollin:partido:{id}` + cache Redis `ollin:partido:{id}` TTL 60 s
+- Componentes: `src/pages/OllinPartido.jsx`, `src/hooks/usePartido.js`, `src/components/ollin/partido/*`
+
+**Layout desktop (3 columnas — referencia futura PixiJS):**
 ```
 [Header: Equipos + Marcador + Tiempo + Mini-stats]
 [Col 1: Campo 2D / Diamond 2D]  [Col 2: Estadísticas]  [Col 3: Chat en vivo]
@@ -679,7 +691,7 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | 12 | Ollin acceso torneo 2026 | Público gratuito — adquisición SSO |
 | 13 | Ollin acceso post-torneo | Marcadores básicos libres; premium = suscriptor Pro cualquier app JeelJel |
 | 14 | Ollin flag PREMIUM_ONLY | Por liga — frontend preparado, activar post-torneo |
-| 15 | API-Sports upgrade | PRO/Ultra al inicio torneo 11/06/2026 |
+| 15 | API-Sports upgrade | ✅ **PRO activo** — $19 USD/mes · polling inteligente 15 s / 3 min |
 | 16 | Comunicaciones | Solo con consentimiento explícito al registrarse |
 | 17 | Ollin puerto backend | 10001 — nunca 10000 (Ikan Naat) |
 | 18 | Ollin independiente | Producto separado de Ikan Naat; Agente Apuestas (`telarana`) sigue en Ikan Naat |
@@ -701,25 +713,27 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **FIN-6** | 🟡 | Verificar cross-app jeeljel_coins entre apps | Todas | ⏳ Pendiente |
 | **OLLIN-1** | — | Backend Node.js puerto 10001 + Redis + PM2 + Socket.io | Ollin Deportes | ✅ Completado |
 | **OLLIN-2** | — | Frontend layout 3 zonas + catálogo ligas + POSICIONES UI | Ollin Deportes | ✅ Completado |
-| **OLLIN-3** | 🔴 | Página `/ollin-deportes/partido/:id` completa (stub actual) | Ollin Deportes | ⏳ Pendiente |
-| **OLLIN-4** | 🟡 | Tab POSICIONES — datos standings reales en VPS (UI + API ✅) | Ollin Deportes | ⏳ Verificar PM2 |
+| **OLLIN-3** | — | Página `/ollin-deportes/partido/:id` completa | Ollin Deportes | ✅ Completado |
+| **OLLIN-4** | — | Tab POSICIONES — grupos torneo funcionando (PRO) | Ollin Deportes | ✅ Completado |
+| **OLLIN-4b** | 🟡 | Goleadores + traducciones ES standings — deploy VPS | Ollin Deportes | ⏳ Código en repo |
 | **OLLIN-5** | 🟡 | UI chat en vivo (backend + moderación ya activos) | Ollin Deportes | ⏳ Pendiente |
 | **OLLIN-6** | — | Cumplimiento legal (compliance + sanitize + disclaimer) | Ollin Deportes | ✅ Completado |
 | **OLLIN-7** | — | Polling próximos ligas 1/2/3/4 season 2026 | Ollin Deportes | ✅ Completado |
 | **OLLIN-8** | — | Rediseño UI 3 zonas (Sofascore/Bet365) + sidebar ligas | Ollin Deportes | ✅ Completado |
 | **OLLIN-9** | — | Catálogo ligas/deportes (sección 23) | Ollin Deportes | ✅ Completado |
-| **OLLIN-10** | 🔴 | Upgrade API-Sports PRO/Ultra (11/06/2026) | Ollin Deportes | ⏳ Pendiente |
+| **OLLIN-10** | — | Upgrade API-Sports PRO + polling inteligente | Ollin Deportes | ✅ Completado |
 | **OLLIN-11** | 🟡 | Activar modelo premium post-torneo (`PREMIUM_ONLY`) | Ollin Deportes | ⏳ Post-torneo |
 | **OLLIN-12** | — | Deploy manual VPS backend + PM2 | Ollin Deportes | ✅ Completado |
-| **OLLIN-13** | 🟡 | Campo 2D SVG fútbol + diamante 2D béisbol con eventos | Ollin Deportes | ⏳ Pendiente |
+| **OLLIN-13** | 🟡 | Campo 2D PixiJS + modo apostador (SVG básico en partido ✅) | Ollin Deportes | ⏳ Fase Día 2+ |
 | **OLLIN-14** | 🟡 | Afiliados: registro 1xBet Partners + Bet365 Affiliates | Ollin Deportes | ⏳ Pendiente |
 | **WEB-1** | — | Espaciado `/apps` (navbar sticky + footer) | jeeljel.com | ✅ Completado |
 | **WEB-2** | — | Contacto `proyectos@jeeljel.com` — footer + botón Home | jeeljel.com | ✅ Completado |
 | **WEB-3** | — | Ajustes móvil Ollin (TABLA + menú Fútbol) | Ollin Deportes | ✅ Completado |
+| **WEB-4** | 🟡 | CTA tarjeta Ollin en `/apps` — «¡Ingresa aquí!» | jeeljel.com | ⏳ Pendiente |
 
 ---
 
-*Documento generado: 10/06/2026 | Versión: v1.1 | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
+*Documento generado: 10/06/2026 | Versión: **v1.2** (11/06/2026 — Ollin PRO + partido individual) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
 *Unifica: JeelJel_Coins_Ecosistema_Master_v13.md + CURSOR_OllinDeportes_v1.md + alias Coins Master*
 
 *Documentos hermanos: SNAPSHOT.md (estado actual — v6) · MASTER_BLUEPRINT.md (hoja de ruta)*
