@@ -1,3 +1,5 @@
+import { getLeagueDisplayName } from './compliance'
+
 const FOOTBALL_LIVE = new Set(['1H', '2H', 'HT', 'ET', 'BT', 'P', 'LIVE', 'INT'])
 const FOOTBALL_FINISHED = new Set(['FT', 'AET', 'PEN', 'AWD', 'WO'])
 const BASEBALL_LIVE = /^IN|^LIVE|^BT/i
@@ -27,10 +29,12 @@ export function normalizeFootballFixture(raw) {
 
   const home = raw.teams?.home || {}
   const away = raw.teams?.away || {}
+  const leagueId = raw.league?.id ?? null
 
   return {
     id: String(raw.fixture?.id ?? raw.id),
     sport: 'futbol',
+    leagueId,
     homeTeam: {
       name: home.name || 'Local',
       national: Boolean(home.national),
@@ -45,7 +49,7 @@ export function normalizeFootballFixture(raw) {
     awayScore: raw.goals?.away ?? null,
     status,
     statusLabel,
-    leagueName: raw.league?.name || 'Fútbol',
+    leagueName: getLeagueDisplayName(leagueId, raw.league?.name, 'futbol'),
     date: raw.fixture?.date,
   }
 }
@@ -66,17 +70,19 @@ export function normalizeBaseballGame(raw) {
 
   const home = raw.teams?.home || {}
   const away = raw.teams?.away || {}
+  const leagueId = raw.league?.id ?? 1
 
   return {
     id: String(raw.id ?? raw.game?.id),
     sport: 'beisbol',
+    leagueId,
     homeTeam: { name: home.name || 'Local', national: false },
     awayTeam: { name: away.name || 'Visitante', national: false },
     homeScore: home.score ?? raw.scores?.home?.total ?? null,
     awayScore: away.score ?? raw.scores?.away?.total ?? null,
     status,
     statusLabel,
-    leagueName: raw.league?.name || 'MLB',
+    leagueName: getLeagueDisplayName(leagueId, raw.league?.name, 'beisbol'),
     date: raw.date || raw.game?.date,
   }
 }
@@ -110,6 +116,39 @@ export function categorizeApiData(livePayload, hoyPayload, proximosPayload) {
 
 export function filterBySport(matches, sport) {
   return matches.filter((m) => m.sport === sport)
+}
+
+export function filterByLeague(matches, leagueId, sport) {
+  if (leagueId == null) return matches
+  return matches.filter((m) => m.sport === sport && m.leagueId === leagueId)
+}
+
+export function countLiveByLeague(matches, sport) {
+  const counts = {}
+  for (const m of matches) {
+    if (m.sport !== sport || m.status !== 'live' || m.leagueId == null) continue
+    counts[m.leagueId] = (counts[m.leagueId] || 0) + 1
+  }
+  return counts
+}
+
+export function groupMatchesByLeague(matches) {
+  const map = new Map()
+  for (const m of matches) {
+    const key = `${m.sport}-${m.leagueId ?? m.leagueName}`
+    if (!map.has(key)) {
+      map.set(key, {
+        leagueId: m.leagueId,
+        leagueName: m.leagueName,
+        sport: m.sport,
+        matches: [],
+      })
+    }
+    map.get(key).matches.push(m)
+  }
+  return Array.from(map.values()).sort((a, b) =>
+    a.leagueName.localeCompare(b.leagueName, 'es')
+  )
 }
 
 export function sportHasMatches(categorized, sport) {
@@ -154,4 +193,19 @@ export function formatMatchDateTime(dateStr) {
   const day = String(d.getDate()).padStart(2, '0')
   const month = String(d.getMonth() + 1).padStart(2, '0')
   return `${day}/${month} · ${time}`
+}
+
+export function getMatchesForTab(categorized, tabId) {
+  switch (tabId) {
+    case 'live':
+      return categorized.live
+    case 'hoy':
+      return categorized.hoyScheduled
+    case 'proximos':
+      return categorized.proximos
+    case 'pasados':
+      return categorized.hoyFinished
+    default:
+      return []
+  }
 }
