@@ -1,19 +1,20 @@
 # SNAPSHOT — Estado actual del proyecto
 
-## SNAPSHOT v9 — SSO registro + modal Ollin + badge Beta + deploy manual (sesión actual)
+## SNAPSHOT v9 — SSO completo + Supabase unificado + Telaraña × Ollin (sesión actual)
 
-✅ SSO jeeljel.com/registro — Supabase Auth + tabla `users` + trigger `on_auth_user_created`
-✅ Modal chat Ollin — input bloqueado sin sesión + modal CTA registro
+✅ SSO jeeljel.com/registro — formulario completo: confirmar contraseña, mostrar/ocultar 👁, trigger `on_auth_user_created`
+✅ RLS tabla `users` deshabilitado temporalmente — re-habilitar post-torneo con políticas correctas
+✅ Modal chat Ollin — input bloqueado sin sesión + modal CTA a `/registro`
 ✅ Badge Beta Ikan Naat — landing, chat y header móvil
 ✅ Enlace jeeljel.com/registro en `login.html` y `register.html` de Ikan Naat
 ✅ CTA tarjeta Ollin en `/apps` habilitado
-✅ Deploy manual jeeljel.com e Ikan Naat vía VPS terminal
-✅ Llave SSH regenerada en VPS + secret `VPS_SSH_KEY` actualizado en GitHub
+✅ Llave SSH VPS regenerada + secret `VPS_SSH_KEY` actualizado en GitHub
+✅ Deploy manual jeeljel.com e Ikan Naat confirmados vía terminal VPS
+✅ Supabase unificado — jeeljel.com y futuras apps usan proyecto `ikan-nat-prod`
 
+⏳ **Confirmar registro end-to-end** — rate limit Supabase temporalmente activo; verificar cuando se libere
 ⏳ **Chat frontend** — conectar a backend (`POST /chat/messages`, `GET /chat/status`, tabla `ollin_chat`)
-⏳ **Bot Telaraña en chat Ollin** — Agente de Apuestas de Ikan Naat publica picks automáticos durante partidos en vivo (requiere campo `tipo` usuario/bot en `ollin_chat` + usuario especial Telaraña Bot)
-⏳ **Workflow auto-deploy backend** — GitHub Actions `git pull` + `pm2 restart ollin-deportes`
-⏳ **Fix SSH GitHub Actions → VPS** — puerto bloqueado por Hostinger
+⏳ **Workflow auto-deploy backend** — GitHub Actions `git pull` + `pm2 restart ollin-deportes` (SSH bloqueado por Hostinger)
 
 ## SNAPSHOT v8 — Backend migrado + límites PRO + traducciones ES + links Google — SUPERSEDIDO por v9
 
