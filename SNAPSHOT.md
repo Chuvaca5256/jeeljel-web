@@ -1,23 +1,24 @@
 # SNAPSHOT — Estado actual del proyecto
 
-## SNAPSHOT v8 — Backend migrado a git + límites PRO corregidos (25/05/2026)
+## SNAPSHOT v8 — Backend migrado + límites PRO + traducciones ES + links Google (sesión actual)
 
-✅ Backend ollin-deportes migrado de `/var/www/ollin-backend` (sin git) a `/var/www/jeeljel-repo/ollin-backend` (repo clonado)
-✅ Límites API-Sports corregidos en `env.js`: `apiDailyLimit` **7500**, `apiDailyPauseAt` **7400**
-✅ Polling interval fallback corregido: **180000 ms** (3 min idle)
-✅ Commit de sincronización: **fe09225**
-✅ Deploy backend en VPS: `git pull` en `/var/www/jeeljel-repo` + `pm2 restart ollin-deportes`
-✅ Traducciones ES standings: pendiente (frontend corregir Grupo Group L y nombres selecciones)
+✅ Backend ollin-deportes migrado a `/var/www/jeeljel-repo/ollin-backend` (repo git clonado)
+✅ `apiDailyLimit`: **7500** · `apiDailyPauseAt`: **7400** · `POLLING_INTERVAL_MS` fallback: **180000 ms**
+✅ Commit sincronización repo: **fe09225**
+✅ Traducciones ES standings: Grupo A–L, Mejores terceros, nombres 48 selecciones (`teamDisplay.js` · commit **15ce3c7**)
+✅ Links Google por selección en tabla standings (`StandingsView.jsx` · commit **53aac09**)
+✅ Goleadores: endpoint activo, sin datos hasta inicio del torneo (normal)
 
-⏳ Workflow GitHub Actions auto-deploy backend: pendiente
-⏳ Chat UI frontend: pendiente
-⏳ SSO jeeljel.com/registro: pendiente
-⏳ CTA tarjeta Ollin en `/apps`: pendiente
+⏳ **Chat UI frontend** — backend + moderación activos; pendiente decisión: chat global vs por partido, con o sin SSO bloqueante
+⏳ **SSO jeeljel.com/registro** — Supabase Auth + modal chat Ollin
+⏳ **CTA tarjeta Ollin en `/apps`** — habilitar enlace
+⏳ **Workflow GitHub Actions auto-deploy backend** — `git pull` + `pm2 restart ollin-deportes` automático en cada push
 
-**Regla crítica actualizada:**
-- Ruta backend en VPS: `/var/www/jeeljel-repo/ollin-backend` (**NO** `/var/www/ollin-backend` — carpeta obsoleta)
+**Regla crítica de deploy:**
+- Ruta backend VPS: `/var/www/jeeljel-repo/ollin-backend` (la carpeta `/var/www/ollin-backend` es obsoleta)
 - Deploy manual backend: `cd /var/www/jeeljel-repo && git pull && pm2 restart ollin-deportes`
-- PM2 process name: **ollin-deportes**
+- Deploy frontend: automático vía GitHub Actions en cada push a `main`
+- PM2 process name: **`ollin-deportes`** (nunca `ollin-backend`)
 
 ## SNAPSHOT v7 — Ollin torneo PRO + partido individual (11/06/2026) — SUPERSEDIDO por v8 en infra/deploy
 
@@ -455,8 +456,10 @@ El servidor tiene **DOS sitios** corriendo simultáneamente:
 - **Polling inteligente:** 15 s con partidos en vivo · 3 min sin en vivo (próximos + standings)
 - **API-Sports:** plan **PRO activo** — **$19 USD/mes** · 7 500 req/día · season 2026
 - **Partido individual:** `/ollin-deportes/partido/:id` — SVG isométrico + 5 tabs
-- **Standings:** grupos torneo selecciones + goleadores (traducciones ES frontend pendiente: Grupo Group L, nombres selecciones)
+- **Standings:** grupos A–L + Mejores terceros en ES · nombres 48 selecciones traducidos (`teamDisplay.js`) · links Google en tabla POSICIONES
+- **Goleadores:** endpoint activo; sin datos hasta inicio del torneo (comportamiento normal API-Sports)
 - **Deploy backend VPS:** `cd /var/www/jeeljel-repo && git pull && pm2 restart ollin-deportes` — ruta `/var/www/jeeljel-repo/ollin-backend` (NO `/var/www/ollin-backend`)
+- **Deploy frontend:** automático GitHub Actions en push a `main`
 - **Límites API (`env.js`):** `apiDailyLimit` 7500 · `apiDailyPauseAt` 7400 · fallback polling 180000 ms
-- **Pendiente:** chat UI · SSO jeeljel.com/registro · modal chat · CTA tarjeta `/apps` · workflow auto-deploy backend · traducciones ES standings frontend
+- **Pendiente:** chat UI (decisión global vs por partido / SSO) · SSO jeeljel.com/registro · modal chat · CTA tarjeta `/apps` · workflow auto-deploy backend
 - **Puerto backend Ollin Deportes:** 10001 (nunca 10000, ese es Ikan Naat)

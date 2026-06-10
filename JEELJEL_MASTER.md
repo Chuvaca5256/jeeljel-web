@@ -1,5 +1,5 @@
 # JEELJEL MASTER — Documento Maestro del Ecosistema
-## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.3 — 25/05/2026
+## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.4 — sesión actual
 
 > **Este documento reemplaza y unifica:** `JeelJel_Coins_Ecosistema_Master_v13.md`, `JeelJel_Coins_Ecosistema_Master.md` (alias) y `CURSOR_OllinDeportes_v1.md`. Es la fuente de verdad única sobre economía (JC), identidad unificada (SSO), arquitectura de Ollin Deportes, decisiones permanentes del CEO y pendientes técnicos. Los documentos `SNAPSHOT.md` (estado actual) y `MASTER_BLUEPRINT.md` (hoja de ruta) se mantienen separados.
 
@@ -235,7 +235,7 @@ Esta tabla es el **piso de precios** para todo el ecosistema. Ninguna app puede 
 
 ## 9. TABLA DE PRECIOS — OLLIN DEPORTES
 
-Ollin Deportes está **completamente funcional en producción** (11/06/2026): https://jeeljel.com/ollin-deportes · backend Node.js `:10001` + Redis + PM2 + Socket.io + **API-Sports PRO** · polling inteligente **15 s live / 3 min idle** · moderación chat activa · cumplimiento legal implementado · **partido individual en producción**.
+Ollin Deportes está **completamente funcional en producción**: https://jeeljel.com/ollin-deportes · backend `/var/www/jeeljel-repo/ollin-backend` · PM2 **`ollin-deportes`** · `:10001` + Redis + Socket.io + **API-Sports PRO** · polling **15 s live / 3 min idle** · `apiDailyLimit` 7500 · `apiDailyPauseAt` 7400 · traducciones ES standings + links Google · partido individual en producción.
 
 | Servicio | JC | MXN | Notas |
 |----------|----|-----|-------|
@@ -243,8 +243,8 @@ Ollin Deportes está **completamente funcional en producción** (11/06/2026): ht
 | Marcadores básicos (post-torneo) | 0 JC | Gratis | ✅ Tier libre permanente |
 | Estadísticas completas + live detallado + ligas premium (post-torneo) | 0 JC* | Incluido en Pro | *Requiere suscripción Pro activa en cualquier app JeelJel — no se cobra JC extra |
 | Listado fútbol + béisbol MLB | 0 JC | Gratis | ✅ Layout 3 zonas + tabs EN VIVO / HOY / PRÓXIMOS / PASADOS / POSICIONES |
-| Chat en vivo | 0 JC | Gratis | Requiere cuenta JeelJel (SSO) — backend moderado activo; UI pendiente |
-| Tab POSICIONES (standings + grupos) | 0 JC | Gratis | ✅ Grupos torneo funcionando (PRO) · goleadores/traducciones ES pendiente deploy VPS |
+| Chat en vivo | 0 JC | Gratis | Requiere cuenta JeelJel (SSO) — backend moderado activo; UI pendiente (decisión: global vs por partido) |
+| Tab POSICIONES (standings + grupos) | 0 JC | Gratis | ✅ Grupos A–L + Mejores terceros ES · links Google por selección · goleadores endpoint activo (sin datos pre-torneo) |
 | Vista partido individual | 0 JC | Gratis | ✅ **En producción** — `/ollin-deportes/partido/:id` · SVG + tabs EN VIVO/ESTADÍSTICAS/JUGADORES/ALINEACIONES/H2H |
 | Rediseño UI Sofascore/Bet365 | — | — | ✅ En producción (sidebar ligas, tabs, buscador, móvil TABLA) |
 | Ollin Deportes Premium (futuro JC) | TBD | TBD | Funciones IA/analista post-torneo |
@@ -456,7 +456,7 @@ API-Sports → Backend Node.js (polling) → Redis (caché) → Socket.io / REST
 - `GET /api/ollin/fixtures/proximos` — próximos 3 días + ligas torneo
 - `GET /api/ollin/fixtures/partido/:id` — detalle partido (stats, alineaciones, H2H, eventos)
 - `GET /api/ollin/standings/:ligaId` — tabla posiciones por liga (cache 1 h)
-- `GET /api/ollin/standings/:ligaId/scorers` — goleadores (cache 1 h; deploy VPS pendiente)
+- `GET /api/ollin/standings/:ligaId/scorers` — goleadores (cache 1 h; activo — sin datos hasta inicio torneo)
 - `GET /api/ollin/health` — status, última actualización, deportes activos, contador de requests
 - `POST /chat/messages` y `GET /chat/status` — chat moderado
 
@@ -722,8 +722,9 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **OLLIN-2** | — | Frontend layout 3 zonas + catálogo ligas + POSICIONES UI | Ollin Deportes | ✅ Completado |
 | **OLLIN-3** | — | Página `/ollin-deportes/partido/:id` completa | Ollin Deportes | ✅ Completado |
 | **OLLIN-4** | — | Tab POSICIONES — grupos torneo funcionando (PRO) | Ollin Deportes | ✅ Completado |
-| **OLLIN-4b** | 🟡 | Goleadores + traducciones ES standings — deploy VPS | Ollin Deportes | ⏳ Código en repo |
-| **OLLIN-5** | 🟡 | UI chat en vivo (backend + moderación ya activos) | Ollin Deportes | ⏳ Pendiente |
+| **OLLIN-4b** | — | Goleadores + traducciones ES standings (backend + frontend deployados) | Ollin Deportes | ✅ Completado |
+| **OLLIN-4c** | — | Links Google por selección en tabla POSICIONES (`StandingsView.jsx`) | Ollin Deportes | ✅ Completado |
+| **OLLIN-5** | 🟡 | UI chat en vivo — decisión: global vs por partido; SSO bloqueante opcional | Ollin Deportes | ⏳ Pendiente |
 | **OLLIN-6** | — | Cumplimiento legal (compliance + sanitize + disclaimer) | Ollin Deportes | ✅ Completado |
 | **OLLIN-7** | — | Polling próximos ligas 1/2/3/4 season 2026 | Ollin Deportes | ✅ Completado |
 | **OLLIN-8** | — | Rediseño UI 3 zonas (Sofascore/Bet365) + sidebar ligas | Ollin Deportes | ✅ Completado |
@@ -733,7 +734,7 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **OLLIN-12** | — | Deploy manual VPS backend + PM2 (`/var/www/jeeljel-repo`, `ollin-deportes`) | Ollin Deportes | ✅ Completado |
 | **OLLIN-13** | 🟡 | Campo 2D PixiJS + modo apostador (SVG básico en partido ✅) | Ollin Deportes | ⏳ Fase Día 2+ |
 | **OLLIN-14** | 🟡 | Afiliados: registro 1xBet Partners + Bet365 Affiliates | Ollin Deportes | ⏳ Pendiente |
-| **OLLIN-15** | 🟡 | Workflow GitHub Actions auto-deploy backend | Ollin Deportes | ⏳ Pendiente |
+| **OLLIN-15** | 🟡 | Workflow GitHub Actions auto-deploy backend (`git pull` + `pm2 restart ollin-deportes`) | Ollin Deportes | ⏳ Pendiente |
 | **WEB-1** | — | Espaciado `/apps` (navbar sticky + footer) | jeeljel.com | ✅ Completado |
 | **WEB-2** | — | Contacto `proyectos@jeeljel.com` — footer + botón Home | jeeljel.com | ✅ Completado |
 | **WEB-3** | — | Ajustes móvil Ollin (TABLA + menú Fútbol) | Ollin Deportes | ✅ Completado |
@@ -741,7 +742,7 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 
 ---
 
-*Documento generado: 10/06/2026 | Versión: **v1.3** (25/05/2026 — backend VPS git + límites PRO) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
+*Documento generado: 10/06/2026 | Versión: **v1.4** (sesión actual — traducciones ES + links Google + deploy VPS git) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
 *Unifica: JeelJel_Coins_Ecosistema_Master_v13.md + CURSOR_OllinDeportes_v1.md + alias Coins Master*
 
 *Documentos hermanos: SNAPSHOT.md (estado actual — v6) · MASTER_BLUEPRINT.md (hoja de ruta)*

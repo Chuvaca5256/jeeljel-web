@@ -58,7 +58,8 @@
 - ✅ **API-Sports PRO activo** — $19 USD/mes, 7 500 req/día, season 2026
 - ✅ **Página partido individual** — `/ollin-deportes/partido/:id` completa: SVG + tabs EN VIVO/ESTADÍSTICAS/JUGADORES/ALINEACIONES/H2H (`b563917`)
 - ✅ **Standings grupos torneo** — tab POSICIONES con grupos funcionando (PRO)
-- ✅ **Goleadores + traducciones ES backend** — endpoint scorers + labels (`ebeebb4`); traducciones frontend pendientes
+- ✅ **Goleadores + traducciones ES** — backend deployado + frontend 48 selecciones (`15ce3c7`) · Grupos A–L + Mejores terceros
+- ✅ **Links Google en standings** — nombres de selección enlazan búsqueda (`53aac09`)
 - ✅ **Backend migrado a git en VPS** — `/var/www/jeeljel-repo/ollin-backend`; PM2 **`ollin-deportes`** (`fe09225`)
 - ✅ **Límites API-Sports PRO** — `apiDailyLimit` 7500, `apiDailyPauseAt` 7400, fallback polling 180000 ms
 
@@ -73,11 +74,12 @@
 | Polling API-Sports | ✅ **Inteligente** — **15 s** con en vivo · **3 min** idle (próximos + standings) |
 | Plan API-Sports | ✅ **PRO activo** — $19 USD/mes · 7 500 req/día |
 | Límites API (`env.js`) | ✅ **`apiDailyLimit` 7500** · **`apiDailyPauseAt` 7400** · fallback **180000 ms** |
-| Tab POSICIONES (grupos + goleadores) | ✅ **Grupos torneo funcionando** · traducciones ES frontend pendientes (Grupo Group L) |
+| Tab POSICIONES (grupos + goleadores) | ✅ **Grupos A–L + Mejores terceros en ES** · goleadores endpoint activo (sin datos pre-torneo) · links Google por selección |
 | Página `/ollin-deportes/partido/:id` | ✅ **En producción** — SVG + 5 tabs + API partido |
 | SSO jeeljel.com/registro | ⏳ Pendiente |
 | Modal registro en chat | ⏳ Pendiente |
-| Chat en vivo UI (frontend) | ⏳ Pendiente — backend y moderación listos |
+| Chat en vivo UI (frontend) | ⏳ Pendiente — decisión: chat global vs por partido; SSO bloqueante opcional |
+| Workflow auto-deploy backend | ⏳ Pendiente — GitHub Actions `git pull` + `pm2 restart ollin-deportes` |
 | CTA tarjeta Ollin en `/apps` | ⏳ Pendiente — habilitar «¡Ingresa aquí!» |
 | Modelo premium post-torneo (`PREMIUM_ONLY`) | ⏳ Flag frontend listo; activación post-torneo |
 | Campo 2D PixiJS + modo apostador | ⏳ Pendiente — fase Día 2+ (SVG básico en partido ✅) |
@@ -192,9 +194,8 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 
 - [ ] 🔴 **SSO jeeljel.com/registro** — Supabase Auth + modal chat Ollin (ver `JEELJEL_MASTER.md` Parte I §1)
 - [ ] 🔴 **Modal registro en chat** — al intentar escribir en chat Ollin
-- [ ] 🟡 **Ollin Deportes — chat UI frontend** — conectar a backend moderado ya activo
-- [ ] 🟡 **Traducciones ES standings frontend** — corregir Grupo Group L y nombres selecciones
-- [ ] 🟡 **Workflow auto-deploy backend** — GitHub Actions para `git pull` + `pm2 restart ollin-deportes`
+- [ ] 🟡 **Ollin Deportes — chat UI frontend** — backend moderado activo; pendiente decisión: global vs por partido, SSO bloqueante o no
+- [ ] 🟡 **Workflow auto-deploy backend** — GitHub Actions: `cd /var/www/jeeljel-repo && git pull && pm2 restart ollin-deportes` en cada push
 - [ ] 🟡 **Modelo premium post-torneo** — activar flag `PREMIUM_ONLY` por liga post-torneo (decisión CEO documentada)
 - [ ] 🟡 **Migración auth Ikan Naat** → `jeeljel_users` post-torneo
 - [ ] 🟡 **Ollin Deportes — campo 2D PixiJS + modo apostador** — fase Día 2+ (SVG básico en partido ✅)
@@ -206,7 +207,8 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - [x] **Backend migrado a git VPS** — `/var/www/jeeljel-repo/ollin-backend` + PM2 `ollin-deportes` (`fe09225`)
 - [x] **Límites API-Sports PRO** — `apiDailyLimit` 7500, `apiDailyPauseAt` 7400
 - [x] **Página partido individual** — `/ollin-deportes/partido/:id` en producción
-- [x] **Standings grupos torneo** — tab POSICIONES funcionando
+- [x] **Traducciones ES standings + goleadores** — `teamDisplay.js` 48 selecciones + grupos A–L (`15ce3c7`)
+- [x] **Links Google en tabla POSICIONES** — `StandingsView.jsx` (`53aac09`)
 - [x] **Rediseño UI Ollin Deportes** — layout 3 zonas Sofascore/Bet365
 - [x] **Catálogo ligas/deportes** — leagueCatalog + backend leagues (~50 IDs)
 - [x] **Tab POSICIONES UI + standings API** — StandingsView + useStandings
