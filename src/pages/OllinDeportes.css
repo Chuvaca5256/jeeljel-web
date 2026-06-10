@@ -113,21 +113,10 @@
 
 .ollin-sidebar__section {
   padding: 12px;
-}
-
-.ollin-sidebar__section--scroll {
   flex: 1;
-  overflow-y: auto;
-  padding-top: 0;
-}
-
-.ollin-sidebar__heading {
-  font-family: 'Cinzel', serif;
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  color: #c9a84c;
-  margin: 0 0 10px;
-  text-transform: uppercase;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .ollin-sidebar__sports {
@@ -137,10 +126,25 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex: 1;
+  min-height: 0;
+}
+
+.ollin-sidebar__sport-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.ollin-sidebar__sport-row {
+  display: flex;
+  align-items: stretch;
+  gap: 6px;
 }
 
 .ollin-sidebar__sport {
-  width: 100%;
+  flex: 1;
+  min-width: 0;
   text-align: left;
   padding: 10px 12px;
   border-radius: 8px;
@@ -179,8 +183,97 @@
   color: rgba(0, 0, 0, 0.55);
 }
 
+.ollin-sidebar__toggle {
+  flex-shrink: 0;
+  width: 38px;
+  border-radius: 8px;
+  border: 1px solid rgba(78, 205, 196, 0.45);
+  background: rgba(78, 205, 196, 0.12);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.ollin-sidebar__toggle:hover {
+  background: rgba(78, 205, 196, 0.22);
+  border-color: #4ecdc4;
+}
+
+.ollin-sidebar__toggle-arrow {
+  font-size: 18px;
+  line-height: 1;
+  color: #4ecdc4;
+  font-weight: 700;
+}
+
+.ollin-sidebar__toggle-arrow.is-blinking {
+  animation: ollin-sidebar-arrow-blink 1.2s ease-in-out infinite;
+}
+
+@keyframes ollin-sidebar-arrow-blink {
+  0%,
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+    color: #4ecdc4;
+  }
+  50% {
+    opacity: 0.35;
+    transform: translateY(3px);
+    color: #f0c030;
+  }
+}
+
+.ollin-sidebar__leagues-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.35s ease;
+}
+
+.ollin-sidebar__leagues-panel.is-open {
+  grid-template-rows: 1fr;
+}
+
+.ollin-sidebar__leagues-inner {
+  overflow: hidden;
+  min-height: 0;
+}
+
+.ollin-sidebar__leagues-scroll {
+  max-height: min(52vh, 420px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-top: 8px;
+  padding: 8px 4px 8px 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(78, 205, 196, 0.2);
+  background: rgba(0, 0, 0, 0.25);
+  scrollbar-width: thin;
+  scrollbar-color: rgba(78, 205, 196, 0.4) transparent;
+}
+
+.ollin-sidebar__leagues-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ollin-sidebar__leagues-scroll::-webkit-scrollbar-thumb {
+  background: rgba(78, 205, 196, 0.35);
+  border-radius: 999px;
+}
+
+.ollin-sidebar__heading {
+  font-family: 'Cinzel', serif;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: #c9a84c;
+  margin: 0 0 10px;
+  text-transform: uppercase;
+}
+
 .ollin-sidebar__region {
-  margin-top: 14px;
+  margin-top: 10px;
 }
 
 .ollin-sidebar__region-title {
