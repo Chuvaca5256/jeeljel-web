@@ -1,5 +1,5 @@
 # JEELJEL MASTER — Documento Maestro del Ecosistema
-## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.6 — sesión actual
+## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.7 — sesión actual
 
 > **Este documento reemplaza y unifica:** `JeelJel_Coins_Ecosistema_Master_v13.md`, `JeelJel_Coins_Ecosistema_Master.md` (alias) y `CURSOR_OllinDeportes_v1.md`. Es la fuente de verdad única sobre economía (JC), identidad unificada (SSO), arquitectura de Ollin Deportes, decisiones permanentes del CEO y pendientes técnicos. Los documentos `SNAPSHOT.md` (estado actual) y `MASTER_BLUEPRINT.md` (hoja de ruta) se mantienen separados.
 
@@ -704,10 +704,14 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | 18 | Ollin independiente | Producto separado de Ikan Naat; Agente Apuestas (`telarana`) sigue en Ikan Naat |
 | 19 | Chat usuarios y marcas | Términos FIFA/Mundial permitidos en chat de usuarios (UGC); prohibidos en copy propio de JeelJel |
 | 20 | Lista negra chat | Groserías + homofobia + racismo + spam — moderación backend siempre activa |
-| 21 | Ikan Naat en Ollin | El Agente Deportivo (Telaraña) publica picks automáticos en chat de Ollin durante partidos en vivo — funnel de adquisición cross-app |
-| 22 | Telaraña tiers | Gratuito: 2-3 picks/partido visibles para todos · Free: límite en Ikan Naat · Pro: ilimitados + parlays |
-| 23 | Telaraña protocolo | El protocolo técnico del agente vive en el proyecto de Ikan Naat — no en jeeljel-web |
-| 24 | Supabase unificado | jeeljel.com usa proyecto `ikan-nat-prod`; tabla `users` con `origen_registro` y `consentimiento_comunicaciones` |
+| 21 | Chat Ollin — por partido | El chat es por partido, nunca global; cada partido tiene su room `ollin:partido:{id}`; mensajes aislados entre partidos |
+| 22 | Chat Ollin — acceso | Ver: libre sin cuenta · Escribir: requiere cuenta JeelJel (modal de registro al intentar escribir) |
+| 23 | Chat Ollin — UI volumen | Lista virtualizada · tope ~200 msgs en cliente · render en lotes ~500 ms · rate limit 1 msg/3–5 s por usuario |
+| 24 | Ikan Naat en Ollin | Telaraña publica 2–3 picks/partido con momios reales — visibles para todos; picks PINNED en parte superior del chat |
+| 25 | Telaraña picks pinned | El pick más reciente queda fijado (pinned) en la parte superior del chat hasta el siguiente; estilo visual diferenciado |
+| 26 | Telaraña tiers | Gratuito: 2–3 picks/partido · Free: límite en Ikan Naat · Pro: ilimitados + parlays + bankroll |
+| 27 | Telaraña protocolo | El protocolo técnico del agente vive en el proyecto de Ikan Naat — no en jeeljel-web |
+| 28 | Supabase unificado | jeeljel.com usa proyecto `ikan-nat-prod`; tabla `users` con `origen_registro` y `consentimiento_comunicaciones` |
 
 ---
 
@@ -731,7 +735,8 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **OLLIN-4b** | — | Goleadores + traducciones ES standings (backend + frontend deployados) | Ollin Deportes | ✅ Completado |
 | **OLLIN-4c** | — | Links Google por selección en tabla POSICIONES (`StandingsView.jsx`) | Ollin Deportes | ✅ Completado |
 | **OLLIN-5** | 🔴 | Chat frontend — conectar a backend (`POST /chat/messages`, `GET /chat/status`, tabla `ollin_chat`); SSO ✅ listo | Ollin Deportes | ⏳ Pendiente |
-| **OLLIN-5b** | 🟡 | Telaraña × Ollin — campo `tipo` usuario/bot en `ollin_chat` + usuario especial Telaraña Bot + scheduler in-play (min ~20/~45/~70); protocolo en Ikan Naat; vars `API_SPORTS_KEY` + `ODDS_API_KEY` disponibles | Ollin Deportes + Ikan Naat | ⏳ Pendiente |
+| **OLLIN-5b** | 🟡 | Telaraña × Ollin — campo `tipo` usuario/bot en `ollin_chat` + usuario especial Telaraña Bot + scheduler in-play (min ~20/~45/~70); `API_SPORTS_KEY` + `ODDS_API_KEY` disponibles; protocolo en Ikan Naat | Ollin Deportes + Ikan Naat | ⏳ Pendiente |
+| **OLLIN-5c** | 🟡 | Chat UI — lista virtualizada + tope ~200 msgs + render lotes ~500 ms + rate limit 1 msg/3–5 s + soporte `pinned` para picks Telaraña | Ollin Deportes | ⏳ Pendiente |
 | **OLLIN-6** | — | Cumplimiento legal (compliance + sanitize + disclaimer) | Ollin Deportes | ✅ Completado |
 | **OLLIN-7** | — | Polling próximos ligas 1/2/3/4 season 2026 | Ollin Deportes | ✅ Completado |
 | **OLLIN-8** | — | Rediseño UI 3 zonas (Sofascore/Bet365) + sidebar ligas | Ollin Deportes | ✅ Completado |
@@ -753,7 +758,7 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 
 ---
 
-*Documento generado: 10/06/2026 | Versión: **v1.6** (sesión actual — SSO registro completo + Supabase unificado + decisión Ikan Naat picks en chat Ollin) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
+*Documento generado: 10/06/2026 | Versión: **v1.7** (sesión actual — arquitectura chat por partido + picks pinned + UI volumen + Telaraña tiers definitivos) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
 *Unifica: JeelJel_Coins_Ecosistema_Master_v13.md + CURSOR_OllinDeportes_v1.md + alias Coins Master*
 
 *Documentos hermanos: SNAPSHOT.md (estado actual — v9) · MASTER_BLUEPRINT.md (hoja de ruta)*

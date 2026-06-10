@@ -149,29 +149,44 @@
 - Nginx: modificar solo `jeeljel-landing`, **nunca** `ikannaat`
 - Producto **independiente** de Ikan Naat IA
 
-## Decisión CEO 10/06/2026 — Funnel Telaraña × Ollin
+## Decisiones CEO 10/06/2026 — Arquitectura chat Ollin + Ikan Naat picks
 
-**Ikan Naat Telaraña** publicará picks automáticos en el chat de Ollin Deportes durante partidos en vivo, usando **API-Sports** (datos del partido) + **Odds API** (momios reales).
+### Arquitectura del chat (definitiva)
 
-### Modelo de acceso por tiers
+- **Chat por partido, nunca global** — cada partido tiene su propio room de Socket.io `ollin:partido:{id}` con mensajes aislados. México vs Sudáfrica es un chat; Brasil vs Marruecos es otro. Los mensajes de un partido jamás se mezclan con otro.
+- **Ver chat:** libre sin cuenta. **Escribir:** requiere cuenta JeelJel (modal de registro al intentar escribir).
 
-| Tier | Picks visibles | CTA |
-|------|---------------|-----|
-| **Chat gratuito (sin cuenta)** | 2-3 picks gratis por partido — visibles para todos | «Regístrate gratis en Ikan Naat para picks de los juegos de mañana» |
+#### Requisitos de UI para alto volumen
+| Requisito | Detalle |
+|-----------|---------|
+| Lista virtualizada | Solo renderizar mensajes visibles en pantalla |
+| Tope en memoria | ~200 mensajes en cliente; los más antiguos se descartan |
+| Render en lotes | Agrupar mensajes nuevos ~500 ms en picos de volumen |
+| Rate limit usuario | 1 mensaje cada 3–5 segundos |
+
+### Ikan Naat en el chat (estrategia de adquisición)
+
+**El Agente Deportivo de Ikan Naat (Telaraña)** publicará 2–3 picks automáticos con momios reales durante cada partido en vivo, visibles para todos los usuarios de Ollin.
+
+**REGLA DE UI — Picks pinned:** los picks de Ikan Naat quedan **fijados en la parte superior del chat** — no se pierden entre la conversación. El pick más reciente permanece clavado hasta que llegue el siguiente, con estilo visual diferenciado del resto de mensajes.
+
+#### Modelo de acceso por tiers
+| Tier | Acceso | CTA |
+|------|--------|-----|
+| **Chat gratuito (sin cuenta)** | 2–3 picks/partido — visibles para todos | «Regístrate gratis en Ikan Naat para picks de los juegos de mañana» |
 | **Registrado free** | Picks adicionales con límite en Ikan Naat | Upgrade a Pro |
 | **Pro** | Picks ilimitados, parlays, Telaraña completa, gestión de bankroll | — |
 
-### Implementación técnica (pendiente)
-
+#### Implementación técnica (pendiente)
 - **Campo `tipo`** en tabla `ollin_chat` — valores: `'usuario'` / `'bot'`
 - **Usuario especial** `Telaraña Bot` en Supabase — identificable por `tipo = 'bot'`
-- **Scheduler de ventanas in-play** — dispara picks en los minutos **~20**, **~45** y **~70** de cada partido en vivo
-- **Variables disponibles en VPS** — `API_SPORTS_KEY` y `ODDS_API_KEY` ya activas en Ikan Naat
+- **Scheduler in-play** — dispara picks en ventanas **~20 min**, **~45 min** y **~70 min** de cada partido en vivo
+- **Soporte `pinned`** en UI del chat — campo o flag en el mensaje para distinguir picks clavados de mensajes normales
+- **Variables en VPS** — `API_SPORTS_KEY` (estadísticas en vivo) + `ODDS_API_KEY` (momios) ya activas en Ikan Naat
 - ⚠️ **El protocolo técnico del agente vive en el proyecto de Ikan Naat, no en jeeljel-web**
 
-### Objetivo estratégico
-
-El funnel convierte espectadores de Ollin en usuarios registrados de Ikan Naat. Los picks gratuitos generan interés; el CTA dirigido a los juegos del día siguiente impulsa el registro y el uso de Telaraña dentro de Ikan Naat.
+#### Objetivo estratégico
+El funnel convierte espectadores de Ollin en usuarios registrados de Ikan Naat. Los picks gratuitos y visibles generan confianza; el pick pinned asegura visibilidad máxima; el CTA dirigido a los juegos del día siguiente impulsa el registro y el uso de Telaraña dentro de Ikan Naat.
 
 ## Infraestructura
 
