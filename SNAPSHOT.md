@@ -1,6 +1,21 @@
 # SNAPSHOT — Estado actual del proyecto
 
-## SNAPSHOT v8 — Backend migrado + límites PRO + traducciones ES + links Google (sesión actual)
+## SNAPSHOT v9 — SSO registro + modal Ollin + badge Beta + deploy manual (sesión actual)
+
+✅ SSO jeeljel.com/registro — Supabase Auth + tabla `users` + trigger `on_auth_user_created`
+✅ Modal chat Ollin — input bloqueado sin sesión + modal CTA registro
+✅ Badge Beta Ikan Naat — landing, chat y header móvil
+✅ Enlace jeeljel.com/registro en `login.html` y `register.html` de Ikan Naat
+✅ CTA tarjeta Ollin en `/apps` habilitado
+✅ Deploy manual jeeljel.com e Ikan Naat vía VPS terminal
+✅ Llave SSH regenerada en VPS + secret `VPS_SSH_KEY` actualizado en GitHub
+
+⏳ **Chat frontend** — conectar a backend (`POST /chat/messages`, `GET /chat/status`, tabla `ollin_chat`)
+⏳ **Bot Telaraña en chat Ollin** — Agente de Apuestas de Ikan Naat publica picks automáticos durante partidos en vivo (requiere campo `tipo` usuario/bot en `ollin_chat` + usuario especial Telaraña Bot)
+⏳ **Workflow auto-deploy backend** — GitHub Actions `git pull` + `pm2 restart ollin-deportes`
+⏳ **Fix SSH GitHub Actions → VPS** — puerto bloqueado por Hostinger
+
+## SNAPSHOT v8 — Backend migrado + límites PRO + traducciones ES + links Google — SUPERSEDIDO por v9
 
 ✅ Backend ollin-deportes migrado a `/var/www/jeeljel-repo/ollin-backend` (repo git clonado)
 ✅ `apiDailyLimit`: **7500** · `apiDailyPauseAt`: **7400** · `POLLING_INTERVAL_MS` fallback: **180000 ms**
@@ -9,9 +24,9 @@
 ✅ Links Google por selección en tabla standings (`StandingsView.jsx` · commit **53aac09**)
 ✅ Goleadores: endpoint activo, sin datos hasta inicio del torneo (normal)
 
-⏳ **Chat UI frontend** — backend + moderación activos; pendiente decisión: chat global vs por partido, con o sin SSO bloqueante
-⏳ **SSO jeeljel.com/registro** — Supabase Auth + modal chat Ollin
-⏳ **CTA tarjeta Ollin en `/apps`** — habilitar enlace
+~~⏳ **SSO jeeljel.com/registro** — Supabase Auth + modal chat Ollin~~ → **completado** (ver SNAPSHOT v9)
+~~⏳ **CTA tarjeta Ollin en `/apps`** — habilitar enlace~~ → **completado** (ver SNAPSHOT v9)
+⏳ **Chat UI frontend** — SSO listo; pendiente conectar frontend a backend (`POST /chat/messages`, `GET /chat/status`, tabla `ollin_chat`)
 ⏳ **Workflow GitHub Actions auto-deploy backend** — `git pull` + `pm2 restart ollin-deportes` automático en cada push
 
 **Regla crítica de deploy:**

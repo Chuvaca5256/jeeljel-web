@@ -62,6 +62,13 @@
 - ✅ **Links Google en standings** — nombres de selección enlazan búsqueda (`53aac09`)
 - ✅ **Backend migrado a git en VPS** — `/var/www/jeeljel-repo/ollin-backend`; PM2 **`ollin-deportes`** (`fe09225`)
 - ✅ **Límites API-Sports PRO** — `apiDailyLimit` 7500, `apiDailyPauseAt` 7400, fallback polling 180000 ms
+- ✅ **SSO jeeljel.com/registro** — Supabase Auth + tabla `users` + trigger `on_auth_user_created`
+- ✅ **Modal chat Ollin** — input bloqueado sin sesión + modal CTA registro
+- ✅ **Badge Beta Ikan Naat** — landing, chat y header móvil
+- ✅ **Enlace jeeljel.com/registro en Ikan Naat** — `login.html` y `register.html` actualizados
+- ✅ **CTA tarjeta Ollin en `/apps` habilitado** — enlace «¡Ingresa aquí!» activo
+- ✅ **Deploy manual jeeljel.com e Ikan Naat** — via VPS terminal
+- ✅ **Llave SSH regenerada en VPS** + secret `VPS_SSH_KEY` actualizado en GitHub
 
 ## 🟡 Ollin Deportes — Fase 2 (post-lanzamiento página principal)
 
@@ -76,11 +83,13 @@
 | Límites API (`env.js`) | ✅ **`apiDailyLimit` 7500** · **`apiDailyPauseAt` 7400** · fallback **180000 ms** |
 | Tab POSICIONES (grupos + goleadores) | ✅ **Grupos A–L + Mejores terceros en ES** · goleadores endpoint activo (sin datos pre-torneo) · links Google por selección |
 | Página `/ollin-deportes/partido/:id` | ✅ **En producción** — SVG + 5 tabs + API partido |
-| SSO jeeljel.com/registro | ⏳ Pendiente |
-| Modal registro en chat | ⏳ Pendiente |
-| Chat en vivo UI (frontend) | ⏳ Pendiente — decisión: chat global vs por partido; SSO bloqueante opcional |
+| SSO jeeljel.com/registro | ✅ **Completado** — tabla `users` + trigger `on_auth_user_created` (SNAPSHOT v9) |
+| Modal registro en chat | ✅ **Completado** — input bloqueado + modal CTA (SNAPSHOT v9) |
+| CTA tarjeta Ollin en `/apps` | ✅ **Completado** — enlace «¡Ingresa aquí!» activo (SNAPSHOT v9) |
+| Chat en vivo UI (frontend) | ⏳ Pendiente — conectar frontend a backend (`POST /chat/messages`, `GET /chat/status`) |
+| Bot Telaraña en chat | ⏳ Pendiente — picks automáticos; campo `tipo` en `ollin_chat` |
 | Workflow auto-deploy backend | ⏳ Pendiente — GitHub Actions `git pull` + `pm2 restart ollin-deportes` |
-| CTA tarjeta Ollin en `/apps` | ⏳ Pendiente — habilitar «¡Ingresa aquí!» |
+| Fix SSH GitHub Actions → VPS | ⏳ Pendiente — puerto bloqueado por Hostinger |
 | Modelo premium post-torneo (`PREMIUM_ONLY`) | ⏳ Flag frontend listo; activación post-torneo |
 | Campo 2D PixiJS + modo apostador | ⏳ Pendiente — fase Día 2+ (SVG básico en partido ✅) |
 
@@ -123,11 +132,11 @@
 
 **Fase 2 futura:** NBA, NFL, NHL, F1.
 
-### SSO pendiente
+### SSO — estado actual
 
-- `jeeljel.com/registro` — Supabase Auth
-- Modal registro en chat Ollin Deportes
-- Migración auth Ikan Naat → `jeeljel_users` post-torneo
+- ✅ `jeeljel.com/registro` — Supabase Auth + tabla `users` + trigger `on_auth_user_created`
+- ✅ Modal registro en chat Ollin Deportes — input bloqueado + modal CTA
+- ⏳ Migración auth Ikan Naat → `jeeljel_users` post-torneo
 
 **Reglas críticas:**
 - Puerto **10001** — nunca 10000 (Ikan Naat)
@@ -192,10 +201,13 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 
 ## Pendientes próxima sesión
 
-- [ ] 🔴 **SSO jeeljel.com/registro** — Supabase Auth + modal chat Ollin (ver `JEELJEL_MASTER.md` Parte I §1)
-- [ ] 🔴 **Modal registro en chat** — al intentar escribir en chat Ollin
-- [ ] 🟡 **Ollin Deportes — chat UI frontend** — backend moderado activo; pendiente decisión: global vs por partido, SSO bloqueante o no
+- [x] ~~🔴 **SSO jeeljel.com/registro**~~ — ✅ Supabase Auth + tabla `users` + trigger `on_auth_user_created` (SNAPSHOT v9)
+- [x] ~~🔴 **Modal registro en chat**~~ — ✅ Input bloqueado sin sesión + modal CTA registro (SNAPSHOT v9)
+- [x] ~~**CTA tarjeta Ollin en `/apps`**~~ — ✅ enlace «¡Ingresa aquí!» habilitado (SNAPSHOT v9)
+- [ ] 🔴 **Chat frontend** — conectar a backend (`POST /chat/messages`, `GET /chat/status`, tabla `ollin_chat`)
+- [ ] 🟡 **Bot Telaraña en chat Ollin** — Agente de Apuestas de Ikan Naat publica picks automáticos durante partidos en vivo; requiere campo `tipo` usuario/bot en `ollin_chat` + usuario especial Telaraña Bot
 - [ ] 🟡 **Workflow auto-deploy backend** — GitHub Actions: `cd /var/www/jeeljel-repo && git pull && pm2 restart ollin-deportes` en cada push
+- [ ] 🟡 **Fix SSH GitHub Actions → VPS** — puerto bloqueado por Hostinger
 - [ ] 🟡 **Modelo premium post-torneo** — activar flag `PREMIUM_ONLY` por liga post-torneo (decisión CEO documentada)
 - [ ] 🟡 **Migración auth Ikan Naat** → `jeeljel_users` post-torneo
 - [ ] 🟡 **Ollin Deportes — campo 2D PixiJS + modo apostador** — fase Día 2+ (SVG básico en partido ✅)

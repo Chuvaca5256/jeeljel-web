@@ -1,5 +1,5 @@
 # JEELJEL MASTER — Documento Maestro del Ecosistema
-## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.4 — sesión actual
+## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.5 — sesión actual
 
 > **Este documento reemplaza y unifica:** `JeelJel_Coins_Ecosistema_Master_v13.md`, `JeelJel_Coins_Ecosistema_Master.md` (alias) y `CURSOR_OllinDeportes_v1.md`. Es la fuente de verdad única sobre economía (JC), identidad unificada (SSO), arquitectura de Ollin Deportes, decisiones permanentes del CEO y pendientes técnicos. Los documentos `SNAPSHOT.md` (estado actual) y `MASTER_BLUEPRINT.md` (hoja de ruta) se mantienen separados.
 
@@ -243,7 +243,7 @@ Ollin Deportes está **completamente funcional en producción**: https://jeeljel
 | Marcadores básicos (post-torneo) | 0 JC | Gratis | ✅ Tier libre permanente |
 | Estadísticas completas + live detallado + ligas premium (post-torneo) | 0 JC* | Incluido en Pro | *Requiere suscripción Pro activa en cualquier app JeelJel — no se cobra JC extra |
 | Listado fútbol + béisbol MLB | 0 JC | Gratis | ✅ Layout 3 zonas + tabs EN VIVO / HOY / PRÓXIMOS / PASADOS / POSICIONES |
-| Chat en vivo | 0 JC | Gratis | Requiere cuenta JeelJel (SSO) — backend moderado activo; UI pendiente (decisión: global vs por partido) |
+| Chat en vivo | 0 JC | Gratis | Requiere cuenta JeelJel (SSO ✅) — backend moderado activo; UI pendiente (conectar frontend a backend) |
 | Tab POSICIONES (standings + grupos) | 0 JC | Gratis | ✅ Grupos A–L + Mejores terceros ES · links Google por selección · goleadores endpoint activo (sin datos pre-torneo) |
 | Vista partido individual | 0 JC | Gratis | ✅ **En producción** — `/ollin-deportes/partido/:id` · SVG + tabs EN VIVO/ESTADÍSTICAS/JUGADORES/ALINEACIONES/H2H |
 | Rediseño UI Sofascore/Bet365 | — | — | ✅ En producción (sidebar ligas, tabs, buscador, móvil TABLA) |
@@ -434,7 +434,7 @@ Ollin Deportes es el hub deportivo en tiempo real de JeelJel Kaanab. Vive en `je
 - **Caché:** Redis — todos los datos de la API se cachean en Redis; los usuarios nunca golpean la API directamente
 - **Proceso:** PM2 (`ollin-deportes`) con auto-arranque systemd
 - **Tiempo real:** Socket.io — el backend emite evento `ollin:update` a los clientes conectados
-- **Chat en vivo:** Supabase (tablas `ollin_chat` y `ollin_chat_moderacion`) — backend moderado activo; UI pendiente
+- **Chat en vivo:** Supabase (tablas `ollin_chat` y `ollin_chat_moderacion`) — backend moderado activo; SSO ✅; UI frontend pendiente (conectar a `POST /chat/messages` + `GET /chat/status`)
 - **API de datos:** API-Football / API-Baseball (API-Sports) — `API_SPORTS_KEY` del VPS
 
 ### Flujo de datos
@@ -711,10 +711,10 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 
 | ID | Prioridad | Descripción | App | Estado |
 |----|-----------|-------------|-----|--------|
-| **SSO-1** | 🔴 URGENTE | Crear página jeeljel.com/registro con SSO Supabase | jeeljel.com | ⏳ Pendiente |
-| **SSO-2** | 🔴 URGENTE | Modal de registro en Ollin Deportes al intentar chatear | Ollin Deportes | ⏳ Pendiente |
+| **SSO-1** | — | Crear página jeeljel.com/registro con SSO Supabase | jeeljel.com | ✅ Completado — tabla `users` + trigger `on_auth_user_created` |
+| **SSO-2** | — | Modal de registro en Ollin Deportes al intentar chatear | Ollin Deportes | ✅ Completado — input bloqueado + modal CTA registro |
 | **SSO-3** | 🟡 | Migrar auth Ikan Naat a jeeljel_users (post-torneo) | Ikan Naat | ⏳ Pendiente |
-| **SSO-4** | 🟡 | Tabla jeeljel_users en Supabase con origen_registro y consentimiento | jeeljel.com | ⏳ Pendiente |
+| **SSO-4** | — | Tabla users en Supabase con origen_registro y consentimiento | jeeljel.com | ✅ Completado |
 | **FIN-4** | 🔴 | Display moneda local automático por país | Todas | ⏳ Pendiente |
 | **FIN-5** | 🟡 | Argentina ARS dinámico vía dLocal | Todas | ⏳ Pendiente |
 | **FIN-6** | 🟡 | Verificar cross-app jeeljel_coins entre apps | Todas | ⏳ Pendiente |
@@ -724,7 +724,8 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **OLLIN-4** | — | Tab POSICIONES — grupos torneo funcionando (PRO) | Ollin Deportes | ✅ Completado |
 | **OLLIN-4b** | — | Goleadores + traducciones ES standings (backend + frontend deployados) | Ollin Deportes | ✅ Completado |
 | **OLLIN-4c** | — | Links Google por selección en tabla POSICIONES (`StandingsView.jsx`) | Ollin Deportes | ✅ Completado |
-| **OLLIN-5** | 🟡 | UI chat en vivo — decisión: global vs por partido; SSO bloqueante opcional | Ollin Deportes | ⏳ Pendiente |
+| **OLLIN-5** | 🔴 | Chat frontend — conectar a backend (`POST /chat/messages`, `GET /chat/status`, tabla `ollin_chat`); SSO ✅ listo | Ollin Deportes | ⏳ Pendiente |
+| **OLLIN-5b** | 🟡 | Bot Telaraña — Agente de Apuestas de Ikan Naat publica picks automáticos en chat durante partidos en vivo; requiere campo `tipo` usuario/bot en `ollin_chat` + usuario especial Telaraña Bot | Ollin Deportes | ⏳ Pendiente |
 | **OLLIN-6** | — | Cumplimiento legal (compliance + sanitize + disclaimer) | Ollin Deportes | ✅ Completado |
 | **OLLIN-7** | — | Polling próximos ligas 1/2/3/4 season 2026 | Ollin Deportes | ✅ Completado |
 | **OLLIN-8** | — | Rediseño UI 3 zonas (Sofascore/Bet365) + sidebar ligas | Ollin Deportes | ✅ Completado |
@@ -738,12 +739,16 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **WEB-1** | — | Espaciado `/apps` (navbar sticky + footer) | jeeljel.com | ✅ Completado |
 | **WEB-2** | — | Contacto `proyectos@jeeljel.com` — footer + botón Home | jeeljel.com | ✅ Completado |
 | **WEB-3** | — | Ajustes móvil Ollin (TABLA + menú Fútbol) | Ollin Deportes | ✅ Completado |
-| **WEB-4** | 🟡 | CTA tarjeta Ollin en `/apps` — «¡Ingresa aquí!» | jeeljel.com | ⏳ Pendiente |
+| **WEB-4** | — | CTA tarjeta Ollin en `/apps` — «¡Ingresa aquí!» | jeeljel.com | ✅ Completado |
+| **WEB-5** | — | Badge Beta Ikan Naat — landing, chat y header móvil | Ikan Naat | ✅ Completado |
+| **WEB-6** | — | Enlace jeeljel.com/registro en `login.html` y `register.html` de Ikan Naat | Ikan Naat | ✅ Completado |
+| **INFRA-1** | — | Llave SSH regenerada en VPS + secret `VPS_SSH_KEY` actualizado en GitHub | Infra | ✅ Completado |
+| **INFRA-2** | 🟡 | Fix SSH GitHub Actions → VPS — puerto bloqueado por Hostinger | Infra | ⏳ Pendiente |
 
 ---
 
-*Documento generado: 10/06/2026 | Versión: **v1.4** (sesión actual — traducciones ES + links Google + deploy VPS git) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
+*Documento generado: 10/06/2026 | Versión: **v1.5** (sesión actual — SSO registro + modal Ollin + badge Beta + Bot Telaraña pendiente) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
 *Unifica: JeelJel_Coins_Ecosistema_Master_v13.md + CURSOR_OllinDeportes_v1.md + alias Coins Master*
 
-*Documentos hermanos: SNAPSHOT.md (estado actual — v6) · MASTER_BLUEPRINT.md (hoja de ruta)*
+*Documentos hermanos: SNAPSHOT.md (estado actual — v9) · MASTER_BLUEPRINT.md (hoja de ruta)*
 *Próxima revisión: 01/07/2026 (TC mensual + post-torneo)*
