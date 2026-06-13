@@ -1,6 +1,18 @@
 # SNAPSHOT — Estado actual del proyecto
 
-## SNAPSHOT v10 — Polling optimizado + bugs HOY/PASADOS/partido FT detectados (sesión actual)
+## SNAPSHOT v11 — SEC-8 backend parcial + VPS desincronizado del repo (sesión actual)
+
+✅ **SEC-8 backend (parcial)** — `pasadosService.js` creado en VPS; key `ollin:futbol:pasados` en Redis con **2 partidos FT**; endpoint `GET /fixtures/pasados` operativo
+🟡 **SEC-8 frontend pendiente** — tab PASADOS muestra «Sin partidos» aunque Redis tiene datos (frontend no consume `/pasados` o formato incompatible)
+🔴 **PRÓXIMOS roto** — `polling.js` modificado manualmente en VPS durante la sesión; requiere revisión urgente
+🔴 **SEC-9 pendiente** — página partido individual: `sanitizeFootballFixture is not a function` para partidos terminados
+🔴 **Minuto en vivo no se muestra** — UI no refleja minuto actual en partidos en vivo
+⚠️ **VPS desincronizado del repo** — archivos editados directamente en VPS (no commiteados): `ollin-backend/src/services/pasadosService.js`, `ollin-backend/src/services/polling.js`
+⏳ **Pendiente crítico:** sincronizar VPS ↔ repo vía `git` antes de cualquier instrucción futura; **leer código real en VPS** antes de modificar
+
+**Regla de sesión:** no asumir que el repo local refleja producción — verificar siempre en `/var/www/jeeljel-repo/ollin-backend`
+
+## SNAPSHOT v10 — Polling optimizado + bugs HOY/PASADOS/partido FT detectados — SUPERSEDIDO por v11
 
 ✅ **Polling corregido** — `pollFootballHoy` al arrancar + transición live→idle; standings cada 6h; `detectLiveTransition` cada 10min con guarda
 ✅ **Redis keys limpias** — contador diario reseteado manualmente via `redis-cli DEL`

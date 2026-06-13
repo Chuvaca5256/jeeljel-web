@@ -1,5 +1,5 @@
 # JEELJEL MASTER — Documento Maestro del Ecosistema
-## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.7 — sesión actual
+## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.8 — sesión actual
 
 > **Este documento reemplaza y unifica:** `JeelJel_Coins_Ecosistema_Master_v13.md`, `JeelJel_Coins_Ecosistema_Master.md` (alias) y `CURSOR_OllinDeportes_v1.md`. Es la fuente de verdad única sobre economía (JC), identidad unificada (SSO), arquitectura de Ollin Deportes, decisiones permanentes del CEO y pendientes técnicos. Los documentos `SNAPSHOT.md` (estado actual) y `MASTER_BLUEPRINT.md` (hoja de ruta) se mantienen separados.
 
@@ -755,14 +755,16 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **WEB-6** | — | Enlace jeeljel.com/registro en `login.html` y `register.html` de Ikan Naat | Ikan Naat | ✅ Completado |
 | **INFRA-1** | — | Llave SSH regenerada en VPS + secret `VPS_SSH_KEY` actualizado en GitHub | Infra | ✅ Completado |
 | **INFRA-2** | 🟡 | Fix SSH GitHub Actions → VPS — puerto bloqueado por Hostinger | Infra | ⏳ Pendiente |
-| **OLLIN-16** | 🔴 | Histórico partidos — key `ollin:futbol:pasados` para fixtures FT de días anteriores; tab PASADOS vacío actualmente | Ollin Deportes | ⏳ Pendiente |
-| **OLLIN-17** | 🔴 | Página partido FT — `/ollin-deportes/partido/:id` falla para partidos terminados; necesita caché persistente por partido | Ollin Deportes | ⏳ Pendiente |
+| **INFRA-3** | 🔴 | VPS ↔ repo desincronizados — `pasadosService.js` y `polling.js` editados solo en VPS; sincronizar antes de próximos cambios | Infra | ⏳ Pendiente |
+| **OLLIN-16** | 🟡 | PASADOS — backend ✅ key `ollin:futbol:pasados` (2 FT en Redis); frontend ⏳ tab muestra «Sin partidos» | Ollin Deportes | 🟡 Backend ✅ · Frontend ⏳ |
+| **OLLIN-17** | 🔴 | Página partido FT — error `sanitizeFootballFixture is not a function`; minuto en vivo no se muestra | Ollin Deportes | ⏳ Pendiente |
 | **OLLIN-18** | 🟡 | Standings post-partido — trigger inmediato de `pollStandingsBatch` al detectar transición live→idle | Ollin Deportes | ⏳ Pendiente |
+| **OLLIN-19** | 🔴 | PRÓXIMOS roto — `polling.js` modificado manualmente en VPS; revisión urgente | Ollin Deportes | ⏳ Urgente |
 
 ---
 
-*Documento generado: 10/06/2026 | Versión: **v1.7** (sesión actual — arquitectura chat por partido + picks pinned + UI volumen + Telaraña tiers definitivos) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
+*Documento generado: 10/06/2026 | Versión: **v1.8** (sesión 13/06 — SEC-8 backend parcial, PRÓXIMOS roto, VPS desincronizado del repo) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
 *Unifica: JeelJel_Coins_Ecosistema_Master_v13.md + CURSOR_OllinDeportes_v1.md + alias Coins Master*
 
-*Documentos hermanos: SNAPSHOT.md (estado actual — v9) · MASTER_BLUEPRINT.md (hoja de ruta)*
+*Documentos hermanos: SNAPSHOT.md (estado actual — v11) · MASTER_BLUEPRINT.md (hoja de ruta)*
 *Próxima revisión: 01/07/2026 (TC mensual + post-torneo)*

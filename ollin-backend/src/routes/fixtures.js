@@ -1,6 +1,6 @@
 const express = require('express')
 const config = require('../config/env')
-const { KEYS, getJson, getMeta, isRedisConnected } = require('../lib/redis')
+const { KEYS, getJson, getMeta, isRedisConnected, getClient } = require('../lib/redis')
 const { getRequestCount, isPollingPaused } = require('../lib/requestCounter')
 const { isBaseballLive } = require('../services/polling')
 
@@ -43,6 +43,18 @@ router.get('/hoy', async (_req, res) => {
   } catch (err) {
     console.error('[ollin][route] /fixtures/hoy:', err.message)
     res.status(500).json({ error: 'Error leyendo caché' })
+  }
+})
+
+router.get('/pasados', async (_req, res) => {
+  try {
+    const redis = getClient()
+    const cached = redis ? await redis.get('ollin:futbol:pasados') : null
+    if (cached) return res.json({ source: 'redis', data: JSON.parse(cached) })
+    return res.json({ source: 'redis', data: [] })
+  } catch (err) {
+    console.error('[ollin][pasados] Error:', err.message)
+    res.status(500).json({ error: 'Error obteniendo pasados' })
   }
 })
 

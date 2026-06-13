@@ -160,10 +160,16 @@
 | **SEC-5** | 🟡 | Confirmar registro end-to-end jeeljel.com/registro (rate limit Supabase liberado) | ⏳ Pendiente |
 | **SEC-6** | 🟡 | Agregar `helmet.js` y CORS explícito en `ollin-backend` | ⏳ Post-lanzamiento |
 | **SEC-7** | 🟡 | Workflow GitHub Actions auto-deploy backend con `pm2 reload` (SSH bloqueado Hostinger) | ⏳ Post-lanzamiento |
-| **SEC-8** | 🔴 | HOY/PASADOS — partidos históricos no se guardan en Redis; necesita key `ollin:futbol:pasados` con fixtures FT de días anteriores | ⏳ Pendiente |
-| **SEC-9** | 🔴 | Página partido terminado — `/ollin-deportes/partido/:id` falla para partidos FT; necesita caché persistente por partido | ⏳ Pendiente |
+| **SEC-8** | 🟡 | PASADOS — backend ✅ (`pasadosService.js`, key `ollin:futbol:pasados`, 2 FT en Redis); frontend ⏳ tab PASADOS muestra «Sin partidos» | 🟡 Backend ✅ · Frontend ⏳ |
+| **SEC-9** | 🔴 | Página partido terminado — `/ollin-deportes/partido/:id` falla FT; error `sanitizeFootballFixture is not a function`; minuto en vivo no se muestra | ⏳ Pendiente |
 | **SEC-10** | 🟡 | POSICIONES — actualizar standings inmediatamente después de cada transición live→idle además del timer de 6h | ⏳ Pendiente |
 | **SEC-11** | 🟡 | Navbar — active link bug: todos los links quedan amarillos al navegar entre páginas | ⏳ Pendiente |
+| **SEC-12** | 🔴 | PRÓXIMOS roto — `polling.js` editado manualmente en VPS; revisión urgente y resincronización con repo | ⏳ Urgente |
+| **INFRA-3** | 🔴 | VPS ↔ repo desincronizados — `pasadosService.js` y `polling.js` solo en VPS; sincronizar vía git antes de próximos cambios | ⏳ Pendiente |
+
+### ⚠️ Alerta sesión 13/06/2026 — fuente de verdad
+
+El backend en producción (`/var/www/jeeljel-repo/ollin-backend`) **no coincide** con el repo GitHub en archivos críticos de polling. Antes de cualquier fix: `git diff` en VPS, copiar cambios válidos al repo, commit, `git pull` + `pm2 reload`. **No dar instrucciones basadas solo en el repo local sin verificar VPS.**
 
 ## Decisiones CEO 10/06/2026 — Arquitectura chat Ollin + Ikan Naat picks
 

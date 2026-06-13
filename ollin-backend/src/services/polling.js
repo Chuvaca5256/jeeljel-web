@@ -11,12 +11,14 @@ const {
 } = require('./footballPolling')
 const { pollBaseball, isBaseballLive } = require('./baseballPolling')
 const { fetchStandings } = require('./standingsService')
+const { pollFootballPasados } = require('./pasadosService')
 
 const LIVE_INTERVAL_MS = 15000
 const IDLE_INTERVAL_MS = 180000
 
 let pollingTimer = null
 let standingsTimer = null
+let pasadosTimer = null
 let liveTransitionTimer = null
 let ioRef = null
 let currentIntervalMs = IDLE_INTERVAL_MS
@@ -227,6 +229,7 @@ async function runPollingCycle(redis) {
 function startPolling(redis) {
   if (pollingTimer) clearTimeout(pollingTimer)
   if (standingsTimer) clearInterval(standingsTimer)
+  if (pasadosTimer) clearInterval(pasadosTimer)
   if (liveTransitionTimer) clearInterval(liveTransitionTimer)
 
   // Poblar futbolHoy inmediatamente al arrancar
@@ -236,6 +239,16 @@ function startPolling(redis) {
       if (hoy.hoy !== null) return setJson(KEYS.futbolHoy, hoy.hoy, ttl)
     })
     .catch((err) => console.warn('[ollin][polling] pollFootballHoy inicial falló:', err.message))
+
+  // Pasados: llamada inmediata al arrancar + cada 6 horas
+  pollFootballPasados().catch((err) => {
+    console.warn('[ollin][polling] pollFootballPasados inicial falló:', err.message)
+  })
+  pasadosTimer = setInterval(() => {
+    pollFootballPasados().catch((err) => {
+      console.warn('[ollin][polling] pollFootballPasados falló:', err.message)
+    })
+  }, 6 * 60 * 60 * 1000)
 
   runPollingCycle(redis).catch((err) => {
     console.error('[ollin][polling] Error en ciclo inicial:', err.message)
@@ -272,6 +285,10 @@ function stopPolling() {
   if (standingsTimer) {
     clearInterval(standingsTimer)
     standingsTimer = null
+  }
+  if (pasadosTimer) {
+    clearInterval(pasadosTimer)
+    pasadosTimer = null
   }
   if (liveTransitionTimer) {
     clearInterval(liveTransitionTimer)
