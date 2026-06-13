@@ -56,6 +56,8 @@ function sortFixturesByDate(fixtures) {
   })
 }
 
+// Solo ligas TORNEO_SELECCIONES_LIGAS [1,2,3,4] — no ligas adicionales.
+// Esta función es la única que debe usarse para próximos partidos durante el torneo.
 async function pollFootballProximos(redis) {
   const torneoProximos = await fetchProximosTorneoSelecciones(redis)
   const combinedProximos = dedupeFixtures(torneoProximos)
@@ -83,21 +85,30 @@ async function pollFootball(redis) {
     : null
 
   const hoyFixtures = []
-  const proximosFixtures = []
+  // const proximosFixtures = []
 
-  for (const date of dates) {
-    const result = await fetchFixturesByDate(date, redis)
-    if (!result.ok) continue
-    const filtered = sanitizeFootballFixtures(filterAllowedLeagues(result.data))
-    if (date === today) {
-      hoyFixtures.push(...filtered)
-    } else {
-      proximosFixtures.push(...filtered)
-    }
+  // DESACTIVADO durante torneo selecciones 2026 — evita consumir requests de API-Sports
+  // en ligas fuera de TORNEO_SELECCIONES_LIGAS [1,2,3,4].
+  // Solo pollFootballProximos debe usarse para próximos partidos.
+  // for (const date of dates) {
+  //   const result = await fetchFixturesByDate(date, redis)
+  //   if (!result.ok) continue
+  //   const filtered = sanitizeFootballFixtures(filterAllowedLeagues(result.data))
+  //   if (date === today) {
+  //     hoyFixtures.push(...filtered)
+  //   } else {
+  //     proximosFixtures.push(...filtered)
+  //   }
+  // }
+
+  // Partidos de hoy: solo fecha de hoy (una request)
+  const hoyResult = await fetchFixturesByDate(today, redis)
+  if (hoyResult.ok) {
+    hoyFixtures.push(...sanitizeFootballFixtures(filterAllowedLeagues(hoyResult.data)))
   }
 
   const torneoProximos = await fetchProximosTorneoSelecciones(redis)
-  const combinedProximos = dedupeFixtures([...proximosFixtures, ...torneoProximos])
+  const combinedProximos = dedupeFixtures(torneoProximos)
 
   return {
     live: liveFixtures,

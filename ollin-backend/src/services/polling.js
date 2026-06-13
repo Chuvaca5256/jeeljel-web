@@ -15,6 +15,8 @@ const LIVE_INTERVAL_MS = 15000
 const IDLE_INTERVAL_MS = 180000
 
 let pollingTimer = null
+let standingsTimer = null
+let liveTransitionTimer = null
 let ioRef = null
 let currentIntervalMs = IDLE_INTERVAL_MS
 
@@ -114,7 +116,7 @@ async function runLiveCycle(redis, ttl) {
 }
 
 async function runIdleCycle(redis, ttl) {
-  console.log('[ollin][polling] Modo IDLE — próximos + standings')
+  console.log('[ollin][polling] Modo IDLE — próximos')
 
   const football = await pollFootballProximos(redis)
   if (football.proximos !== null) {
@@ -122,7 +124,7 @@ async function runIdleCycle(redis, ttl) {
     await emitUpdate('futbol', 'proximos', football.proximos)
   }
 
-  await pollStandingsBatch(redis)
+  // pollStandingsBatch removido del ciclo idle — se ejecuta en timer de 6h (startPolling)
 }
 
 async function detectLiveTransition(redis, ttl) {
@@ -182,7 +184,7 @@ async function runPollingCycle(redis) {
     await runLiveCycle(redis, ttl)
   } else {
     await runIdleCycle(redis, ttl)
-    await detectLiveTransition(redis, ttl)
+    // detectLiveTransition removido del ciclo normal — se ejecuta en timer de 10min (startPolling)
   }
 
   const liveAfter = (await getJson(KEYS.futbolLive, [])) || []
@@ -209,17 +211,48 @@ async function runPollingCycle(redis) {
 
 function startPolling(redis) {
   if (pollingTimer) clearTimeout(pollingTimer)
+  if (standingsTimer) clearInterval(standingsTimer)
+  if (liveTransitionTimer) clearInterval(liveTransitionTimer)
 
   runPollingCycle(redis).catch((err) => {
     console.error('[ollin][polling] Error en ciclo inicial:', err.message)
     scheduleNextCycle(redis, IDLE_INTERVAL_MS)
   })
+
+  // Standings: actualizar cada 6 horas (independiente del ciclo de polling)
+  standingsTimer = setInterval(() => {
+    console.log('[ollin][polling] Timer standings — actualizando cada 6h')
+    pollStandingsBatch(redis).catch((err) => {
+      console.warn('[ollin][polling] Standings batch falló:', err.message)
+    })
+  }, 6 * 60 * 60 * 1000)
+
+  // Detección de transición live: verificar cada 10 minutos, solo si no hay partidos en vivo
+  liveTransitionTimer = setInterval(async () => {
+    try {
+      const cachedLive = (await getJson(KEYS.futbolLive, [])) || []
+      const cachedBeisbol = (await getJson(KEYS.beisbolHoy, [])) || []
+      if (hasAnyLiveFixture(cachedLive, cachedBeisbol)) return
+      const ttl = config.cacheTtlMs
+      await detectLiveTransition(redis, ttl)
+    } catch (err) {
+      console.warn('[ollin][polling] detectLiveTransition falló:', err.message)
+    }
+  }, 10 * 60 * 1000)
 }
 
 function stopPolling() {
   if (pollingTimer) {
     clearTimeout(pollingTimer)
     pollingTimer = null
+  }
+  if (standingsTimer) {
+    clearInterval(standingsTimer)
+    standingsTimer = null
+  }
+  if (liveTransitionTimer) {
+    clearInterval(liveTransitionTimer)
+    liveTransitionTimer = null
   }
 }
 
