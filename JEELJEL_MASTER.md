@@ -743,7 +743,7 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **OLLIN-9** | — | Catálogo ligas/deportes (sección 23) | Ollin Deportes | ✅ Completado |
 | **OLLIN-10** | — | Upgrade API-Sports PRO + polling inteligente | Ollin Deportes | ✅ Completado |
 | **OLLIN-11** | 🟡 | Activar modelo premium post-torneo (`PREMIUM_ONLY`) | Ollin Deportes | ⏳ Post-torneo |
-| **OLLIN-12** | — | Deploy manual VPS backend + PM2 (`/var/www/jeeljel-repo`, `ollin-deportes`) | Ollin Deportes | ✅ Completado |
+| **OLLIN-12** | — | Deploy manual VPS backend + PM2 (`/var/www/jeeljel-repo`, `ollin-deportes`) | Ollin Deportes | ✅ Completado — `pm2 reload` sin downtime confirmado |
 | **OLLIN-13** | 🟡 | Campo 2D PixiJS + modo apostador (SVG básico en partido ✅) | Ollin Deportes | ⏳ Fase Día 2+ |
 | **OLLIN-14** | 🟡 | Afiliados: registro 1xBet Partners + Bet365 Affiliates | Ollin Deportes | ⏳ Pendiente |
 | **OLLIN-15** | 🟡 | Workflow GitHub Actions auto-deploy backend (`git pull` + `pm2 restart ollin-deportes`) | Ollin Deportes | ⏳ Pendiente |
@@ -755,6 +755,9 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **WEB-6** | — | Enlace jeeljel.com/registro en `login.html` y `register.html` de Ikan Naat | Ikan Naat | ✅ Completado |
 | **INFRA-1** | — | Llave SSH regenerada en VPS + secret `VPS_SSH_KEY` actualizado en GitHub | Infra | ✅ Completado |
 | **INFRA-2** | 🟡 | Fix SSH GitHub Actions → VPS — puerto bloqueado por Hostinger | Infra | ⏳ Pendiente |
+| **OLLIN-16** | 🔴 | Histórico partidos — key `ollin:futbol:pasados` para fixtures FT de días anteriores; tab PASADOS vacío actualmente | Ollin Deportes | ⏳ Pendiente |
+| **OLLIN-17** | 🔴 | Página partido FT — `/ollin-deportes/partido/:id` falla para partidos terminados; necesita caché persistente por partido | Ollin Deportes | ⏳ Pendiente |
+| **OLLIN-18** | 🟡 | Standings post-partido — trigger inmediato de `pollStandingsBatch` al detectar transición live→idle | Ollin Deportes | ⏳ Pendiente |
 
 ---
 

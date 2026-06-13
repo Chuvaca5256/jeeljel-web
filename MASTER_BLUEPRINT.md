@@ -153,13 +153,17 @@
 
 | ID | Prioridad | Descripción | Estado |
 |----|-----------|-------------|--------|
-| **SEC-1** | 🔴 | `pm2 reload` en lugar de `pm2 restart` en deploy backend — elimina downtime | ⏳ Pendiente |
+| **SEC-1** | — | `pm2 reload` en lugar de `pm2 restart` en deploy backend — elimina downtime | ✅ Completado — confirmado en VPS |
 | **SEC-2** | 🔴 | `express-rate-limit` en rutas de `ollin-backend` — evitar quema de API-Sports y ataques | ⏳ Pendiente |
 | **SEC-3** | 🔴 | Habilitar RLS en tablas `users` y `ollin_chat` en Supabase antes de usuarios reales | ⏳ Pendiente |
 | **SEC-4** | 🟡 | Confirmar que `vite.config.js` NO tiene `sourcemap: true` en producción | ⏳ Pendiente |
 | **SEC-5** | 🟡 | Confirmar registro end-to-end jeeljel.com/registro (rate limit Supabase liberado) | ⏳ Pendiente |
 | **SEC-6** | 🟡 | Agregar `helmet.js` y CORS explícito en `ollin-backend` | ⏳ Post-lanzamiento |
 | **SEC-7** | 🟡 | Workflow GitHub Actions auto-deploy backend con `pm2 reload` (SSH bloqueado Hostinger) | ⏳ Post-lanzamiento |
+| **SEC-8** | 🔴 | HOY/PASADOS — partidos históricos no se guardan en Redis; necesita key `ollin:futbol:pasados` con fixtures FT de días anteriores | ⏳ Pendiente |
+| **SEC-9** | 🔴 | Página partido terminado — `/ollin-deportes/partido/:id` falla para partidos FT; necesita caché persistente por partido | ⏳ Pendiente |
+| **SEC-10** | 🟡 | POSICIONES — actualizar standings inmediatamente después de cada transición live→idle además del timer de 6h | ⏳ Pendiente |
+| **SEC-11** | 🟡 | Navbar — active link bug: todos los links quedan amarillos al navegar entre páginas | ⏳ Pendiente |
 
 ## Decisiones CEO 10/06/2026 — Arquitectura chat Ollin + Ikan Naat picks
 

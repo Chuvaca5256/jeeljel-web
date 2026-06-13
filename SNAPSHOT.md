@@ -1,6 +1,20 @@
 # SNAPSHOT — Estado actual del proyecto
 
-## SNAPSHOT v9 — SSO registro + decisión Ikan Naat picks en chat Ollin (sesión actual)
+## SNAPSHOT v10 — Polling optimizado + bugs HOY/PASADOS/partido FT detectados (sesión actual)
+
+✅ **Polling corregido** — `pollFootballHoy` al arrancar + transición live→idle; standings cada 6h; `detectLiveTransition` cada 10min con guarda
+✅ **Redis keys limpias** — contador diario reseteado manualmente via `redis-cli DEL`
+✅ **Deploy con `pm2 reload`** (sin downtime) confirmado y funcionando
+✅ **Consumo API-Sports corregido** — ~29 requests/ciclo idle vs ~7,400 anterior
+
+🔴 **HOY muestra solo Brasil vs Marruecos** — faltan partidos de hoy (USA vs Paraguay está en fecha 12/06; Qatar vs Suiza puede ser liga ID diferente)
+🔴 **PASADOS sin histórico** — no existe key Redis ni endpoint para partidos de días anteriores
+🔴 **Página partido individual `/ollin-deportes/partido/:id` muestra 'Partido no disponible'** para partidos terminados
+🔴 **POSICIONES desactualizadas** — Qatar y Suiza jugaron hoy; standings timer es 6h
+⏳ SEC-2 `express-rate-limit` pendiente
+⏳ Bug navbar — todos los links quedan amarillos simultáneamente al navegar
+
+## SNAPSHOT v9 — SSO registro + decisión Ikan Naat picks en chat Ollin — SUPERSEDIDO por v10
 
 ✅ **SSO jeeljel.com/registro desplegado** — formulario completo: confirmar contraseña, mostrar/ocultar 👁; trigger Supabase `on_auth_user_created` inserta automáticamente en tabla `users` al crear usuario en auth
 ✅ **Supabase unificado** — jeeljel.com usa proyecto `ikan-nat-prod`; tabla `users` con columnas `origen_registro` y `consentimiento_comunicaciones`
