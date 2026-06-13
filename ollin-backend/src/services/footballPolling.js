@@ -1,7 +1,7 @@
 const { LIGAS_PERMITIDAS_SET } = require('../config/leagues')
 const { apiGet } = require('./apiClient')
 const { footballClient } = require('./apiClient')
-const { nextDates } = require('../lib/dates')
+const { nextDates, todayKey } = require('../lib/dates')
 const { sanitizeFootballFixtures } = require('../lib/sanitize')
 
 /** Ligas del torneo de selecciones 2026 — solo columna PRÓXIMOS */
@@ -54,6 +54,27 @@ function sortFixturesByDate(fixtures) {
     const db = new Date(b?.fixture?.date || 0).getTime()
     return da - db
   })
+}
+
+// Partidos de hoy (programados + terminados) — solo ligas TORNEO_SELECCIONES_LIGAS [1,2,3,4].
+async function pollFootballHoy(redis) {
+  const date = todayKey()
+  const collected = []
+
+  for (const leagueId of TORNEO_SELECCIONES_LIGAS) {
+    const result = await apiGet(
+      footballClient,
+      '/fixtures',
+      { league: leagueId, season: TORNEO_SELECCIONES_SEASON, date },
+      redis
+    )
+    if (!result.ok) continue
+    collected.push(...sanitizeFootballFixtures(filterAllowedLeagues(result.data)))
+  }
+
+  return {
+    hoy: collected.length ? dedupeFixtures(collected) : null,
+  }
 }
 
 // Solo ligas TORNEO_SELECCIONES_LIGAS [1,2,3,4] — no ligas adicionales.
@@ -122,6 +143,7 @@ module.exports = {
   fetchLiveFixtures,
   pollFootball,
   pollFootballLive,
+  pollFootballHoy,
   pollFootballProximos,
   TORNEO_SELECCIONES_LIGAS,
 }

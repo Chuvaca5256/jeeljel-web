@@ -5,6 +5,7 @@ const { FOOTBALL_LIVE_STATUSES } = require('../config/leagues')
 const { footballClient, apiGet } = require('./apiClient')
 const {
   pollFootballLive,
+  pollFootballHoy,
   pollFootballProximos,
   TORNEO_SELECCIONES_LIGAS,
 } = require('./footballPolling')
@@ -118,12 +119,14 @@ async function runLiveCycle(redis, ttl) {
 async function runIdleCycle(redis, ttl) {
   console.log('[ollin][polling] Modo IDLE — próximos')
 
-  const football = await pollFootballProximos(redis)
-  if (football.proximos !== null) {
-    await setJson(KEYS.futbolProximos, football.proximos, ttl)
-    await emitUpdate('futbol', 'proximos', football.proximos)
+  const proximos = await pollFootballProximos(redis)
+  if (proximos.proximos !== null) {
+    await setJson(KEYS.futbolProximos, proximos.proximos, ttl)
+    await emitUpdate('futbol', 'proximos', proximos.proximos)
   }
 
+  // pollFootballHoy removido del ciclo idle:
+  // se llama una vez al arrancar (startPolling) y en transición live→idle (runPollingCycle)
   // pollStandingsBatch removido del ciclo idle — se ejecuta en timer de 6h (startPolling)
 }
 
@@ -178,9 +181,9 @@ async function runPollingCycle(redis) {
   const cachedLive = (await getJson(KEYS.futbolLive, [])) || []
   const cachedBeisbol = (await getJson(KEYS.beisbolHoy, [])) || []
   const cachedHoy = (await getJson(KEYS.futbolHoy, [])) || []
-  const inLiveMode = hasAnyLiveFixture(cachedLive, cachedBeisbol)
+  const wasLive = hasAnyLiveFixture(cachedLive, cachedBeisbol)
 
-  if (inLiveMode) {
+  if (wasLive) {
     await runLiveCycle(redis, ttl)
   } else {
     await runIdleCycle(redis, ttl)
@@ -189,6 +192,18 @@ async function runPollingCycle(redis) {
 
   const liveAfter = (await getJson(KEYS.futbolLive, [])) || []
   const beisbolAfter = (await getJson(KEYS.beisbolHoy, [])) || []
+  const nowLive = hasAnyLiveFixture(liveAfter, beisbolAfter)
+
+  // Transición live→idle: uno o más partidos acaban de terminar — refrescar "hoy"
+  if (wasLive && !nowLive) {
+    console.log('[ollin][polling] Transición live→idle — refrescando futbolHoy')
+    const hoy = await pollFootballHoy(redis)
+    if (hoy.hoy !== null) {
+      await setJson(KEYS.futbolHoy, hoy.hoy, ttl)
+      await emitUpdate('futbol', 'hoy', hoy.hoy)
+    }
+  }
+
   const hoyAfter = (await getJson(KEYS.futbolHoy, [])) || []
   const deportesActivos = computeDeportesActivos(liveAfter, hoyAfter, beisbolAfter)
   await setMeta(now, deportesActivos)
@@ -213,6 +228,14 @@ function startPolling(redis) {
   if (pollingTimer) clearTimeout(pollingTimer)
   if (standingsTimer) clearInterval(standingsTimer)
   if (liveTransitionTimer) clearInterval(liveTransitionTimer)
+
+  // Poblar futbolHoy inmediatamente al arrancar
+  const ttl = config.cacheTtlMs
+  pollFootballHoy(redis)
+    .then((hoy) => {
+      if (hoy.hoy !== null) return setJson(KEYS.futbolHoy, hoy.hoy, ttl)
+    })
+    .catch((err) => console.warn('[ollin][polling] pollFootballHoy inicial falló:', err.message))
 
   runPollingCycle(redis).catch((err) => {
     console.error('[ollin][polling] Error en ciclo inicial:', err.message)
