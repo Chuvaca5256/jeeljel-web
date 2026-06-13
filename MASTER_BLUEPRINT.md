@@ -149,6 +149,18 @@
 - Nginx: modificar solo `jeeljel-landing`, **nunca** `ikannaat`
 - Producto **independiente** de Ikan Naat IA
 
+## 🔴 Producción segura — Pendientes críticos pre-lanzamiento
+
+| ID | Prioridad | Descripción | Estado |
+|----|-----------|-------------|--------|
+| **SEC-1** | 🔴 | `pm2 reload` en lugar de `pm2 restart` en deploy backend — elimina downtime | ⏳ Pendiente |
+| **SEC-2** | 🔴 | `express-rate-limit` en rutas de `ollin-backend` — evitar quema de API-Sports y ataques | ⏳ Pendiente |
+| **SEC-3** | 🔴 | Habilitar RLS en tablas `users` y `ollin_chat` en Supabase antes de usuarios reales | ⏳ Pendiente |
+| **SEC-4** | 🟡 | Confirmar que `vite.config.js` NO tiene `sourcemap: true` en producción | ⏳ Pendiente |
+| **SEC-5** | 🟡 | Confirmar registro end-to-end jeeljel.com/registro (rate limit Supabase liberado) | ⏳ Pendiente |
+| **SEC-6** | 🟡 | Agregar `helmet.js` y CORS explícito en `ollin-backend` | ⏳ Post-lanzamiento |
+| **SEC-7** | 🟡 | Workflow GitHub Actions auto-deploy backend con `pm2 reload` (SSH bloqueado Hostinger) | ⏳ Post-lanzamiento |
+
 ## Decisiones CEO 10/06/2026 — Arquitectura chat Ollin + Ikan Naat picks
 
 ### Arquitectura del chat (definitiva)
