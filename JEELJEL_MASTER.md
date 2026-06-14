@@ -627,11 +627,15 @@ SUPABASE_SERVICE_KEY=<en el VPS>
 cd /var/www/jeeljel-repo && git pull --rebase && pm2 reload ollin-deportes
 ```
 
-**Deploy frontend (automático via webhook — activo 14/06/2026):**
+**Deploy frontend (automático via webhook + Telegram — activo 14/06/2026):**
+- **Deploy:** webhook activo + notificaciones Telegram en cada push
+- **Bot Telegram:** `@Jeeljel_deploy_bot` (id 8872524312) · Chat ID: `8402374818`
+- **Mensajes:** 🚀 Deploy iniciado (rama + commit) · ✅ Deploy exitoso (hora CDMX) · ❌ Deploy falló (error)
 - **GitHub Actions:** ❌ desactivado (`.github/workflows/deploy.yml` → solo `workflow_dispatch`)
 - **Webhook:** PM2 `webhook-deploy` en puerto **9000** — `/var/www/webhook/server.js`
 - **Nginx:** `location /deploy-hook` → `proxy_pass http://localhost:9000/deploy`
-- **Flujo:** push a `main` → GitHub → `https://jeeljel.com/deploy-hook` → VPS hace `git pull` + `npm build` + `rsync` → `/var/www/jeeljel-web/dist/`
+- **Flujo:** push a `main` → GitHub → `https://jeeljel.com/deploy-hook` → VPS (`git pull` + `npm build` + `rsync`) → Telegram notificación
+- **Token y Chat ID:** `/var/www/webhook/.env`
 - **Verificar:** `pm2 logs webhook-deploy --lines 5 --nostream` → buscar `[webhook] Deploy exitoso`
 - **Tiempo estimado:** 2-3 minutos desde el push
 - Ruta código: `/var/www/jeeljel-repo/ollin-backend` — **NO** `/var/www/ollin-backend` (obsoleta)
@@ -752,7 +756,7 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **WEB-5** | — | Badge Beta Ikan Naat — landing, chat y header móvil | Ikan Naat | ✅ Completado |
 | **WEB-6** | — | Enlace jeeljel.com/registro en `login.html` y `register.html` de Ikan Naat | Ikan Naat | ✅ Completado |
 | **INFRA-1** | — | Llave SSH regenerada en VPS + secret `VPS_SSH_KEY` actualizado en GitHub | Infra | ✅ Completado |
-| **INFRA-2** | — | Deploy frontend via webhook — PM2 `webhook-deploy` puerto 9000; GitHub Actions desactivado | Infra | ✅ Completado (14/06/2026) |
+| **INFRA-2** | — | Deploy frontend via webhook + Telegram — PM2 `webhook-deploy` puerto 9000; bot `@Jeeljel_deploy_bot` | Infra | ✅ Completado (14/06/2026) |
 | **INFRA-3** | 🔴 | VPS ↔ GitHub desincronizados — `pasadosService.js` solo en VPS (no GitHub); `git pull --rebase` obligatorio | Infra | ⏳ Pendiente |
 | **OLLIN-16** | 🟡 | PASADOS — backend ✅ VPS (**7 FT** en Redis); frontend ⏳ tab no consume `/pasados` | Ollin Deportes | 🟡 Backend VPS ✅ · Frontend ⏳ |
 | **OLLIN-17** | 🔴 | Página partido FT — `sanitizeFootballFixture is not a function`; minuto en vivo muestra «LIVE» en lugar de `elapsed` | Ollin Deportes | ⏳ Pendiente |
@@ -762,8 +766,8 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 
 ---
 
-*Documento generado: 10/06/2026 | Versión: **v1.8** (14/06 — webhook deploy activo puerto 9000, GitHub Actions desactivado, deploy automático en cada push) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
+*Documento generado: 10/06/2026 | Versión: **v1.8** (14/06 — webhook deploy + notificaciones Telegram `@Jeeljel_deploy_bot`) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
 *Unifica: JeelJel_Coins_Ecosistema_Master_v13.md + CURSOR_OllinDeportes_v1.md + alias Coins Master*
 
-*Documentos hermanos: SNAPSHOT.md (estado actual — v11 webhook deploy) · MASTER_BLUEPRINT.md (hoja de ruta)*
+*Documentos hermanos: SNAPSHOT.md (estado actual — v12 Telegram deploy) · MASTER_BLUEPRINT.md (hoja de ruta)*
 *Próxima revisión: 01/07/2026 (TC mensual + post-torneo)*

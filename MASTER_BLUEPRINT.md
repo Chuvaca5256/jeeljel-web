@@ -238,11 +238,14 @@ El funnel convierte espectadores de Ollin en usuarios registrados de Ikan Naat. 
 
 ### Deploy
 
+- **Deploy:** webhook activo + notificaciones Telegram en cada push
+- **Bot Telegram:** `@Jeeljel_deploy_bot` · Chat ID: `8402374818`
 - **GitHub Actions:** ❌ **Desactivado** — `.github/workflows/deploy.yml` reducido a `workflow_dispatch` manual
 - **Deploy frontend:** ✅ **Automático via webhook** en cada push a `main`
-  - Flujo: push → GitHub → `https://jeeljel.com/deploy-hook` → VPS (`git pull` + `npm build` + `rsync`)
+  - Flujo: push → GitHub → `https://jeeljel.com/deploy-hook` → VPS (`git pull` + `npm build` + `rsync`) → Telegram (🚀 iniciado · ✅ exitoso · ❌ falló)
   - PM2: `webhook-deploy` (puerto **9000**) · script: `/var/www/webhook/server.js`
   - Nginx: `location /deploy-hook` → `proxy_pass http://localhost:9000/deploy`
+  - Token y Chat ID: `/var/www/webhook/.env`
   - Verificar: `pm2 logs webhook-deploy --lines 5 --nostream` → buscar `[webhook] Deploy exitoso`
   - Tiempo estimado build: **2-3 minutos** desde el push
 - Destino frontend: `/var/www/jeeljel-web/dist/`

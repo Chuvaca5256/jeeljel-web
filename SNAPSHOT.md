@@ -1,5 +1,19 @@
 # SNAPSHOT — Estado actual del proyecto
 
+## SNAPSHOT v12 — Telegram deploy notifications (14/06/2026)
+
+✅ **Notificaciones Telegram activas** — bot `@Jeeljel_deploy_bot` (id 8872524312) envía mensaje al Chat ID 8402374818
+✅ **Mensajes de deploy** — 🚀 Deploy iniciado (rama + commit) · ✅ Deploy exitoso (hora CDMX) · ❌ Deploy falló (error)
+✅ **Token y Chat ID** — guardados en `/var/www/webhook/.env`
+✅ **Flujo completo de deploy** — Cursor push → GitHub webhook → VPS build → Telegram notificación
+
+⏳ **Pendiente sesión siguiente (PRIORIDAD):**
+1. EN VIVO — mostrar minuto transcurrido del partido (campo `elapsed` en `fixture.status`)
+2. HOY — verificar que muestra partidos
+3. PRÓXIMOS — verificar que muestra partidos
+4. PASADOS — verificar que muestra los 5 partidos en Redis
+5. Chat UI frontend — conectar a backend
+
 ## SNAPSHOT v11 — Deploy automático via webhook (14/06/2026)
 
 ✅ **Webhook deploy activo** — `/var/www/webhook/server.js` corriendo en PM2 (id 2, nombre `webhook-deploy`, puerto 9000)
