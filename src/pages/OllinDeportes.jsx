@@ -1,79 +1,42 @@
 import './OllinDeportes.css'
 import { useEffect, useMemo, useState } from 'react'
 import LeagueSidebar from '../components/ollin/LeagueSidebar'
-import MatchGroupList from '../components/ollin/MatchGroupList'
 import StandingsView from '../components/ollin/StandingsView'
 import OllinLayout from '../components/ollin/OllinLayout'
 import OllinChat from '../components/ollin/OllinChat'
-import useOllinData from '../hooks/useOllinData'
+import TabEnVivo from '../components/ollin/tabs/TabEnVivo'
+import TabHoy from '../components/ollin/tabs/TabHoy'
+import TabProximos from '../components/ollin/tabs/TabProximos'
+import TabPasados from '../components/ollin/tabs/TabPasados'
 import useStandings from '../hooks/useStandings'
 import { CENTRAL_TABS, getLeagueMeta } from '../ollin/leagueCatalog'
-import {
-  countLiveByLeague,
-  filterByLeague,
-  filterBySearch,
-  filterBySport,
-  getMatchesForTab,
-  groupMatchesByLeague,
-} from '../ollin/matchUtils'
 import logoBalon from '../assets/Logo_JeelJel_Kanaabcon_balon_sin_fondo.png'
 import mosaico from '../assets/mosaicos/Macuilxochitl.png'
 
 export default function OllinDeportes() {
-  const { loading, usingMock, categorized } = useOllinData()
   const [sport, setSport] = useState('futbol')
   const [selectedLeagueId, setSelectedLeagueId] = useState(null)
   const [activeTab, setActiveTab] = useState('live')
   const [searchQuery, setSearchQuery] = useState('')
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
-  const standingsLeagueId =
-    selectedLeagueId ?? (sport === 'futbol' ? 1 : null)
+  const standingsLeagueId = selectedLeagueId ?? (sport === 'futbol' ? 1 : null)
   const { loading: standingsLoading, data: standingsData, scorers: scorersData, usingMock: standingsMock } =
     useStandings(standingsLeagueId, activeTab === 'posiciones' && sport === 'futbol')
+
+  const selectedLeagueMeta = useMemo(() => getLeagueMeta(selectedLeagueId, sport), [selectedLeagueId, sport])
 
   useEffect(() => {
     document.body.classList.add('page-ollin-deportes')
     return () => document.body.classList.remove('page-ollin-deportes')
   }, [])
 
-  const liveCounts = useMemo(
-    () => countLiveByLeague(categorized.live, sport),
-    [categorized.live, sport]
-  )
-
-  const matchGroups = useMemo(() => {
-    if (activeTab === 'posiciones') return []
-
-    const raw = getMatchesForTab(categorized, activeTab)
-    const bySport = filterBySport(raw, sport)
-    const byLeague = filterByLeague(bySport, selectedLeagueId, sport)
-    const searched = filterBySearch(byLeague, searchQuery)
-    const grouped = groupMatchesByLeague(searched)
-
-    return grouped.map((g) => ({
-      ...g,
-      liveCount: g.matches.filter((m) => m.status === 'live').length,
-    }))
-  }, [activeTab, categorized, sport, selectedLeagueId, searchQuery])
-
-  const emptyIcon = sport === 'beisbol' ? '⚾' : '⚽'
-  const hasSearch = searchQuery.trim().length > 0
-  const emptyLabel = hasSearch
-    ? 'Sin resultados para tu búsqueda'
-    : 'Sin partidos en este momento'
-
-  const selectedLeagueMeta = getLeagueMeta(selectedLeagueId, sport)
+  const sharedProps = { sport, selectedLeagueId, searchQuery }
 
   return (
     <OllinLayout pageTitle="Ollin Deportes">
       <div className="ollin-page">
-        <div
-          className="ollin-page__mosaic"
-          style={{ backgroundImage: `url(${mosaico})` }}
-          aria-hidden
-        />
-
+        <div className="ollin-page__mosaic" style={{ backgroundImage: `url(${mosaico})` }} aria-hidden />
         <div className="ollin-shell">
           <header className="ollin-topbar">
             <button
@@ -94,24 +57,17 @@ export default function OllinDeportes() {
             </div>
           </header>
 
-          {usingMock && (
-            <div className="ollin-demo-banner" role="status">
-              Modo demo — conectando al servidor...
-            </div>
-          )}
-
           <div className="ollin-layout">
             <div
               className={`ollin-layout__overlay${sidebarOpen ? ' is-visible' : ''}`}
               onClick={() => setSidebarOpen(false)}
               aria-hidden={!sidebarOpen}
             />
-
             <div className={`ollin-layout__sidebar${sidebarOpen ? ' is-open' : ''}`}>
               <LeagueSidebar
                 sport={sport}
                 selectedLeagueId={selectedLeagueId}
-                liveCounts={liveCounts}
+                liveCounts={{}}
                 onSelectSport={setSport}
                 onSelectLeague={setSelectedLeagueId}
                 onCloseMobile={() => setSidebarOpen(false)}
@@ -121,9 +77,7 @@ export default function OllinDeportes() {
             <main className="ollin-layout__main">
               <div className="ollin-search">
                 <label className="ollin-search__wrap" htmlFor="ollin-global-search">
-                  <span className="ollin-search__icon" aria-hidden>
-                    🔍
-                  </span>
+                  <span className="ollin-search__icon" aria-hidden>🔍</span>
                   <input
                     id="ollin-global-search"
                     type="search"
@@ -148,9 +102,7 @@ export default function OllinDeportes() {
                   >
                     {tab.id === 'posiciones' ? (
                       <>
-                        <span className="ollin-tabs__label ollin-tabs__label--desktop">
-                          POSICIONES
-                        </span>
+                        <span className="ollin-tabs__label ollin-tabs__label--desktop">POSICIONES</span>
                         <span className="ollin-tabs__label ollin-tabs__label--mobile">TABLA</span>
                       </>
                     ) : (
@@ -160,20 +112,25 @@ export default function OllinDeportes() {
                 ))}
               </div>
 
-              {activeTab === 'posiciones' ? (
+              <div style={{ display: activeTab === 'live' ? 'block' : 'none' }}>
+                <TabEnVivo {...sharedProps} active={activeTab === 'live'} />
+              </div>
+              <div style={{ display: activeTab === 'hoy' ? 'block' : 'none' }}>
+                <TabHoy {...sharedProps} active={activeTab === 'hoy'} />
+              </div>
+              <div style={{ display: activeTab === 'proximos' ? 'block' : 'none' }}>
+                <TabProximos {...sharedProps} active={activeTab === 'proximos'} />
+              </div>
+              <div style={{ display: activeTab === 'pasados' ? 'block' : 'none' }}>
+                <TabPasados {...sharedProps} active={activeTab === 'pasados'} />
+              </div>
+              {activeTab === 'posiciones' && (
                 <StandingsView
                   loading={standingsLoading}
                   data={standingsData}
                   scorers={scorersData}
                   usingMock={standingsMock}
                   leagueMeta={selectedLeagueMeta}
-                />
-              ) : (
-                <MatchGroupList
-                  groups={matchGroups}
-                  loading={loading}
-                  emptyIcon={emptyIcon}
-                  emptyLabel={emptyLabel}
                 />
               )}
 

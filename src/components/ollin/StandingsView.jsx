@@ -41,6 +41,7 @@ function StandingsTable({ rows }) {
           <th>P</th>
           <th>GF</th>
           <th>GC</th>
+          <th>DG</th>
           <th>Pts</th>
         </tr>
       </thead>
@@ -55,6 +56,7 @@ function StandingsTable({ rows }) {
             <td>{row.all?.lose ?? '—'}</td>
             <td>{row.all?.goals?.for ?? '—'}</td>
             <td>{row.all?.goals?.against ?? '—'}</td>
+            <td>{row.goalsDiff ?? '—'}</td>
             <td>{row.points ?? '—'}</td>
           </tr>
         ))}
@@ -113,7 +115,8 @@ export default function StandingsView({ loading, data, scorers, usingMock, leagu
     )
   }
 
-  const showGroups = data.groups?.length > 1
+  const groups = data.groups ?? data.standings ?? []
+  const showGroups = groups.length > 0
   const scorerRows = scorers?.scorers || []
 
   return (
@@ -127,14 +130,14 @@ export default function StandingsView({ loading, data, scorers, usingMock, leagu
       {leagueMeta?.premiumOnly && <PremiumLockNotice />}
 
       {showGroups ? (
-        data.groups.map((group) => (
+        groups.map((group) => (
           <section key={group.group} className="ollin-standings-group">
             <h3 className="ollin-standings-group__title">{formatStandingsGroupTitle(group.group)}</h3>
-            <StandingsTable rows={group.rows} />
+            <StandingsTable rows={group.rows ?? group.standings ?? []} />
           </section>
         ))
       ) : (
-        <StandingsTable rows={data.flat?.length ? data.flat : data.groups?.[0]?.rows || []} />
+        <StandingsTable rows={groups[0]?.rows ?? groups[0]?.standings ?? []} />
       )}
 
       <section className="ollin-standings-group ollin-scorers-section">
