@@ -13,7 +13,7 @@ function createApiClient(baseURL) {
 }
 
 const footballClient = createApiClient(config.footballBaseUrl)
-const baseballClient = createApiClient(config.baseballBaseUrl)
+// const baseballClient = createApiClient(config.baseballBaseUrl)
 
 async function apiGet(client, path, params, redis) {
   try {
@@ -32,6 +32,6 @@ async function apiGet(client, path, params, redis) {
 
 module.exports = {
   footballClient,
-  baseballClient,
+  // baseballClient,
   apiGet,
 }

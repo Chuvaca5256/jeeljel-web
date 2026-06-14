@@ -9,7 +9,11 @@ const {
   pollFootballProximos,
   TORNEO_SELECCIONES_LIGAS,
 } = require('./footballPolling')
-const { pollBaseball, isBaseballLive } = require('./baseballPolling')
+// const { pollBaseball, isBaseballLive } = require('./baseballPolling')
+// Béisbol desactivado temporalmente — stub para rutas que aún importan isBaseballLive
+function isBaseballLive(_game) {
+  return false
+}
 const { fetchStandings } = require('./standingsService')
 const { pollFootballPasados } = require('./pasadosService')
 
@@ -38,9 +42,9 @@ function hasAnyLiveFixture(futbolLive, beisbolHoy) {
       const short = f?.fixture?.status?.short
       return short && FOOTBALL_LIVE_STATUSES.has(short)
     })
-  const beisbolActive =
-    Array.isArray(beisbolHoy) && beisbolHoy.some((g) => isBaseballLive(g))
-  return futbolActive || beisbolActive
+  // const beisbolActive =
+  //   Array.isArray(beisbolHoy) && beisbolHoy.some((g) => isBaseballLive(g))
+  return futbolActive // || beisbolActive
 }
 
 function computeDeportesActivos(futbolLive, futbolHoy, beisbolHoy) {
@@ -50,7 +54,7 @@ function computeDeportesActivos(futbolLive, futbolHoy, beisbolHoy) {
     (Array.isArray(futbolHoy) && futbolHoy.length > 0)
   const hasBeisbol = Array.isArray(beisbolHoy) && beisbolHoy.length > 0
   if (hasFutbol) activos.push('futbol')
-  if (hasBeisbol) activos.push('beisbol')
+  // if (hasBeisbol) activos.push('beisbol')
   return activos
 }
 
@@ -111,11 +115,11 @@ async function runLiveCycle(redis, ttl) {
     console.warn('[ollin][polling] Fútbol live sin actualizar — conservando caché')
   }
 
-  const baseball = await pollBaseball(redis)
-  if (baseball.hoy !== null) {
-    await setJson(KEYS.beisbolHoy, baseball.hoy, ttl)
-    await emitUpdate('beisbol', 'hoy', baseball.hoy)
-  }
+  // const baseball = await pollBaseball(redis)
+  // if (baseball.hoy !== null) {
+  //   await setJson(KEYS.beisbolHoy, baseball.hoy, ttl)
+  //   await emitUpdate('beisbol', 'hoy', baseball.hoy)
+  // }
 }
 
 async function runIdleCycle(redis, ttl) {
@@ -138,10 +142,10 @@ async function detectLiveTransition(redis, ttl) {
     await setJson(KEYS.futbolLive, football.live, ttl)
   }
 
-  const baseball = await pollBaseball(redis)
-  if (baseball.hoy !== null) {
-    await setJson(KEYS.beisbolHoy, baseball.hoy, ttl)
-  }
+  // const baseball = await pollBaseball(redis)
+  // if (baseball.hoy !== null) {
+  //   await setJson(KEYS.beisbolHoy, baseball.hoy, ttl)
+  // }
 }
 
 function scheduleNextCycle(redis, intervalMs) {

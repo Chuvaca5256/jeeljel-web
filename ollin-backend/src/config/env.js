@@ -17,7 +17,7 @@ const config = {
   apiDailyLimit: 7500,
   apiDailyPauseAt: 7400,
   footballBaseUrl: 'https://v3.football.api-sports.io',
-  baseballBaseUrl: 'https://v1.baseball.api-sports.io',
+  // baseballBaseUrl: 'https://v1.baseball.api-sports.io',
   corsOrigins: ['https://jeeljel.com', 'http://localhost:5173'],
   supabaseUrl: process.env.SUPABASE_URL || '',
   supabaseServiceKey: process.env.SUPABASE_SERVICE_KEY || '',
