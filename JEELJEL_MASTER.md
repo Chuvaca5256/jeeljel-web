@@ -1,5 +1,5 @@
 # JEELJEL MASTER — Documento Maestro del Ecosistema
-## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.8 — sesión actual
+## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.8 — fin sesión 13/06/2026
 
 > **Este documento reemplaza y unifica:** `JeelJel_Coins_Ecosistema_Master_v13.md`, `JeelJel_Coins_Ecosistema_Master.md` (alias) y `CURSOR_OllinDeportes_v1.md`. Es la fuente de verdad única sobre economía (JC), identidad unificada (SSO), arquitectura de Ollin Deportes, decisiones permanentes del CEO y pendientes técnicos. Los documentos `SNAPSHOT.md` (estado actual) y `MASTER_BLUEPRINT.md` (hoja de ruta) se mantienen separados.
 
@@ -235,7 +235,7 @@ Esta tabla es el **piso de precios** para todo el ecosistema. Ninguna app puede 
 
 ## 9. TABLA DE PRECIOS — OLLIN DEPORTES
 
-Ollin Deportes está **completamente funcional en producción**: https://jeeljel.com/ollin-deportes · backend `/var/www/jeeljel-repo/ollin-backend` · PM2 **`ollin-deportes`** · `:10001` + Redis + Socket.io + **API-Sports PRO** · polling **15 s live / 3 min idle** · `apiDailyLimit` 7500 · `apiDailyPauseAt` 7400 · traducciones ES standings + links Google · partido individual en producción.
+Ollin Deportes está **funcional en backend (VPS)** con EN VIVO operativo (Australia vs Türkiye). **Frontend en producción desactualizado** — GitHub Actions roto; deploy manual pendiente. Backend: solo liga **1** activa, béisbol desactivado, timezone `America/Mexico_City` en `pollFootballHoy`/`todayKey`, `runIdleCycle` verifica live al inicio, `pasadosService.js` con 7 FT en Redis (solo VPS, no GitHub).
 
 | Servicio | JC | MXN | Notas |
 |----------|----|-----|-------|
@@ -453,7 +453,8 @@ API-Sports → Backend Node.js (polling) → Redis (caché) → Socket.io / REST
 ### Endpoints REST en producción
 - `GET /api/ollin/fixtures/live` — partidos en vivo (fútbol + béisbol combinados)
 - `GET /api/ollin/fixtures/hoy` — partidos de hoy
-- `GET /api/ollin/fixtures/proximos` — próximos 3 días + ligas torneo
+- `GET /api/ollin/fixtures/proximos` — próximos torneo selecciones (ligas 1–4 en polling; solo liga **1** activa en filtro)
+- `GET /api/ollin/fixtures/pasados` — últimos 3 días FT (`ollin:futbol:pasados`, TTL 6h) — **operativo en VPS**; `pasadosService.js` no en GitHub
 - `GET /api/ollin/fixtures/partido/:id` — detalle partido (stats, alineaciones, H2H, eventos)
 - `GET /api/ollin/standings/:ligaId` — tabla posiciones por liga (cache 1 h)
 - `GET /api/ollin/standings/:ligaId/scorers` — goleadores (cache 1 h; activo — sin datos hasta inicio torneo)
@@ -461,7 +462,7 @@ API-Sports → Backend Node.js (polling) → Redis (caché) → Socket.io / REST
 - `POST /chat/messages` y `GET /chat/status` — chat moderado
 
 ### Claves Redis
-`ollin:futbol:live` · `ollin:futbol:hoy` · `ollin:futbol:proximos` · `ollin:beisbol:hoy` · `ollin:standings:{ligaId}` · `ollin:scorers:{ligaId}` · `ollin:partido:{id}` · `ollin:futbol:events:{fixtureId}` · `ollin:api:requests:YYYY-MM-DD` — TTL = 2× intervalo de polling
+`ollin:futbol:live` · `ollin:futbol:hoy` · `ollin:futbol:proximos` · `ollin:futbol:pasados` · `ollin:beisbol:hoy` (béisbol desactivado) · `ollin:standings:{ligaId}` · `ollin:scorers:{ligaId}` · `ollin:partido:{id}` · `ollin:futbol:events:{fixtureId}` · `ollin:api:requests:YYYY-MM-DD` — TTL = 2× intervalo de polling
 
 ---
 
@@ -473,7 +474,7 @@ API-Sports → Backend Node.js (polling) → Redis (caché) → Socket.io / REST
 | **PRO (activo)** | **7,500** | **15 s live** / **3 min idle** (inteligente) | ✅ **$19 USD/mes** — activo desde 11/06/2026 |
 | Ultra | según plan | 15 segundos fijo | Opcional futuro torneo intenso |
 
-**Polling inteligente (`polling.js`):** con ≥1 partido en vivo → ciclo **15 000 ms** (`/fixtures?live=all` + `/fixtures/events` por partido activo); sin en vivo → ciclo **180 000 ms** (próximos + standings). Log: `[ollin][polling] Intervalo: Xms`.
+**Polling inteligente (`polling.js`):** con ≥1 partido en vivo → ciclo **15 000 ms** (`/fixtures?live=all` + `/fixtures/events` por partido activo); sin en vivo → ciclo **180 000 ms** (próximos + hoy). **`runIdleCycle`** verifica live al inicio con `pollFootballLive` — si hay partidos, popula `ollin:futbol:live` y retorna `true` para activar modo LIVE. Log: `[ollin][polling] Intervalo: Xms`.
 
 **Variable de entorno:** `POLLING_INTERVAL_MS` — fallback **180000 ms** (3 min idle) si no hay lógica dinámica.
 **Protección de límite:** contador diario en Redis; `apiDailyLimit` **7500** · pausa en **`apiDailyPauseAt` 7400** requests — polling se detiene hasta el día siguiente.
@@ -482,11 +483,11 @@ API-Sports → Backend Node.js (polling) → Redis (caché) → Socket.io / REST
 
 ## 23. DEPORTES Y LIGAS
 
-### En producción hoy
+### En producción hoy (fin sesión 13/06/2026)
 | Deporte | Cobertura actual |
 |---------|------------------|
-| ⚽ Fútbol | Live ligas permitidas + próximos ligas 1, 2, 3, 4 season 2026 |
-| ⚾ Béisbol | MLB en vivo (API-Baseball, liga id 1) |
+| ⚽ Fútbol | **Solo liga ID 1** activa en `LIGAS_PERMITIDAS`; EN VIVO operativo (Australia vs Türkiye); HOY con timezone `America/Mexico_City`; próximos vía `pollFootballProximos` |
+| ⚾ Béisbol | **Desactivado temporalmente** — `pollBaseball` y `baseballClient` comentados |
 
 ### Catálogo en producción (rediseño UI v6 — commit `77a556e`)
 
@@ -508,21 +509,10 @@ API-Sports → Backend Node.js (polling) → Redis (caché) → Socket.io / REST
 
 ### Ligas de fútbol permitidas actuales (`LIGAS_PERMITIDAS`)
 ```javascript
+// Solo liga 1 activa — resto comentado (torneo selecciones 2026, commit 3f0dd1b)
 const LIGAS_PERMITIDAS = [
   1,    // Fútbol internacional — torneo selecciones 2026
-  2,    // Champions League / selecciones (según temporada API)
-  3,    // UEFA European Championship
-  4,    // Copa América
-  9,    // Copa MX
-  11,   // CONMEBOL Libertadores
-  13,   // CONMEBOL Sudamericana
-  140,  // La Liga (España)
-  39,   // Premier League (Inglaterra)
-  135,  // Serie A (Italia)
-  78,   // Bundesliga (Alemania)
-  61,   // Ligue 1 (Francia)
-  262,  // Liga MX (México)
-  // Catálogo completo de la sección 23 se agrega en el rediseño UI
+  // 2, 3, 4, 11, 13, 262, ... — comentadas
 ];
 ```
 
@@ -634,7 +624,11 @@ SUPABASE_SERVICE_KEY=<en el VPS>
 
 **Deploy manual backend (VPS):**
 ```bash
-cd /var/www/jeeljel-repo && git pull && pm2 restart ollin-deportes
+cd /var/www/jeeljel-repo && git pull --rebase && pm2 reload ollin-deportes
+```
+**Deploy manual frontend (VPS — GitHub Actions roto):**
+```bash
+cd /var/www/jeeljel-repo && npm ci && npm run build && rsync -av dist/ /var/www/jeeljel-web/dist/
 ```
 - Ruta código: `/var/www/jeeljel-repo/ollin-backend` — **NO** `/var/www/ollin-backend` (obsoleta)
 - PM2 process name: **`ollin-deportes`**
@@ -754,16 +748,17 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **WEB-5** | — | Badge Beta Ikan Naat — landing, chat y header móvil | Ikan Naat | ✅ Completado |
 | **WEB-6** | — | Enlace jeeljel.com/registro en `login.html` y `register.html` de Ikan Naat | Ikan Naat | ✅ Completado |
 | **INFRA-1** | — | Llave SSH regenerada en VPS + secret `VPS_SSH_KEY` actualizado en GitHub | Infra | ✅ Completado |
-| **INFRA-2** | 🟡 | Fix SSH GitHub Actions → VPS — puerto bloqueado por Hostinger | Infra | ⏳ Pendiente |
-| **INFRA-3** | 🔴 | VPS ↔ repo desincronizados — `pasadosService.js` y `polling.js` editados solo en VPS; sincronizar antes de próximos cambios | Infra | ⏳ Pendiente |
-| **OLLIN-16** | 🟡 | PASADOS — backend ✅ key `ollin:futbol:pasados` (2 FT en Redis); frontend ⏳ tab muestra «Sin partidos» | Ollin Deportes | 🟡 Backend ✅ · Frontend ⏳ |
-| **OLLIN-17** | 🔴 | Página partido FT — error `sanitizeFootballFixture is not a function`; minuto en vivo no se muestra | Ollin Deportes | ⏳ Pendiente |
+| **INFRA-2** | 🔴 | Fix SSH GitHub Actions → VPS — deploy frontend roto desde hace días; usar deploy manual | Infra | ⏳ Urgente |
+| **INFRA-3** | 🔴 | VPS ↔ GitHub desincronizados — `pasadosService.js` solo en VPS (no GitHub); `git pull --rebase` obligatorio | Infra | ⏳ Pendiente |
+| **OLLIN-16** | 🟡 | PASADOS — backend ✅ VPS (**7 FT** en Redis); frontend ⏳ tab no consume `/pasados` | Ollin Deportes | 🟡 Backend VPS ✅ · Frontend ⏳ |
+| **OLLIN-17** | 🔴 | Página partido FT — `sanitizeFootballFixture is not a function`; minuto en vivo muestra «LIVE» en lugar de `elapsed` | Ollin Deportes | ⏳ Pendiente |
 | **OLLIN-18** | 🟡 | Standings post-partido — trigger inmediato de `pollStandingsBatch` al detectar transición live→idle | Ollin Deportes | ⏳ Pendiente |
-| **OLLIN-19** | 🔴 | PRÓXIMOS roto — `polling.js` modificado manualmente en VPS; revisión urgente | Ollin Deportes | ⏳ Urgente |
+| **OLLIN-19** | 🟡 | PRÓXIMOS — mensaje «limitación FREE» eliminado en repo (`3134998`); **pendiente deploy frontend** | Ollin Deportes | ⏳ Deploy manual |
+| **OLLIN-20** | 🟡 | Navbar active link bug — todos los links amarillos al navegar (SEC-11) | Ollin Deportes | ⏳ Pendiente |
 
 ---
 
-*Documento generado: 10/06/2026 | Versión: **v1.8** (sesión 13/06 — SEC-8 backend parcial, PRÓXIMOS roto, VPS desincronizado del repo) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
+*Documento generado: 10/06/2026 | Versión: **v1.8** (fin sesión 13/06 — backend operativo EN VIVO, frontend desactualizado, GitHub Actions roto, pasadosService solo VPS) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
 *Unifica: JeelJel_Coins_Ecosistema_Master_v13.md + CURSOR_OllinDeportes_v1.md + alias Coins Master*
 
 *Documentos hermanos: SNAPSHOT.md (estado actual — v11) · MASTER_BLUEPRINT.md (hoja de ruta)*

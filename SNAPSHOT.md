@@ -1,16 +1,20 @@
 # SNAPSHOT — Estado actual del proyecto
 
-## SNAPSHOT v11 — SEC-8 backend parcial + VPS desincronizado del repo (sesión actual)
+## SNAPSHOT v11 — Backend operativo + frontend desactualizado (fin sesión 13/06/2026)
 
-✅ **SEC-8 backend (parcial)** — `pasadosService.js` creado en VPS; key `ollin:futbol:pasados` en Redis con **2 partidos FT**; endpoint `GET /fixtures/pasados` operativo
-🟡 **SEC-8 frontend pendiente** — tab PASADOS muestra «Sin partidos» aunque Redis tiene datos (frontend no consume `/pasados` o formato incompatible)
-🔴 **PRÓXIMOS roto** — `polling.js` modificado manualmente en VPS durante la sesión; requiere revisión urgente
-🔴 **SEC-9 pendiente** — página partido individual: `sanitizeFootballFixture is not a function` para partidos terminados
-🔴 **Minuto en vivo no se muestra** — UI no refleja minuto actual en partidos en vivo
-⚠️ **VPS desincronizado del repo** — archivos editados directamente en VPS (no commiteados): `ollin-backend/src/services/pasadosService.js`, `ollin-backend/src/services/polling.js`
-⏳ **Pendiente crítico:** sincronizar VPS ↔ repo vía `git` antes de cualquier instrucción futura; **leer código real en VPS** antes de modificar
+✅ **Backend funcionando** — solo liga **1** activa en `LIGAS_PERMITIDAS`; béisbol desactivado (comentado); `timezone: 'America/Mexico_City'` en `pollFootballHoy` y `todayKey()`; `pollFootballLive` verificado al inicio de `runIdleCycle` (retorna `true` → modo LIVE); `pasadosService.js` operativo con **7 partidos FT** en Redis (`ollin:futbol:pasados`)
+✅ **EN VIVO funciona** — Australia vs Türkiye visible en producción
+🔴 **Frontend desactualizado** — GitHub Actions roto desde hace días; deploy manual pendiente:
+```bash
+cd /var/www/jeeljel-repo && npm ci && npm run build && rsync -av dist/ /var/www/jeeljel-web/dist/
+```
+🔴 **PRÓXIMOS** — mensaje «limitación FREE» eliminado en código (commit `3134998`) pero **no desplegado** en producción
+🔴 **Minuto en vivo** — no muestra `elapsed`; UI muestra «LIVE» en lugar del minuto
+🔴 **VPS desincronizado de GitHub** — usar siempre `git pull --rebase` antes de deploy; verificar código real en VPS
+🔴 **`pasadosService.js` no está en GitHub** — solo en VPS: `/var/www/jeeljel-repo/ollin-backend/src/services/pasadosService.js`
+⏳ **SEC-9, SEC-10, SEC-11 pendientes** — partido FT, standings post-partido, navbar active link
 
-**Regla de sesión:** no asumir que el repo local refleja producción — verificar siempre en `/var/www/jeeljel-repo/ollin-backend`
+**Regla de sesión:** no asumir que el repo local refleja producción — verificar siempre en `/var/www/jeeljel-repo/ollin-backend` y `/var/www/jeeljel-web/dist`
 
 ## SNAPSHOT v10 — Polling optimizado + bugs HOY/PASADOS/partido FT detectados — SUPERSEDIDO por v11
 
@@ -424,11 +428,11 @@ Reemplazó la cuadrícula «5 Plataformas · 30+ Agentes IA · …». Ahora mues
 | **Nginx** | Dos archivos en `sites-enabled`: `ikannaat` y `jeeljel-landing` |
 | **SSL jeeljel.com** | Certbot — `/etc/letsencrypt/live/jeeljel.com/` |
 | **SSL ikannaat** | Certbot — `/etc/letsencrypt/live/ikannaat.jeeljel.com/` |
-| **Deploy jeeljel.com** | `/var/www/jeeljel-web/dist` |
+| **Deploy jeeljel.com** | `/var/www/jeeljel-web/dist` — **manual** (GitHub Actions roto); ver comando en SNAPSHOT v11 |
 | **Ikan Naat** | Puerto 10000 — `proxy_pass http://localhost:10000` |
 | **Ollin Deportes backend** | Puerto **10001** — PM2 **`ollin-deportes`** + Redis + Socket.io; código en `/var/www/jeeljel-repo/ollin-backend`; Nginx `location /api/ollin/` → `:10001` (jeeljel-landing) |
 | **GitHub** | https://github.com/Chuvaca5256/jeeljel-web |
-| **Deploy automático** | GitHub Actions — `.github/workflows/deploy.yml` — push a `main` o `workflow_dispatch` |
+| **Deploy automático** | GitHub Actions — `.github/workflows/deploy.yml` — **🔴 ROTO** desde hace días; usar deploy manual (SNAPSHOT v11) |
 | **Secret GitHub** | `VPS_SSH_KEY` — llave SSH ed25519 para deploy |
 
 ### Deploy workflow (corregido)
@@ -498,7 +502,7 @@ El servidor tiene **DOS sitios** corriendo simultáneamente:
 - **Standings:** grupos A–L + Mejores terceros en ES · nombres 48 selecciones traducidos (`teamDisplay.js`) · links Google en tabla POSICIONES
 - **Goleadores:** endpoint activo; sin datos hasta inicio del torneo (comportamiento normal API-Sports)
 - **Deploy backend VPS:** `cd /var/www/jeeljel-repo && git pull && pm2 restart ollin-deportes` — ruta `/var/www/jeeljel-repo/ollin-backend` (NO `/var/www/ollin-backend`)
-- **Deploy frontend:** automático GitHub Actions en push a `main`
+- **Deploy frontend:** **manual en VPS** — GitHub Actions roto; `npm ci && npm run build && rsync -av dist/ /var/www/jeeljel-web/dist/`
 - **Límites API (`env.js`):** `apiDailyLimit` 7500 · `apiDailyPauseAt` 7400 · fallback polling 180000 ms
 - **Pendiente:** chat UI (decisión global vs por partido / SSO) · SSO jeeljel.com/registro · modal chat · CTA tarjeta `/apps` · workflow auto-deploy backend
 - **Puerto backend Ollin Deportes:** 10001 (nunca 10000, ese es Ikan Naat)

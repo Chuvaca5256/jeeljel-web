@@ -71,6 +71,14 @@
 - ✅ **Llave SSH VPS regenerada** + secret `VPS_SSH_KEY` actualizado en GitHub
 - ✅ **Deploy manual jeeljel.com e Ikan Naat** — confirmados vía terminal VPS
 - ✅ **Supabase unificado** — jeeljel.com y futuras apps usan proyecto `ikan-nat-prod`
+- ✅ **Backend Ollin — solo liga 1 activa** — `LIGAS_PERMITIDAS` reducido a ID 1; resto comentado (`3f0dd1b`)
+- ✅ **Béisbol desactivado temporalmente** — `pollBaseball` y `baseballClient` comentados en backend (`a3b6091`)
+- ✅ **Timezone México en polling HOY** — `pollFootballHoy` + `todayKey()` con `America/Mexico_City` (`c65135e`, `09ea90a`)
+- ✅ **`runIdleCycle` verifica live al inicio** — `pollFootballLive` → `KEYS.futbolLive` + `return true` → modo LIVE (`8331532`)
+- ✅ **EN VIVO operativo** — Australia vs Türkiye visible en backend/Redis
+- ✅ **Mensaje «limitación FREE» eliminado en repo** — tab PRÓXIMOS usa empty label normal (`3134998`); **pendiente deploy frontend**
+- ✅ **Commit vacío deploy frontend** — `167695d` (`chore: forzar deploy frontend`)
+- 🔴 **Revert timezone en `pollFootballLive`** — commit `cbb5a9f` (no aplica timezone en `/fixtures?live=all`)
 
 ## 🟡 Ollin Deportes — Fase 2 (post-lanzamiento página principal)
 
@@ -79,9 +87,12 @@
 | Área | Estado |
 |------|--------|
 | Página `/ollin-deportes` | ✅ **En producción** — layout 3 zonas, sidebar ligas, tabs, POSICIONES — https://jeeljel.com/ollin-deportes |
-| Backend Node.js (puerto **10001**) | ✅ **Activo** — PM2 **`ollin-deportes`** · código `/var/www/jeeljel-repo/ollin-backend` |
-| Polling API-Sports | ✅ **Inteligente** — **15 s** con en vivo · **3 min** idle (próximos + standings) |
+| Backend Node.js (puerto **10001**) | ✅ **Activo** — solo liga **1** · béisbol desactivado · PM2 **`ollin-deportes`** · `/var/www/jeeljel-repo/ollin-backend` |
+| Polling API-Sports | ✅ **Inteligente** — **15 s** con en vivo · **3 min** idle · `runIdleCycle` verifica live al inicio |
+| EN VIVO | ✅ **Operativo** — Australia vs Türkiye visible |
 | Plan API-Sports | ✅ **PRO activo** — $19 USD/mes · 7 500 req/día |
+| Deploy frontend | 🔴 **GitHub Actions roto** — deploy manual: `cd /var/www/jeeljel-repo && npm ci && npm run build && rsync -av dist/ /var/www/jeeljel-web/dist/` |
+| Tab PRÓXIMOS | 🟡 Código OK en repo (`3134998`) · producción aún muestra mensaje FREE — frontend no desplegado |
 | Límites API (`env.js`) | ✅ **`apiDailyLimit` 7500** · **`apiDailyPauseAt` 7400** · fallback **180000 ms** |
 | Tab POSICIONES (grupos + goleadores) | ✅ **Grupos A–L + Mejores terceros en ES** · goleadores endpoint activo (sin datos pre-torneo) · links Google por selección |
 | Página `/ollin-deportes/partido/:id` | ✅ **En producción** — SVG + 5 tabs + API partido |
@@ -97,7 +108,7 @@
 
 **Stack en producción:** React + Vite + Tailwind (frontend en `jeeljel-web`) · Node.js + Express + Redis + PM2 + Socket.io (backend `:10001`) · API-Sports · Supabase (chat)
 
-**Deportes en producción:** Fútbol (polling próximos ligas 1/2/3/4 season 2026) · Béisbol (MLB en vivo)
+**Deportes en producción:** Fútbol — **solo liga 1** activa · EN VIVO operativo · ~~Béisbol MLB~~ desactivado temporalmente
 
 **Deportes próxima sesión:** catálogo completo fútbol internacional + clubes Europa/LATAM + béisbol LMB/NPB/LVBP/Cuba · Fase 2 futura: NBA, NFL, NHL, F1
 
@@ -160,16 +171,20 @@
 | **SEC-5** | 🟡 | Confirmar registro end-to-end jeeljel.com/registro (rate limit Supabase liberado) | ⏳ Pendiente |
 | **SEC-6** | 🟡 | Agregar `helmet.js` y CORS explícito en `ollin-backend` | ⏳ Post-lanzamiento |
 | **SEC-7** | 🟡 | Workflow GitHub Actions auto-deploy backend con `pm2 reload` (SSH bloqueado Hostinger) | ⏳ Post-lanzamiento |
-| **SEC-8** | 🟡 | PASADOS — backend ✅ (`pasadosService.js`, key `ollin:futbol:pasados`, 2 FT en Redis); frontend ⏳ tab PASADOS muestra «Sin partidos» | 🟡 Backend ✅ · Frontend ⏳ |
-| **SEC-9** | 🔴 | Página partido terminado — `/ollin-deportes/partido/:id` falla FT; error `sanitizeFootballFixture is not a function`; minuto en vivo no se muestra | ⏳ Pendiente |
+| **SEC-8** | 🟡 | PASADOS — backend ✅ en VPS (`pasadosService.js`, key `ollin:futbol:pasados`, **7 FT** en Redis); archivo **no en GitHub**; frontend ⏳ tab PASADOS no consume `/pasados` | 🟡 Backend VPS ✅ · Repo ⏳ · Frontend ⏳ |
+| **SEC-9** | 🔴 | Página partido FT — `/ollin-deportes/partido/:id` falla FT; error `sanitizeFootballFixture is not a function`; minuto en vivo muestra «LIVE» en lugar de `elapsed` | ⏳ Pendiente |
 | **SEC-10** | 🟡 | POSICIONES — actualizar standings inmediatamente después de cada transición live→idle además del timer de 6h | ⏳ Pendiente |
 | **SEC-11** | 🟡 | Navbar — active link bug: todos los links quedan amarillos al navegar entre páginas | ⏳ Pendiente |
-| **SEC-12** | 🔴 | PRÓXIMOS roto — `polling.js` editado manualmente en VPS; revisión urgente y resincronización con repo | ⏳ Urgente |
-| **INFRA-3** | 🔴 | VPS ↔ repo desincronizados — `pasadosService.js` y `polling.js` solo en VPS; sincronizar vía git antes de próximos cambios | ⏳ Pendiente |
+| **SEC-12** | 🟡 | PRÓXIMOS — mensaje «limitación FREE» eliminado en repo; **pendiente deploy frontend** | ⏳ Deploy manual |
+| **INFRA-3** | 🔴 | VPS ↔ GitHub desincronizados — `pasadosService.js` solo en VPS; usar siempre `git pull --rebase`; verificar código real antes de cambios | ⏳ Pendiente |
+| **INFRA-4** | 🔴 | GitHub Actions deploy frontend roto desde hace días — deploy manual obligatorio hasta fix SSH/workflow | ⏳ Urgente |
 
 ### ⚠️ Alerta sesión 13/06/2026 — fuente de verdad
 
-El backend en producción (`/var/www/jeeljel-repo/ollin-backend`) **no coincide** con el repo GitHub en archivos críticos de polling. Antes de cualquier fix: `git diff` en VPS, copiar cambios válidos al repo, commit, `git pull` + `pm2 reload`. **No dar instrucciones basadas solo en el repo local sin verificar VPS.**
+- **Backend en VPS** (`/var/www/jeeljel-repo/ollin-backend`): operativo — liga 1, béisbol off, EN VIVO OK, `pasadosService.js` con 7 FT en Redis
+- **Frontend en producción** (`/var/www/jeeljel-web/dist`): **desactualizado** — GitHub Actions roto; mensaje PRÓXIMOS FREE aún visible hasta deploy manual
+- **`pasadosService.js`**: existe en VPS pero **no está en GitHub** — no asumir paridad repo ↔ VPS
+- Antes de cualquier fix: `git pull --rebase` en VPS, verificar diff, deploy manual frontend si aplica
 
 ## Decisiones CEO 10/06/2026 — Arquitectura chat Ollin + Ikan Naat picks
 
@@ -220,9 +235,13 @@ El funnel convierte espectadores de Ollin en usuarios registrados de Ikan Naat. 
 
 ### Deploy
 
-- **Frontend (automático):** workflow `.github/workflows/deploy.yml`
-- Destino frontend: `root@187.77.196.169:/var/www/jeeljel-web/dist/`
-- Re-disparar manualmente: GitHub → Actions → Deploy jeeljel.com → Run workflow
+- **Frontend (automático — ROTO):** workflow `.github/workflows/deploy.yml` — GitHub Actions fallando desde hace días (SSH Hostinger)
+- **Frontend (manual — usar hasta fix):**
+  ```bash
+  cd /var/www/jeeljel-repo && npm ci && npm run build && rsync -av dist/ /var/www/jeeljel-web/dist/
+  ```
+- Destino frontend: `/var/www/jeeljel-web/dist/`
+- Re-disparar automático (cuando funcione): GitHub → Actions → Deploy jeeljel.com → Run workflow
 
 - **Backend Ollin (manual):**
   ```bash
