@@ -61,9 +61,7 @@ export default function OllinDeportes() {
   const hasSearch = searchQuery.trim().length > 0
   const emptyLabel = hasSearch
     ? 'Sin resultados para tu búsqueda'
-    : activeTab === 'proximos'
-      ? 'Próximos partidos no disponibles temporalmente — limitación del plan FREE de API-Sports. Se activará mañana con el upgrade PRO.'
-      : 'Sin partidos en este momento'
+    : 'Sin partidos en este momento'
 
   const selectedLeagueMeta = getLeagueMeta(selectedLeagueId, sport)
 
