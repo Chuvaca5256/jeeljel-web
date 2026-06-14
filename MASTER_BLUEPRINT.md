@@ -79,6 +79,8 @@
 - ✅ **Mensaje «limitación FREE» eliminado en repo** — tab PRÓXIMOS usa empty label normal (`3134998`); **pendiente deploy frontend**
 - ✅ **Commit vacío deploy frontend** — `167695d` (`chore: forzar deploy frontend`)
 - 🔴 **Revert timezone en `pollFootballLive`** — commit `cbb5a9f` (no aplica timezone en `/fixtures?live=all`)
+- ✅ **Tabs Ollin refactorizados e independientes** — `TabEnVivo` · `TabHoy` · `TabProximos` · `TabPasados` + `useTabData` + `useSocketUpdate` (SNAPSHOT v10)
+- ✅ **Columna DG en POSICIONES** — `StandingsView.jsx` muestra `row.goalsDiff` (SNAPSHOT v10)
 
 ## 🟡 Ollin Deportes — Fase 2 (post-lanzamiento página principal)
 
@@ -86,15 +88,16 @@
 
 | Área | Estado |
 |------|--------|
-| Página `/ollin-deportes` | ✅ **En producción** — layout 3 zonas, sidebar ligas, tabs, POSICIONES — https://jeeljel.com/ollin-deportes |
+| Página `/ollin-deportes` | ✅ **En producción** — layout 3 zonas, sidebar ligas, **tabs refactorizados e independientes**, POSICIONES — https://jeeljel.com/ollin-deportes |
+| Tabs EN VIVO · HOY · PRÓXIMOS · PASADOS | ✅ **Refactorizados e independientes** — cada tab con fetch propio vía `useTabData` + `extract`; EN VIVO con `useSocketUpdate` |
 | Backend Node.js (puerto **10001**) | ✅ **Activo** — solo liga **1** · béisbol desactivado · PM2 **`ollin-deportes`** · `/var/www/jeeljel-repo/ollin-backend` |
 | Polling API-Sports | ✅ **Inteligente** — **15 s** con en vivo · **3 min** idle · `runIdleCycle` verifica live al inicio |
 | EN VIVO | ✅ **Operativo** — Australia vs Türkiye visible |
 | Plan API-Sports | ✅ **PRO activo** — $19 USD/mes · 7 500 req/día |
-| Deploy frontend | 🔴 **GitHub Actions roto** — deploy manual: `cd /var/www/jeeljel-repo && npm ci && npm run build && rsync -av dist/ /var/www/jeeljel-web/dist/` |
+| Deploy frontend | ✅ **Automático via webhook** en cada push a `main` — `https://jeeljel.com/deploy-hook` → PM2 `webhook-deploy` (puerto 9000) |
 | Tab PRÓXIMOS | 🟡 Código OK en repo (`3134998`) · producción aún muestra mensaje FREE — frontend no desplegado |
 | Límites API (`env.js`) | ✅ **`apiDailyLimit` 7500** · **`apiDailyPauseAt` 7400** · fallback **180000 ms** |
-| Tab POSICIONES (grupos + goleadores) | ✅ **Grupos A–L + Mejores terceros en ES** · goleadores endpoint activo (sin datos pre-torneo) · links Google por selección |
+| Tab POSICIONES (grupos + goleadores) | ✅ **Grupos A–L + Mejores terceros en ES** · goleadores endpoint activo · links Google · **columna DG (`row.goalsDiff`)** · sin duplicados (`data.groups ?? data.standings`) |
 | Página `/ollin-deportes/partido/:id` | ✅ **En producción** — SVG + 5 tabs + API partido |
 | SSO jeeljel.com/registro | ✅ **Completado** — tabla `users` + trigger `on_auth_user_created` (SNAPSHOT v9) |
 | Modal registro en chat | ✅ **Completado** — input bloqueado + modal CTA (SNAPSHOT v9) |
@@ -177,7 +180,7 @@
 | **SEC-11** | 🟡 | Navbar — active link bug: todos los links quedan amarillos al navegar entre páginas | ⏳ Pendiente |
 | **SEC-12** | 🟡 | PRÓXIMOS — mensaje «limitación FREE» eliminado en repo; **pendiente deploy frontend** | ⏳ Deploy manual |
 | **INFRA-3** | 🔴 | VPS ↔ GitHub desincronizados — `pasadosService.js` solo en VPS; usar siempre `git pull --rebase`; verificar código real antes de cambios | ⏳ Pendiente |
-| **INFRA-4** | 🔴 | GitHub Actions deploy frontend roto desde hace días — deploy manual obligatorio hasta fix SSH/workflow | ⏳ Urgente |
+| **INFRA-4** | — | GitHub Actions deploy frontend | Infra | ❌ Desactivado — reemplazado por webhook (`webhook-deploy`, puerto 9000) |
 
 ### ⚠️ Alerta sesión 13/06/2026 — fuente de verdad
 
@@ -235,13 +238,14 @@ El funnel convierte espectadores de Ollin en usuarios registrados de Ikan Naat. 
 
 ### Deploy
 
-- **Frontend (automático — ROTO):** workflow `.github/workflows/deploy.yml` — GitHub Actions fallando desde hace días (SSH Hostinger)
-- **Frontend (manual — usar hasta fix):**
-  ```bash
-  cd /var/www/jeeljel-repo && npm ci && npm run build && rsync -av dist/ /var/www/jeeljel-web/dist/
-  ```
+- **GitHub Actions:** ❌ **Desactivado** — `.github/workflows/deploy.yml` reducido a `workflow_dispatch` manual
+- **Deploy frontend:** ✅ **Automático via webhook** en cada push a `main`
+  - Flujo: push → GitHub → `https://jeeljel.com/deploy-hook` → VPS (`git pull` + `npm build` + `rsync`)
+  - PM2: `webhook-deploy` (puerto **9000**) · script: `/var/www/webhook/server.js`
+  - Nginx: `location /deploy-hook` → `proxy_pass http://localhost:9000/deploy`
+  - Verificar: `pm2 logs webhook-deploy --lines 5 --nostream` → buscar `[webhook] Deploy exitoso`
+  - Tiempo estimado build: **2-3 minutos** desde el push
 - Destino frontend: `/var/www/jeeljel-web/dist/`
-- Re-disparar automático (cuando funcione): GitHub → Actions → Deploy jeeljel.com → Run workflow
 
 - **Backend Ollin (manual):**
   ```bash

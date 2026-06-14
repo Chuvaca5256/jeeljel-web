@@ -1,5 +1,38 @@
 # SNAPSHOT — Estado actual del proyecto
 
+## SNAPSHOT v11 — Deploy automático via webhook (14/06/2026)
+
+✅ **Webhook deploy activo** — `/var/www/webhook/server.js` corriendo en PM2 (id 2, nombre `webhook-deploy`, puerto 9000)
+✅ **GitHub Actions desactivado** — `.github/workflows/deploy.yml` reducido a `workflow_dispatch` manual
+✅ **Nginx ruta webhook** — `location /deploy-hook` → `proxy_pass http://localhost:9000/deploy`
+✅ **Secret webhook** — guardado en `/var/www/webhook/.env`; dotenv instalado en `/var/www/webhook/node_modules`
+✅ **Flujo nuevo de deploy** — Cursor hace push → GitHub llama `https://jeeljel.com/deploy-hook` → VPS hace git pull + npm build + rsync automático
+✅ **Verificación deploy** — `pm2 logs webhook-deploy --lines 5 --nostream` → buscar `[webhook] Deploy exitoso`
+✅ **Tiempo estimado build** — 2-3 minutos desde el push
+
+⏳ **Pendiente sesión siguiente:**
+1. EN VIVO — mostrar minuto transcurrido del partido (no hora de inicio)
+2. HOY — verificar datos
+3. PRÓXIMOS — verificar datos
+4. PASADOS — verificar datos (5 partidos en Redis confirmados)
+5. Chat UI frontend — conectar a backend
+
+## SNAPSHOT v10 — Refactor Ollin Deportes tabs independientes (14/06/2026)
+
+✅ **Refactor arquitectura tabs Ollin** — cada tab es componente independiente con su propio fetch; romper un tab no afecta a los demás
+✅ **Hooks nuevos** — `useTabData.js` (fetch por endpoint con función `extract` personalizada) · `useSocketUpdate.js` (escucha `ollin:update`)
+✅ **Tabs independientes** — `src/components/ollin/tabs/TabEnVivo.jsx` · `TabHoy.jsx` · `TabProximos.jsx` · `TabPasados.jsx`
+✅ **POSICIONES sin duplicados** — `StandingsView.jsx` unifica `data.groups ?? data.standings`; filas con fallback `group.rows ?? group.standings ?? []`
+✅ **Columna DG (diferencia de goles)** — agregada en tabla de posiciones (`row.goalsDiff`)
+✅ **Extractores por tab** — `/live` y `/hoy` → `[...futbol, ...beisbol]` · `/proximos` → `json.futbol` · `/pasados` → `json.data`
+
+⏳ **Pendiente sesión siguiente:**
+1. EN VIVO — mostrar minuto transcurrido del partido (no hora de inicio)
+2. HOY — verificar datos
+3. PRÓXIMOS — verificar datos
+4. PASADOS — verificar datos (5 partidos en Redis confirmados)
+5. Chat UI frontend — conectar a backend
+
 ## SNAPSHOT v11 — Backend operativo + frontend desactualizado (fin sesión 13/06/2026)
 
 ✅ **Backend funcionando** — solo liga **1** activa en `LIGAS_PERMITIDAS`; béisbol desactivado (comentado); `timezone: 'America/Mexico_City'` en `pollFootballHoy` y `todayKey()`; `pollFootballLive` verificado al inicio de `runIdleCycle` (retorna `true` → modo LIVE); `pasadosService.js` operativo con **7 partidos FT** en Redis (`ollin:futbol:pasados`)
