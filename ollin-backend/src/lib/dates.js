@@ -6,7 +6,7 @@ function formatDateYMD(date = new Date()) {
 }
 
 function todayKey() {
-  return formatDateYMD(new Date())
+  return new Date().toLocaleDateString('en-CA', { timeZone: 'America/Mexico_City' })
 }
 
 function addDays(date, days) {
