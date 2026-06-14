@@ -81,6 +81,14 @@
 - 🔴 **Revert timezone en `pollFootballLive`** — commit `cbb5a9f` (no aplica timezone en `/fixtures?live=all`)
 - ✅ **Tabs Ollin refactorizados e independientes** — `TabEnVivo` · `TabHoy` · `TabProximos` · `TabPasados` + `useTabData` + `useSocketUpdate` (SNAPSHOT v10)
 - ✅ **Columna DG en POSICIONES** — `StandingsView.jsx` muestra `row.goalsDiff` (SNAPSHOT v10)
+- ✅ **Deploy webhook + Telegram** — PM2 `webhook-deploy` puerto 9000; bot `@Jeeljel_deploy_bot` activo (`INFRA-2`)
+- ✅ **TabEnVivo — minuto elapsed** — `getMatchTime`, `EnVivoMatchCard`, `EnVivoMatchGroupList` en `TabEnVivo.jsx`
+- ✅ **TabHoy normalizado** — `normalizeFootballFixture` en extract de `useTabData`; `getMatchTime` pasado a `MatchGroupList`
+- ✅ **TabProximos normalizado** — `normalizeFootballFixture` en extract de `useTabData`
+- ✅ **TabPasados normalizado** — consume `json.data` de `/api/ollin/fixtures/pasados`; normaliza con `normalizeFootballFixture`
+- ✅ **MatchGroupList + MatchCardCompact** — prop `getMatchTime` opcional; fallback a `formatMatchDateTime`
+- ✅ **Backend PM2 limpiado** — proceso id 3 arrancado desde `src/server.js`; crash loop por caché PM2 resuelto
+- ✅ **pasadosService.js operativo en VPS** — 6 partidos FT guardados (2026-06-13, 2026-06-12, 2026-06-11)
 
 ## 🟡 Ollin Deportes — Fase 2 (post-lanzamiento página principal)
 
