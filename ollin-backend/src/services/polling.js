@@ -123,6 +123,14 @@ async function runLiveCycle(redis, ttl) {
 }
 
 async function runIdleCycle(redis, ttl) {
+  // Verificar live primero
+  const football = await pollFootballLive(redis)
+  if (football.live !== null && football.live.length > 0) {
+    await setJson(KEYS.futbolLive, football.live, ttl)
+    await emitUpdate('futbol', 'live', football.live)
+    return true // hay live — el ciclo siguiente será LIVE
+  }
+
   console.log('[ollin][polling] Modo IDLE — hoy + próximos')
 
   const proximos = await pollFootballProximos(redis)
@@ -138,6 +146,8 @@ async function runIdleCycle(redis, ttl) {
       if (hoy && hoy.hoy !== null) return setJson(KEYS.futbolHoy, hoy.hoy, ttl)
     })
     .catch((err) => console.warn('[ollin][polling] pollFootballHoy idle falló:', err.message))
+
+  return false
 }
 
 async function detectLiveTransition(redis, ttl) {
@@ -193,10 +203,12 @@ async function runPollingCycle(redis) {
   const cachedHoy = (await getJson(KEYS.futbolHoy, [])) || []
   const wasLive = hasAnyLiveFixture(cachedLive, cachedBeisbol)
 
+  let idleFoundLive = false
+
   if (wasLive) {
     await runLiveCycle(redis, ttl)
   } else {
-    await runIdleCycle(redis, ttl)
+    idleFoundLive = await runIdleCycle(redis, ttl)
     // detectLiveTransition removido del ciclo normal — se ejecuta en timer de 10min (startPolling)
   }
 
@@ -219,7 +231,7 @@ async function runPollingCycle(redis) {
   await setMeta(now, deportesActivos)
 
   const countAfter = await getRequestCount(redis)
-  const nextLive = hasAnyLiveFixture(liveAfter, beisbolAfter)
+  const nextLive = idleFoundLive || hasAnyLiveFixture(liveAfter, beisbolAfter)
   const nextInterval = nextLive ? LIVE_INTERVAL_MS : IDLE_INTERVAL_MS
 
   console.log(
