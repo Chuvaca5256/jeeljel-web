@@ -65,7 +65,7 @@ async function pollFootballHoy(redis) {
     const result = await apiGet(
       footballClient,
       '/fixtures',
-      { league: leagueId, season: TORNEO_SELECCIONES_SEASON, date },
+      { league: leagueId, season: TORNEO_SELECCIONES_SEASON, date, timezone: 'America/Mexico_City' },
       redis
     )
     if (!result.ok) continue
