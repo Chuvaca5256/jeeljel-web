@@ -123,7 +123,7 @@ async function runLiveCycle(redis, ttl) {
 }
 
 async function runIdleCycle(redis, ttl) {
-  console.log('[ollin][polling] Modo IDLE — próximos')
+  console.log('[ollin][polling] Modo IDLE — hoy + próximos')
 
   const proximos = await pollFootballProximos(redis)
   if (proximos.proximos !== null) {
@@ -131,9 +131,13 @@ async function runIdleCycle(redis, ttl) {
     await emitUpdate('futbol', 'proximos', proximos.proximos)
   }
 
-  // pollFootballHoy removido del ciclo idle:
-  // se llama una vez al arrancar (startPolling) y en transición live→idle (runPollingCycle)
   // pollStandingsBatch removido del ciclo idle — se ejecuta en timer de 6h (startPolling)
+
+  pollFootballHoy(redis)
+    .then((hoy) => {
+      if (hoy && hoy.hoy !== null) return setJson(KEYS.futbolHoy, hoy.hoy, ttl)
+    })
+    .catch((err) => console.warn('[ollin][polling] pollFootballHoy idle falló:', err.message))
 }
 
 async function detectLiveTransition(redis, ttl) {
