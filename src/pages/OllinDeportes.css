@@ -1391,3 +1391,13 @@
     align-self: flex-start;
   }
 }
+
+.ollin-banner-text-short,
+.ollin-banner-btn-short { display: none; }
+
+@media (max-width: 600px) {
+  .ollin-banner-text-full,
+  .ollin-banner-btn-full { display: none; }
+  .ollin-banner-text-short,
+  .ollin-banner-btn-short { display: inline; }
+}

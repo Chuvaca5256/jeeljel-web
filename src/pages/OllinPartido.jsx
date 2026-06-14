@@ -10,6 +10,7 @@ import PlayersTab from '../components/ollin/partido/PlayersTab'
 import LineupsTab from '../components/ollin/partido/LineupsTab'
 import H2HTab from '../components/ollin/partido/H2HTab'
 import usePartido from '../hooks/usePartido'
+import ChatPartido from '../components/ollin/partido/ChatPartido'
 import { resolveSport } from '../ollin/partidoMock'
 import mosaico from '../assets/mosaicos/Macuilxochitl.png'
 import './OllinDeportes.css'
@@ -61,6 +62,42 @@ export default function OllinPartido() {
             <>
               <PartidoHeader summary={summary} sport={sport} />
 
+              {/* Banner Ikan Naat IA */}
+              <div style={{
+                background: '#0d1b2a',
+                borderTop: '1px solid rgba(249,115,22,0.3)',
+                borderBottom: '1px solid rgba(249,115,22,0.3)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '0 16px',
+                height: '48px',
+                flexShrink: 0,
+              }}>
+                <span style={{ color: '#fff', fontSize: '0.85rem' }}>
+                  🤖 <span className="ollin-banner-text-full">¿Quieres picks con IA para este partido?</span>
+                  <span className="ollin-banner-text-short">Picks con IA</span>
+                </span>
+                <a
+                  href="https://ikannaat.jeeljel.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    background: '#f97316',
+                    color: '#fff',
+                    fontWeight: 700,
+                    fontSize: '0.8rem',
+                    padding: '6px 14px',
+                    borderRadius: '6px',
+                    textDecoration: 'none',
+                    whiteSpace: 'nowrap',
+                  }}
+                >
+                  <span className="ollin-banner-btn-full">Probar Ikan Naat IA</span>
+                  <span className="ollin-banner-btn-short">Ikan Naat IA</span>
+                </a>
+              </div>
+
               <div className="ollin-partido-tabs" role="tablist" aria-label="Detalle del partido">
                 {PARTIDO_TABS.map((tab) => (
                   <button
@@ -83,25 +120,24 @@ export default function OllinPartido() {
                   ) : (
                     <FootballFieldLive summary={summary} events={data.events} />
                   ))}
-
                 {activeTab === 'stats' && (
                   <StatsTab statistics={data.statistics} sport={sport} summary={summary} />
                 )}
-
                 {activeTab === 'players' && (
                   <PlayersTab
                     players={data.players}
                     sport={sport}
                     summary={summary}
-                    statistics={data.statistics}
                   />
                 )}
-
                 {activeTab === 'lineups' && (
                   <LineupsTab lineups={data.lineups} sport={sport} summary={summary} />
                 )}
-
                 {activeTab === 'h2h' && <H2HTab h2h={data.h2h} />}
+
+                {activeTab === 'live' && summary?.status?.short === 'LIVE' && (
+                  <ChatPartido partidoId={id} summary={summary} />
+                )}
               </div>
             </>
           )}
