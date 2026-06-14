@@ -88,12 +88,7 @@ async function pollFootballProximos(redis) {
 }
 
 async function pollFootballLive(redis) {
-  const liveResult = await apiGet(
-    footballClient,
-    '/fixtures',
-    { live: 'all', timezone: 'America/Mexico_City' },
-    redis
-  )
+  const liveResult = await fetchLiveFixtures(redis)
   const liveFixtures = liveResult.ok
     ? sanitizeFootballFixtures(filterAllowedLeagues(liveResult.data))
     : null
