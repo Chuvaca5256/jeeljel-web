@@ -3,12 +3,12 @@ import { formatMatchDateTime } from '../../ollin/matchUtils'
 import { translateTeamName } from '../../ollin/teamDisplay'
 import TeamDisplay from './TeamDisplay'
 
-export default function MatchCardCompact({ match }) {
+export default function MatchCardCompact({ match, getMatchTime }) {
   if (!match) return null
 
   const showScore = match.homeScore != null && match.awayScore != null
   const scoreText = showScore ? `${match.homeScore} - ${match.awayScore}` : 'vs'
-  const dateTime = formatMatchDateTime(match.date)
+  const dateTime = getMatchTime ? getMatchTime(match._raw ?? match) : formatMatchDateTime(match.date)
 
   return (
     <Link to={`/ollin-deportes/partido/${match.id}`} className="ollin-compact-card">

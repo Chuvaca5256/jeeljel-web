@@ -4,7 +4,7 @@ function SkeletonRow() {
   return <div className="ollin-skeleton ollin-skeleton--compact" aria-hidden />
 }
 
-export default function MatchGroupList({ groups, loading, emptyIcon, emptyLabel }) {
+export default function MatchGroupList({ groups, loading, emptyIcon, emptyLabel, getMatchTime }) {
   if (loading) {
     return (
       <div className="ollin-match-groups">
@@ -38,7 +38,7 @@ export default function MatchGroupList({ groups, loading, emptyIcon, emptyLabel 
           </header>
           <div className="ollin-match-group__list">
             {group.matches.map((match) => (
-              <MatchCardCompact key={match.id} match={match} />
+              <MatchCardCompact key={match.id} match={match} getMatchTime={getMatchTime} />
             ))}
           </div>
         </section>
