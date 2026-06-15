@@ -2155,3 +2155,35 @@
   height: 100%; background: #f97316;
   border-radius: 2px; transition: width 0.5s ease;
 }
+
+/* ── LiveTicker — evento sintético efímero ───────────────── */
+.ollin-ticker {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(15,20,30,0.92);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-left: 3px solid #f97316;
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin: 6px 0 4px;
+  animation: ticker-in 0.3s ease;
+  font-family: Inter, Arial, sans-serif;
+}
+@keyframes ticker-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+.ollin-ticker__icon { font-size: 16px; flex-shrink: 0; }
+.ollin-ticker__label {
+  font-size: 12px; font-weight: 700;
+  color: #fff; text-transform: uppercase; letter-spacing: 0.5px;
+}
+.ollin-ticker__team {
+  font-size: 12px; font-weight: 500;
+  color: rgba(255,255,255,0.6);
+}
+.ollin-ticker__min {
+  font-size: 11px; font-weight: 700;
+  color: #f97316; margin-left: auto;
+}
