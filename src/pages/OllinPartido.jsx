@@ -67,6 +67,10 @@ export default function OllinPartido() {
   const summary = data?.summary
   const sport = resolveSport(summary, data)
 
+  if (data) {
+    console.log('LINEUPS HOME startXI:', JSON.stringify(data?.lineups?.home?.startXI))
+  }
+
   return (
     <OllinLayout pageTitle="Partido — Ollin Deportes">
       <div className="ollin-page">
