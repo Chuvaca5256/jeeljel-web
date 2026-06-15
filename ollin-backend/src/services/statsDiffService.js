@@ -52,6 +52,8 @@ function detectDiffs(prev, next, elapsed, homeTeam, awayTeam) {
     const diffHome = nextHome - prevHome
     const diffAway = nextAway - prevAway
 
+    if (diffHome <= 0 && diffAway <= 0) continue
+
     const base = (team, side) => {
       const ev = {
         type,

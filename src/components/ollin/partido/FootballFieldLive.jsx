@@ -138,6 +138,12 @@ function broadcastLabel(ev) {
   return ev.type || 'Evento'
 }
 
+/** Solo goles y tarjetas van a timeline / puntos en cancha (historial API). */
+function isTimelineEvent(ev) {
+  const kind = getEventKind(ev)
+  return kind === 'goal' || kind === 'yellow' || kind === 'red'
+}
+
 /* Colores por equipo */
 const HOME_COLOR  = '#f97316'  // naranja
 const HOME_BG     = 'rgba(249,115,22,0.18)'
@@ -206,6 +212,41 @@ function shortName(name = '') {
   return parts[parts.length - 1].slice(0, 11)
 }
 
+function BroadcastOverlay({ event }) {
+  if (!event) return null
+  return (
+    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[100]">
+      <div
+        className="animate-pulse flex flex-col items-center gap-2 rounded-2xl border border-white/25 bg-black/55 px-10 py-7 text-center text-white shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md"
+        role="status"
+        aria-live="polite"
+      >
+        {event.elapsed != null && event.elapsed !== '—' && (
+          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
+            {event.elapsed}&apos;
+          </span>
+        )}
+        <span className="animate-bounce text-5xl leading-none" aria-hidden="true">
+          {tickerBroadcastIcon(event)}
+        </span>
+        <span className="text-lg font-bold uppercase tracking-wide">
+          {broadcastLabel(event)}
+        </span>
+        {event.team && (
+          <span className="text-sm font-medium text-white/85">
+            {event.team}
+          </span>
+        )}
+        {event.player && (
+          <span className="text-sm text-white/75">
+            {shortName(event.player)}
+          </span>
+        )}
+      </div>
+    </div>
+  )
+}
+
 /* ══════════════════════════════════════════════════════════
    COMPONENTE
 ══════════════════════════════════════════════════════════ */
@@ -223,6 +264,7 @@ export default function FootballFieldLive({
   const statusShort = summary?.statusShort || ''
   const isLive      = ['1H','2H','HT','ET','BT','P'].includes(statusShort)
   const tickerEvent = useTickerEvents(isLive ? partidoId : null)
+  const [activeEvent, setActiveEvent] = useState(null)
   const [officialBurst, setOfficialBurst] = useState(null)
   const [frequentToast, setFrequentToast] = useState(null)
   const prevEventsLenRef = useRef(events.length)
@@ -241,43 +283,18 @@ export default function FootballFieldLive({
   /* Procesar eventos */
   const [activeDot, setActiveDot] = useState(null)
 
-  const [statEvents, setStatEvents] = useState([])
-
+  /* Pulso sintético del ticker → overlay central (no timeline) */
   useEffect(() => {
-    if (!statistics || !summary?.elapsed) return
-    const elapsed = summary.elapsed
-    const h = statistics.home || {}
-    const a = statistics.away || {}
-    const evs = []
-
-    const add = (key, label, side) => {
-      const val = side === 'home' ? h[key] : a[key]
-      if (val && Number(val) > 0) {
-        evs.push({
-          minute: elapsed,
-          type: key,
-          detail: key,
-          label,
-          player: null,
-          assist: null,
-          teamId: side === 'home' ? summary?.homeTeam?.id : summary?.awayTeam?.id,
-          _synthetic: true,
-          _side: side,
-        })
-      }
+    if (!tickerEvent) {
+      setActiveEvent(null)
+      return undefined
     }
+    if (tickerEvent.isFrequent) return undefined
 
-    add('Shots on Goal',  'TIRO A PUERTA 🥅', 'home')
-    add('Shots on Goal',  'TIRO A PUERTA 🥅', 'away')
-    add('Corner Kicks',   'CORNER 🚩',         'home')
-    add('Corner Kicks',   'CORNER 🚩',         'away')
-    add('Total Shots',    'TIRO TOTAL 👟',      'home')
-    add('Total Shots',    'TIRO TOTAL 👟',      'away')
-    add('Fouls',          'FALTA 🟨',           'home')
-    add('Fouls',          'FALTA 🟨',           'away')
-
-    setStatEvents(evs)
-  }, [statistics, summary?.elapsed]) // eslint-disable-line
+    setActiveEvent(tickerEvent)
+    const t = setTimeout(() => setActiveEvent(null), BROADCAST_DURATION_MS)
+    return () => clearTimeout(t)
+  }, [tickerEvent])
 
   /* Toast sutil — pases y stats frecuentes del ticker */
   useEffect(() => {
@@ -320,10 +337,8 @@ export default function FootballFieldLive({
     return () => clearTimeout(t)
   }, [events, events.length, summary, homeTeam, awayTeam, elapsed])
 
-  const centralBroadcast = officialBurst
-    || (tickerEvent && !tickerEvent.isFrequent ? tickerEvent : null)
-
-  const allEvents = [...events, ...statEvents]
+  /* Timeline + cancha: solo historial API (goles y tarjetas) */
+  const allEvents = events.filter(isTimelineEvent)
   const processed = allEvents.map(ev => {
     const home = isHomeEvent(ev, summary)
     return {
@@ -572,37 +587,8 @@ export default function FootballFieldLive({
           </text>
         </svg>
 
-        {centralBroadcast && (
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
-            <div
-              className="animate-pulse flex flex-col items-center gap-2 rounded-2xl border border-white/25 bg-black/55 px-10 py-7 text-center text-white shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md"
-              role="status"
-              aria-live="polite"
-            >
-              {centralBroadcast.elapsed != null && centralBroadcast.elapsed !== '—' && (
-                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
-                  {centralBroadcast.elapsed}&apos;
-                </span>
-              )}
-              <span className="animate-bounce text-5xl leading-none" aria-hidden="true">
-                {tickerBroadcastIcon(centralBroadcast)}
-              </span>
-              <span className="text-lg font-bold uppercase tracking-wide">
-                {broadcastLabel(centralBroadcast)}
-              </span>
-              {centralBroadcast.team && (
-                <span className="text-sm font-medium text-white/85">
-                  {centralBroadcast.team}
-                </span>
-              )}
-              {centralBroadcast.player && (
-                <span className="text-sm text-white/75">
-                  {shortName(centralBroadcast.player)}
-                </span>
-              )}
-            </div>
-          </div>
-        )}
+        {officialBurst && <BroadcastOverlay event={officialBurst} />}
+        {activeEvent && !officialBurst && <BroadcastOverlay event={activeEvent} />}
 
         {frequentToast && (
           <div
