@@ -212,38 +212,91 @@ function shortName(name = '') {
   return parts[parts.length - 1].slice(0, 11)
 }
 
-function BroadcastOverlay({ event }) {
-  if (!event) return null
+/**
+ * BroadcastOverlay — dos capas que se alternan con fade:
+ *   phase='active' → centrado en cancha, opacidad 100%
+ *   phase='pinned' → esquina inferior-izq, opacidad 30% (Última jugada)
+ */
+function BroadcastOverlay({ event, phase }) {
+  if (!event || !phase) return null
+
+  const isActive = phase === 'active'
+  const isPinned = phase === 'pinned'
+
+  const cardFull = (
+    <>
+      {event.elapsed != null && event.elapsed !== '—' && (
+        <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
+          {event.elapsed}&apos;
+        </span>
+      )}
+      <span className="animate-bounce text-5xl leading-none" aria-hidden="true">
+        {tickerBroadcastIcon(event)}
+      </span>
+      <span className="text-lg font-bold uppercase tracking-wide">
+        {broadcastLabel(event)}
+      </span>
+      {event.team && (
+        <span className="text-sm font-medium text-white/85">{event.team}</span>
+      )}
+      {event.player && (
+        <span className="text-sm text-white/75">{shortName(event.player)}</span>
+      )}
+    </>
+  )
+
+  const cardCompact = (
+    <>
+      <span className="text-2xl leading-none" aria-hidden="true">
+        {tickerBroadcastIcon(event)}
+      </span>
+      <span className="text-[10px] font-bold uppercase tracking-wide">
+        {broadcastLabel(event)}
+      </span>
+      {(event.team || event.player) && (
+        <span className="text-[9px] text-white/70 leading-tight">
+          {event.team || ''}{event.player ? ` · ${shortName(event.player)}` : ''}
+        </span>
+      )}
+    </>
+  )
+
   return (
-    <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-[100]">
+    <>
+      {/* Capa activa — centrada, opacidad completa */}
       <div
-        className="animate-pulse flex flex-col items-center gap-2 rounded-2xl border border-white/25 bg-black/55 px-10 py-7 text-center text-white shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md"
-        role="status"
-        aria-live="polite"
+        className={[
+          'absolute inset-0 flex items-center justify-center pointer-events-none z-[100]',
+          'transition-opacity duration-500 ease-out',
+          isActive ? 'opacity-100' : 'opacity-0',
+        ].join(' ')}
       >
-        {event.elapsed != null && event.elapsed !== '—' && (
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
-            {event.elapsed}&apos;
-          </span>
-        )}
-        <span className="animate-bounce text-5xl leading-none" aria-hidden="true">
-          {tickerBroadcastIcon(event)}
-        </span>
-        <span className="text-lg font-bold uppercase tracking-wide">
-          {broadcastLabel(event)}
-        </span>
-        {event.team && (
-          <span className="text-sm font-medium text-white/85">
-            {event.team}
-          </span>
-        )}
-        {event.player && (
-          <span className="text-sm text-white/75">
-            {shortName(event.player)}
-          </span>
-        )}
+        <div
+          className="animate-pulse flex flex-col items-center gap-2 rounded-2xl border border-white/25 bg-black/55 px-10 py-7 text-center text-white shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md"
+          role="status"
+          aria-live="polite"
+        >
+          {cardFull}
+        </div>
       </div>
-    </div>
+
+      {/* Capa persistente — esquina inferior izquierda, 30% opacidad */}
+      <div
+        className={[
+          'absolute bottom-3 left-3 pointer-events-none z-[90]',
+          'transition-opacity duration-1000 ease-out',
+          isPinned ? 'opacity-30' : 'opacity-0',
+        ].join(' ')}
+        aria-hidden="true"
+      >
+        <div
+          className="flex flex-col items-center gap-1 rounded-xl border border-white/20 bg-black/60 px-3 py-2 text-center text-white backdrop-blur-sm"
+          style={{ transform: 'scale(0.72)', transformOrigin: 'bottom left' }}
+        >
+          {cardCompact}
+        </div>
+      </div>
+    </>
   )
 }
 
@@ -264,10 +317,22 @@ export default function FootballFieldLive({
   const statusShort = summary?.statusShort || ''
   const isLive      = ['1H','2H','HT','ET','BT','P'].includes(statusShort)
   const tickerEvent = useTickerEvents(isLive ? partidoId : null)
-  const [activeEvent, setActiveEvent] = useState(null)
-  const [officialBurst, setOfficialBurst] = useState(null)
+  const [lastEvent, setLastEvent] = useState(null)
+  const [broadcastPhase, setBroadcastPhase] = useState(null) // null | 'active' | 'pinned'
   const [frequentToast, setFrequentToast] = useState(null)
+  const broadcastTimerRef = useRef(null)
   const prevEventsLenRef = useRef(events.length)
+
+  /** Activa el overlay central; tras BROADCAST_DURATION_MS lo baja a 'pinned'. */
+  const triggerBroadcast = (ev) => {
+    setLastEvent(ev)
+    setBroadcastPhase('active')
+    clearTimeout(broadcastTimerRef.current)
+    broadcastTimerRef.current = setTimeout(
+      () => setBroadcastPhase('pinned'),
+      BROADCAST_DURATION_MS,
+    )
+  }
 
   /* Posesión */
   const rawPossH = parseInt(summary?.miniStats?.possessionHome) ||
@@ -283,18 +348,14 @@ export default function FootballFieldLive({
   /* Procesar eventos */
   const [activeDot, setActiveDot] = useState(null)
 
-  /* Pulso sintético del ticker → overlay central (no timeline) */
-  useEffect(() => {
-    if (!tickerEvent) {
-      setActiveEvent(null)
-      return undefined
-    }
-    if (tickerEvent.isFrequent) return undefined
+  /* Limpia el timer al desmontar */
+  useEffect(() => () => clearTimeout(broadcastTimerRef.current), [])
 
-    setActiveEvent(tickerEvent)
-    const t = setTimeout(() => setActiveEvent(null), BROADCAST_DURATION_MS)
-    return () => clearTimeout(t)
-  }, [tickerEvent])
+  /* Pulso sintético del ticker → overlay central */
+  useEffect(() => {
+    if (!tickerEvent || tickerEvent.isFrequent) return
+    triggerBroadcast(tickerEvent)
+  }, [tickerEvent]) // eslint-disable-line
 
   /* Toast sutil — pases y stats frecuentes del ticker */
   useEffect(() => {
@@ -307,22 +368,22 @@ export default function FootballFieldLive({
     return () => clearTimeout(t)
   }, [tickerEvent])
 
-  /* Overlay central — goles y tarjetas oficiales nuevos */
+  /* Overlay central — goles y tarjetas oficiales (prioridad sobre ticker) */
   useEffect(() => {
     if (events.length <= prevEventsLenRef.current) {
       prevEventsLenRef.current = events.length
-      return undefined
+      return
     }
 
     const latest = events[events.length - 1]
     prevEventsLenRef.current = events.length
-    if (!latest) return undefined
+    if (!latest) return
 
     const kind = getEventKind(latest)
-    if (!['goal', 'yellow', 'red'].includes(kind)) return undefined
+    if (!['goal', 'yellow', 'red'].includes(kind)) return
 
     const home = isHomeEvent(latest, summary)
-    setOfficialBurst({
+    triggerBroadcast({
       elapsed: latest.minute ?? elapsed,
       label: broadcastLabel({ ...latest, kind }),
       team: home ? homeTeam : awayTeam,
@@ -332,10 +393,7 @@ export default function FootballFieldLive({
       kind,
       isOfficial: true,
     })
-
-    const t = setTimeout(() => setOfficialBurst(null), BROADCAST_DURATION_MS)
-    return () => clearTimeout(t)
-  }, [events, events.length, summary, homeTeam, awayTeam, elapsed])
+  }, [events, events.length, summary, homeTeam, awayTeam, elapsed]) // eslint-disable-line
 
   /* Timeline + cancha: solo historial API (goles y tarjetas) */
   const allEvents = events.filter(isTimelineEvent)
@@ -587,8 +645,7 @@ export default function FootballFieldLive({
           </text>
         </svg>
 
-        {officialBurst && <BroadcastOverlay event={officialBurst} />}
-        {activeEvent && !officialBurst && <BroadcastOverlay event={activeEvent} />}
+        <BroadcastOverlay event={lastEvent} phase={broadcastPhase} />
 
         {frequentToast && (
           <div
