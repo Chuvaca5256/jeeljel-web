@@ -9,15 +9,26 @@ function FormationPitch({ lineup, side }) {
   const hasGrid = players.some((p) => p.grid)
   if (!hasGrid) {
     return (
-      <ol className="ollin-lineup-list">
-        {players.map((p) => (
-          <li key={p.id || p.number}>
-            <span className="ollin-lineup-list__num">{p.number ?? '—'}</span>
-            <span>{p.name}</span>
-            <span className="ollin-lineup-list__pos">{p.pos}</span>
-          </li>
-        ))}
-      </ol>
+      <div style={{ padding: '0 8px' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+          <thead>
+            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+              <th style={{ textAlign: 'left', padding: '6px 8px', color: '#aaa', fontWeight: 600, width: '40px' }}>#</th>
+              <th style={{ textAlign: 'left', padding: '6px 8px', color: '#aaa', fontWeight: 600 }}>Jugador</th>
+              <th style={{ textAlign: 'right', padding: '6px 8px', color: '#aaa', fontWeight: 600, width: '40px' }}>Pos</th>
+            </tr>
+          </thead>
+          <tbody>
+            {players.map((p, i) => (
+              <tr key={p.id || p.number} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', background: i % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'transparent' }}>
+                <td style={{ padding: '7px 8px', color: '#f0c030', fontWeight: 700 }}>{p.number ?? '—'}</td>
+                <td style={{ padding: '7px 8px', color: '#fff' }}>{p.name}</td>
+                <td style={{ padding: '7px 8px', color: '#aaa', textAlign: 'right' }}>{p.pos}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     )
   }
 

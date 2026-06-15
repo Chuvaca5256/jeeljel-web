@@ -2,6 +2,8 @@ import { useMemo, useState } from 'react'
 
 const FOOTBALL_COLS = [
   { key: 'minutes', label: 'MIN' },
+  { key: 'goals', label: 'Goles' },
+  { key: 'assists', label: 'Asist.' },
   { key: 'rating', label: 'Rating' },
   { key: 'shotsTotal', label: 'Tiros' },
   { key: 'shotsOn', label: 'A puerta' },
@@ -47,6 +49,8 @@ function mapPlayer(p) {
     id: p?.id,
     name: p?.name ?? '—',
     minutes: p?.minutes ?? 0,
+    goals: p?.goals ?? 0,
+    assists: p?.assists ?? 0,
     rating: p?.rating ?? null,
     shotsTotal: p?.shots ?? 0,
     shotsOn: p?.shotsOn ?? 0,
