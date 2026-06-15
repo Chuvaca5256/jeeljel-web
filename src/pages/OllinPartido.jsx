@@ -119,7 +119,7 @@ export default function OllinPartido() {
                     ))}
                     {activeTab === 'stats' && <StatsTab statistics={data.statistics} sport={sport} summary={summary} />}
                     {activeTab === 'players' && <PlayersTab players={data.players} sport={sport} summary={summary} />}
-                    {activeTab === 'lineups' && <LineupsTab lineups={data.lineups} sport={sport} summary={summary} />}
+                    {activeTab === 'lineups' && <LineupsTab lineups={data.lineups} sport={sport} summary={summary} events={data.events} />}
                     {activeTab === 'h2h' && <H2HTab h2h={data.h2h} />}
                   </div>
 
