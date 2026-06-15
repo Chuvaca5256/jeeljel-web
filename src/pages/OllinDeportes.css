@@ -1658,9 +1658,8 @@
 /* ── LAYOUT PARTIDO ── */
 .ollin-partido-layout {
   display: flex;
-  gap: 0;
+  gap: 12px;
   align-items: flex-start;
-  min-height: 600px;
 }
 
 .ollin-partido-main {
@@ -1676,11 +1675,13 @@
   width: 35%;
   position: sticky;
   top: 60px;
-  height: 520px;
-  max-height: 520px;
+  align-self: flex-start;
+  max-height: 650px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  border: 1px solid rgba(249,115,22,0.3);
+  border-radius: 6px;
 }
 
 /* BANNER ROTATIVO */
