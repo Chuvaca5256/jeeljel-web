@@ -58,6 +58,35 @@ const KIND_META = {
   other:     { icon: '⏳', label: 'EVENTO'      },
 }
 
+/* Íconos broadcast — eventos sintéticos del ticker (stats diff) */
+const TICKER_STAT_ICONS = {
+  'Corner Kicks':      '🚩',
+  'Shots on Goal':     '🎯',
+  'Fouls':             '🛑',
+  'Goalkeeper Saves':  '🧤',
+  'Shots off Goal':    '💨',
+  'Total Shots':       '💨',
+}
+
+const TICKER_TYPE_ICONS = {
+  corner:   '🚩',
+  shot:     '🎯',
+  shot_off: '💨',
+  foul:     '🛑',
+}
+
+function tickerBroadcastIcon(ev) {
+  if (!ev) return '📺'
+  if (TICKER_TYPE_ICONS[ev.type]) return TICKER_TYPE_ICONS[ev.type]
+  const label = (ev.label || '').toLowerCase()
+  if (label.includes('esquina') || label.includes('corner')) return TICKER_STAT_ICONS['Corner Kicks']
+  if (label.includes('puerta') || label.includes('on goal')) return TICKER_STAT_ICONS['Shots on Goal']
+  if (label.includes('fuera') || label.includes('off goal')) return TICKER_STAT_ICONS['Shots off Goal']
+  if (label.includes('falta') || label.includes('foul')) return TICKER_STAT_ICONS['Fouls']
+  if (label.includes('parad') || label.includes('save')) return TICKER_STAT_ICONS['Goalkeeper Saves']
+  return ev.icon || '📺'
+}
+
 /* Colores por equipo */
 const HOME_COLOR  = '#f97316'  // naranja
 const HOME_BG     = 'rgba(249,115,22,0.18)'
@@ -143,16 +172,6 @@ export default function FootballFieldLive({
   const statusShort = summary?.statusShort || ''
   const isLive      = ['1H','2H','HT','ET','BT','P'].includes(statusShort)
   const tickerEvent = useTickerEvents(isLive ? partidoId : null)
-  const tickerFieldEvs = tickerEvent ? [{
-    minute: tickerEvent.elapsed,
-    type: tickerEvent.type,
-    detail: tickerEvent.type,
-    label: `${tickerEvent.label} ${tickerEvent.icon}`,
-    player: null,
-    assist: null,
-    teamId: tickerEvent.side === 'home' ? summary?.homeTeam?.id : summary?.awayTeam?.id,
-    _synthetic: true,
-  }] : []
 
   /* Posesión */
   const rawPossH = parseInt(summary?.miniStats?.possessionHome) ||
@@ -206,7 +225,7 @@ export default function FootballFieldLive({
     setStatEvents(evs)
   }, [statistics, summary?.elapsed]) // eslint-disable-line
 
-  const allEvents = [...events, ...statEvents, ...tickerFieldEvs]
+  const allEvents = [...events, ...statEvents]
   const processed = allEvents.map(ev => {
     const home = isHomeEvent(ev, summary)
     return {
@@ -282,7 +301,7 @@ export default function FootballFieldLive({
       </div>
 
       {/* ══ CAMPO SVG ════════════════════════════════════════ */}
-      <div className="ollin-field2__pitch-wrap">
+      <div className="ollin-field2__pitch-wrap relative">
         <svg
           viewBox={`0 0 ${VW} ${VH}`}
           className="ollin-field2__svg"
@@ -454,6 +473,33 @@ export default function FootballFieldLive({
             {awayTeam.slice(0, 14)}
           </text>
         </svg>
+
+        {tickerEvent && (
+          <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
+            <div
+              className="animate-pulse flex flex-col items-center gap-2 rounded-2xl border border-white/25 bg-black/55 px-10 py-7 text-center text-white shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md"
+              role="status"
+              aria-live="polite"
+            >
+              {tickerEvent.elapsed != null && tickerEvent.elapsed !== '—' && (
+                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
+                  {tickerEvent.elapsed}&apos;
+                </span>
+              )}
+              <span className="animate-bounce text-5xl leading-none" aria-hidden="true">
+                {tickerBroadcastIcon(tickerEvent)}
+              </span>
+              <span className="text-lg font-bold uppercase tracking-wide">
+                {tickerEvent.label || tickerEvent.type || 'Evento'}
+              </span>
+              {tickerEvent.team && (
+                <span className="text-sm font-medium text-white/85">
+                  {tickerEvent.team}
+                </span>
+              )}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* ══ BARRA DE POSESIÓN ═══════════════════════════════ */}
