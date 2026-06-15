@@ -155,6 +155,8 @@ export default function FootballFieldLive({
   }
 
   /* Procesar eventos */
+  const [activeDot, setActiveDot] = useState(null)
+
   const processed = events.map(ev => {
     const home = isHomeEvent(ev, summary)
     return {
@@ -171,9 +173,9 @@ export default function FootballFieldLive({
   const timelineEvs = [...processed]
   // En campo: todos los eventos excepto cambios (no tienen ubicación táctica relevante)
   const fieldEvs = processed.filter(ev => ev.kind !== 'subst')
+  const visibleFieldEvs = fieldEvs.filter((ev, i) => ev.kind === 'goal' || i === activeDot)
 
   /* Evento activo ciclado — muestra apellido + equipo del jugador activo */
-  const [activeDot, setActiveDot] = useState(null)
   useEffect(() => {
     if (!fieldEvs.length) { setActiveDot(null); return }
     let i = fieldEvs.length - 1  // empieza por el más reciente
@@ -310,13 +312,13 @@ export default function FootballFieldLive({
             fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="1.8" />
 
           {/* ── EVENTOS EN CAMPO ── */}
-          {fieldEvs.map((ev, i) => {
+          {visibleFieldEvs.map((ev, i) => {
             const meta     = KIND_META[ev.kind]
             const [cpx, cpy] = ev.zone
             // Convertir % de zona interior a coordenadas SVG
             const svgX = 14 + (cpx / 100) * (VW - 28)
             const svgY = 8  + (cpy / 100) * (VH - 16)
-            const isActive = activeDot === i
+            const isActive = ev.kind !== 'goal'
             const isGoal   = ev.kind === 'goal'
             const r        = isGoal ? 12 : 9
 
