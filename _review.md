@@ -1,6 +1,6 @@
-# Review dump — PartidoHeader
+# Review dump — elapsed flow
 
-## `src/components/ollin/partido/PartidoHeader.jsx` (completo)
+## `src/components/ollin/partido/PartidoHeader.jsx` (primeras 60 líneas)
 
 ```jsx
 import { Link } from 'react-router-dom'
@@ -33,35 +33,71 @@ function miniStatLine(summary, sport) {
 export default function PartidoHeader({ summary, sport }) {
   if (!summary) return null
 
-  const showScore = summary.homeScore != null && summary.awayScore != null
-  const score = showScore ? `${summary.homeScore} - ${summary.awayScore}` : 'vs'
+  const isLive = ['1H','2H','ET','BT','P','LIVE'].includes(summary?.statusShort || '')
+  const elapsed = summary?.elapsed ?? null
+  const statusShort = summary?.statusShort || ''
+
+  const matchTime = (() => {
+    if (['FT','AET','PEN'].includes(statusShort)) return 'FT'
+    if (statusShort === 'HT') return 'HT'
+    if (isLive && elapsed != null) return `${elapsed}'`
+    return statusShort || '–'
+  })()
 
   return (
-    <header className="ollin-partido-header">
-      <Link to="/ollin-deportes" className="ollin-partido-back">
-        ← Volver
-      </Link>
+    <div className="ollin-ph">
+      {/* FILA PRINCIPAL: equipo local · marcador+tiempo · equipo visitante */}
+      <div className="ollin-ph__row">
 
-      <p className="ollin-partido-league">{summary.leagueName}</p>
-
-      <div className="ollin-partido-matchup">
-        <div className="ollin-partido-team">
-          <TeamDisplay team={summary.homeTeam} size={40} />
-          <span className="ollin-partido-team__name">{summary.homeTeam.name}</span>
+        {/* LOCAL */}
+        <div className="ollin-ph__team ollin-ph__team--home">
+          <div className="ollin-ph__badge">
+            {summary?.homeTeam?.initials || 'LOC'}
+          </div>
+          <span className="ollin-ph__team-name">{summary?.homeTeam?.name || 'Local'}</span>
         </div>
 
-        <div className="ollin-partido-scorebox">
-          <span className="ollin-partido-scorebox__score">{score}</span>
-          <span className="ollin-partido-scorebox__status">{formatStatus(summary)}</span>
-          <span className="ollin-partido-scorebox__mini">{miniStatLine(summary, sport)}</span>
-        </div>
+        {/* MARCADOR */}
+        <div className="ollin-ph__score-block">
+          <div className="ollin-ph__score">
+            <span>{summary?.homeScore ?? 0}</span>
+            <span className="ollin-ph__score-sep">–</span>
+            <span>{summary?.awayScore ?? 0}</span>
+```
 
-        <div className="ollin-partido-team ollin-partido-team--away">
-          <TeamDisplay team={summary.awayTeam} size={40} />
-          <span className="ollin-partido-team__name">{summary.awayTeam.name}</span>
-        </div>
-      </div>
-    </header>
-  )
-}
+---
+
+## `src/pages/OllinPartido.jsx` (primeras 30 líneas)
+
+```jsx
+import { Link, useParams } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import OllinLayout from '../components/ollin/OllinLayout'
+import PartidoHeader from '../components/ollin/partido/PartidoHeader'
+import PartidoSkeleton from '../components/ollin/partido/PartidoSkeleton'
+import FootballFieldLive from '../components/ollin/partido/FootballFieldLive'
+import BaseballDiamondLive from '../components/ollin/partido/BaseballDiamondLive'
+import StatsTab from '../components/ollin/partido/StatsTab'
+import PlayersTab from '../components/ollin/partido/PlayersTab'
+import LineupsTab from '../components/ollin/partido/LineupsTab'
+import H2HTab from '../components/ollin/partido/H2HTab'
+import usePartido from '../hooks/usePartido'
+import ChatPartido from '../components/ollin/partido/ChatPartido'
+import { resolveSport } from '../ollin/partidoMock'
+import mosaico from '../assets/mosaicos/Macuilxochitl.png'
+import './OllinDeportes.css'
+
+const PARTIDO_TABS = [
+  { id: 'live', label: 'EN VIVO' },
+  { id: 'stats', label: 'ESTADÍSTICAS' },
+  { id: 'players', label: 'JUGADORES' },
+  { id: 'lineups', label: 'ALINEACIONES' },
+  { id: 'h2h', label: 'H2H' },
+]
+
+const BANNER_ITEMS = [
+  {
+    type: 'cta',
+    text: '🤖 ¿Quieres picks con IA para este partido?',
+    btnText: 'Probar Ikan Naat IA',
 ```
