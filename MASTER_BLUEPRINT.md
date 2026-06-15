@@ -89,6 +89,11 @@
 - ✅ **MatchGroupList + MatchCardCompact** — prop `getMatchTime` opcional; fallback a `formatMatchDateTime`
 - ✅ **Backend PM2 limpiado** — proceso id 3 arrancado desde `src/server.js`; crash loop por caché PM2 resuelto
 - ✅ **pasadosService.js operativo en VPS** — 6 partidos FT guardados (2026-06-13, 2026-06-12, 2026-06-11)
+- ✅ **OLLIN-21** — LineupsTab: selector Local/Visitante; portero abajo; banca debajo; iconos eventos
+- ✅ **OLLIN-22** — Label dinámico RESUMEN/EN VIVO/PARTIDO en tab partido
+- ✅ **OLLIN-23** — Timeline sin límite de eventos + scroll grab desktop
+- ✅ **OLLIN-24** — Links Google en jugadores (Goleadores, Banca, Alineaciones, Jugadores)
+- ✅ **OLLIN-25** — Tab TABLA + sub-selector Posiciones/Goleadores
 
 ## 🟡 Ollin Deportes — Fase 2 (post-lanzamiento página principal)
 
@@ -348,12 +353,15 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - [x] **Layout partido** — 2 columnas 65/35; banner rotativo Ikan Naat; chat sidebar altura completa solo tab EN VIVO
 - [x] **ChatPartido placeholder** — input/enviar + validación 50 palabras
 - [x] **useStandings fix** — evitar doble fetch al activar tab POSICIONES
-- [x] **LineupsTab parcial** — SVG campo por `grid`; tabla fallback sin grid
-- [ ] **ALINEACIONES rediseño** — campo horizontal estilo Sofascore con ambos equipos + suplentes + iconos gol/sustitución
+- [x] **OLLIN-21** — LineupsTab: selector Local/Visitante; portero abajo; banca debajo; iconos eventos
+- [x] **OLLIN-22** — Label dinámico RESUMEN/EN VIVO/PARTIDO en tab partido
+- [x] **OLLIN-23** — Timeline sin límite de eventos + scroll grab desktop
+- [x] **OLLIN-24** — Links Google en jugadores (Goleadores, Banca, Alineaciones, Jugadores)
+- [x] **OLLIN-25** — Tab TABLA + sub-selector Posiciones/Goleadores
 - [ ] **INFRA-4** — `pasadosService.js` en repo pero no llega al VPS con `git pull` — investigar con Cursor, NO adivinar
 - [ ] **INFRA-6** — Warm-up Redis al arrancar PM2 (PASADOS, HOY, PRÓXIMOS) sin esperar ciclo IDLE 3 min
 - [ ] **OLLIN-19** — Goles en campo: `formatEventLabel` no detecta `Normal Goal`, `Own Goal`, `Penalty` en `detail`
-- [ ] **CHAT-1** 🔴🔴 — Conectar `ChatPartido.jsx` a backend chat real
+- [ ] **CHAT-1** 🔴🔴 — Conectar `ChatPartido.jsx` a backend chat real — **primer pendiente de mañana**
 - [ ] **OLLIN-20** — Navbar active link bug
 - [ ] Página Misión con contenido real
 - [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:` hola + proyectos)
