@@ -1784,6 +1784,66 @@
   text-decoration: none;
 }
 
+.ollin-chat-partido__modal-inner {
+  position: relative;
+  background: #1a0d0a;
+  border: 1px solid rgba(61,217,168,0.25);
+  border-radius: 12px;
+  padding: 2rem 1.5rem 1.5rem;
+  text-align: center;
+  min-width: 280px;
+  max-width: 340px;
+}
+
+.ollin-chat-partido__modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.4);
+  font-size: 16px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.ollin-chat-partido__modal-close:hover {
+  color: rgba(255,255,255,0.8);
+}
+
+.ollin-chat-partido__modal-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  margin-top: 10px;
+  text-align: center;
+}
+
+.ollin-chat-partido__modal-btn--primary {
+  background: rgba(61,217,168,0.12);
+  border: 1px solid rgba(61,217,168,0.4);
+  color: #6ee7b7;
+}
+
+.ollin-chat-partido__modal-btn--primary:hover {
+  background: rgba(61,217,168,0.2);
+}
+
+.ollin-chat-partido__modal-btn--secondary {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.6);
+}
+
+.ollin-chat-partido__modal-btn--secondary:hover {
+  border-color: rgba(255,255,255,0.3);
+  color: rgba(255,255,255,0.9);
+}
+
 /* BANNER ROTATIVO */
 .ollin-banner-rotativo {
   background: #0d1b2a;

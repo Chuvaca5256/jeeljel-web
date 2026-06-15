@@ -32,16 +32,27 @@ export default function ChatPartido({ partidoId, summary }) {
 
   useEffect(() => {
     let mounted = true
+    supabase.auth.getSession().then(({ data }) => {
+      if (mounted) setUser(data.session?.user ?? null)
+    })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (mounted) setUser(session?.user ?? null)
+    })
+    return () => {
+      mounted = false
+      subscription.unsubscribe()
+    }
+  }, [])
+
+  useEffect(() => {
+    let mounted = true
     let socket
     let flushInterval
 
     async function init() {
-      const { data } = await supabase.auth.getSession()
-      const sessionUser = data.session?.user ?? null
-      if (!mounted) return
-      setUser(sessionUser)
-
       try {
+        const { data } = await supabase.auth.getSession()
+        const sessionUser = data.session?.user ?? null
         const q = sessionUser?.id ? `?userId=${encodeURIComponent(sessionUser.id)}` : ''
         const statusRes = await fetch(`/api/ollin/chat/status${q}`)
         if (statusRes.ok) {
@@ -192,10 +203,25 @@ export default function ChatPartido({ partidoId, summary }) {
 
       {showModal && (
         <div className="ollin-chat-partido__modal" onClick={() => setShowModal(false)}>
-          <div onClick={(e) => e.stopPropagation()}>
-            <p>Regístrate para participar en el chat en vivo</p>
-            <a href={`/registro?origen=ollin_deportes&return=/ollin-deportes/partido/${partidoId}`}>Crear cuenta gratis →</a>
-            <button type="button" onClick={() => setShowModal(false)}>✕</button>
+          <div className="ollin-chat-partido__modal-inner" onClick={(e) => e.stopPropagation()}>
+            <button
+              type="button"
+              className="ollin-chat-partido__modal-close"
+              onClick={() => setShowModal(false)}
+            >✕</button>
+            <p>Únete al chat en vivo</p>
+            <a
+              href={`/registro?origen=ollin_deportes&return=/ollin-deportes/partido/${partidoId}`}
+              className="ollin-chat-partido__modal-btn ollin-chat-partido__modal-btn--primary"
+            >
+              Crear cuenta gratis
+            </a>
+            <a
+              href={`/login?return=/ollin-deportes/partido/${partidoId}`}
+              className="ollin-chat-partido__modal-btn ollin-chat-partido__modal-btn--secondary"
+            >
+              Ya tengo cuenta — Iniciar sesión
+            </a>
           </div>
         </div>
       )}

@@ -1,6 +1,9 @@
 // NAVBAR — logo estático en src/assets/Logo_JeelJel_sin_fondo.png
+import { useState, useEffect } from 'react'
 import { Link, NavLink } from 'react-router-dom'
+import { supabase } from '../lib/supabaseClient'
 import logoStatic from '../assets/Logo_JeelJel_sin_fondo.png'
+import './Navbar.css'
 
 const NAV_LINKS = [
   { label: 'APPS', to: '/apps' },
@@ -10,6 +13,23 @@ const NAV_LINKS = [
 ]
 
 export default function Navbar() {
+  const [userSession, setUserSession] = useState(null)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setUserSession(data.session)
+    })
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_e, session) => {
+      setUserSession(session)
+    })
+    return () => subscription.unsubscribe()
+  }, [])
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    window.location.href = '/'
+  }
+
   return (
     <nav
       className="sticky top-0 left-0 right-0 flex items-center justify-between px-6 md:px-12 py-4"
@@ -49,6 +69,19 @@ export default function Navbar() {
             {label}
           </NavLink>
         ))}
+        {userSession ? (
+          <button
+            type="button"
+            onClick={handleSignOut}
+            className="navbar-signout-btn"
+          >
+            Cerrar sesión
+          </button>
+        ) : (
+          <a href="/login" className="navbar-login-link">
+            Iniciar sesión
+          </a>
+        )}
       </div>
     </nav>
   )
