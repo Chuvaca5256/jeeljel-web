@@ -1,5 +1,5 @@
 # JEELJEL MASTER — Documento Maestro del Ecosistema
-## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.9 — fin sesión 14/06/2026
+## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v2.0 — fin sesión 14/06/2026
 
 > **Este documento reemplaza y unifica:** `JeelJel_Coins_Ecosistema_Master_v13.md`, `JeelJel_Coins_Ecosistema_Master.md` (alias) y `CURSOR_OllinDeportes_v1.md`. Es la fuente de verdad única sobre economía (JC), identidad unificada (SSO), arquitectura de Ollin Deportes, decisiones permanentes del CEO y pendientes técnicos. Los documentos `SNAPSHOT.md` (estado actual) y `MASTER_BLUEPRINT.md` (hoja de ruta) se mantienen separados.
 
@@ -758,18 +758,27 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **INFRA-1** | — | Llave SSH regenerada en VPS + secret `VPS_SSH_KEY` actualizado en GitHub | Infra | ✅ Completado |
 | **INFRA-2** | — | Deploy frontend via webhook + Telegram — PM2 `webhook-deploy` puerto 9000; bot `@Jeeljel_deploy_bot` | Infra | ✅ Completado (14/06/2026) |
 | **BACKEND-1** | 🔴 | `pollFootballProximos` no se llama al arrancar ni en modo LIVE — Redis queda vacío si proceso arranca en LIVE | Ollin Deportes | ⏳ Pendiente |
-| **INFRA-3** | 🔴 | VPS ↔ GitHub desincronizados — `pasadosService.js` solo en VPS; `git pull --rebase` obligatorio | Infra | ⏳ Pendiente |
-| **OLLIN-17** | 🔴 | `sanitizeFootballFixture is not a function` en página partido individual | Ollin Deportes | ⏳ Pendiente |
-| **OLLIN-18** | 🟡 | Standings post-partido — trigger inmediato de `pollStandingsBatch` al detectar transición live→idle | Ollin Deportes | ⏳ Pendiente |
+| **CANCHA-3D** | — | `FootballFieldLive.jsx` SVG top-down v3 — sin PixiJS, eventos por equipo, posesión prominente | Ollin Deportes | ✅ Completado (14/06/2026) |
+| **OLLIN-17** | — | Export `sanitizeFootballFixture` + `sanitizeBaseballGame` en `sanitize.js` | Ollin Deportes | ✅ Completado (14/06/2026) |
+| **OLLIN-18** | — | `pollFootballPasados()` en transición live→idle en `polling.js` | Ollin Deportes | ✅ Completado (14/06/2026) |
+| **INFRA-4** | 🔴 | `pasadosService.js` en repo pero no llega al VPS con `git pull` — investigar con Cursor, NO adivinar en terminal | Infra | ⏳ Pendiente |
+| **INFRA-5** | 🔴 | Redis `ollin:polling:paused` persiste entre reinicios PM2 y bloquea polling — auto-limpiar al arrancar | Infra | ⏳ Pendiente |
+| **INFRA-6** | 🟡 | Cada restart PM2 vacía Redis — warm-up al arrancar sin depender de ciclo IDLE 3 min | Infra | ⏳ Pendiente |
+| **OLLIN-19** | 🟡 | Goles no en campo — `formatEventLabel` no detecta `Normal Goal`, `Own Goal`, `Penalty` en `detail` API-Sports | Ollin Deportes | ⏳ Pendiente |
 | **OLLIN-20** | 🟡 | Navbar active link bug — todos los links amarillos al navegar | Ollin Deportes | ⏳ Pendiente |
 | **CHAT-1** | 🟡 | Chat UI frontend — conectar `ChatPartido.jsx` a `POST /chat/messages` + `GET /chat/status` | Ollin Deportes | ⏳ Pendiente |
 | **SEC** | 🟡 | Re-habilitar RLS en tabla `users` post-torneo | Infra | ⏳ Post-torneo |
-| **CANCHA-3D** | 🔴 | Reemplazar `FootballFieldLive.jsx` con cancha 3D PixiJS — perspectiva isométrica, gradas, balón animado, jugadores con nombre+número, eventos flotantes, timeline, posesión animada | Ollin Deportes | ⏳ Próxima sesión |
+
+## REGLA DE TRABAJO — NO ADIVINAR
+
+Antes de ejecutar cualquier comando en el VPS o proponer un fix, Claude debe primero buscar en Cursor, en el código del repo, o pedir al Licenciado que consulte con la herramienta más eficiente disponible. Nunca ejecutar comandos a ciegas en Redis o PM2 sin entender primero la causa raíz desde el código.
+
+**Reset créditos API-Sports:** 00:00 UTC = 18:00 CDT (hora Ciudad de México)
 
 ---
 
-*Documento generado: 10/06/2026 | Versión: **v1.8** (14/06 — webhook deploy + notificaciones Telegram `@Jeeljel_deploy_bot`) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
+*Documento generado: 10/06/2026 | Versión: **v2.0** (14/06 — CANCHA v3, OLLIN-17/18, INFRA-4/5/6) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
 *Unifica: JeelJel_Coins_Ecosistema_Master_v13.md + CURSOR_OllinDeportes_v1.md + alias Coins Master*
 
-*Documentos hermanos: SNAPSHOT.md (estado actual — v12 Telegram deploy) · MASTER_BLUEPRINT.md (hoja de ruta)*
+*Documentos hermanos: SNAPSHOT.md (estado actual — v15 fin sesión 14/06) · MASTER_BLUEPRINT.md (hoja de ruta)*
 *Próxima revisión: 01/07/2026 (TC mensual + post-torneo)*

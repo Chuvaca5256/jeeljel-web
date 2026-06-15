@@ -337,11 +337,16 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - [x] **PlayersTab reescrito** — stats completas, rating badge, ordenamiento por columna
 - [x] **ChatPartido placeholder** — aparece solo en tab EN VIVO con partido LIVE
 - [x] **Banner Ikan Naat IA** — en página partido individual, responsive móvil/desktop
+- [x] **CANCHA-3D** — `FootballFieldLive.jsx` SVG top-down v3 (sin PixiJS, eventos por equipo, posesión prominente)
+- [x] **OLLIN-17** — export `sanitizeFootballFixture` + `sanitizeBaseballGame` en `sanitize.js`
+- [x] **OLLIN-18** — `pollFootballPasados()` en transición live→idle en `polling.js`
+- [ ] **INFRA-4** — `pasadosService.js` en repo pero no llega al VPS con `git pull` — investigar con Cursor, NO adivinar
+- [ ] **INFRA-5** — Redis `ollin:polling:paused` persiste entre reinicios PM2 — auto-limpiar al arrancar
+- [ ] **INFRA-6** — Warm-up Redis al arrancar PM2 (PASADOS, HOY, PRÓXIMOS) sin esperar ciclo IDLE 3 min
 - [ ] **BACKEND-1** — `pollFootballProximos` llamar al arrancar en `polling.js` (igual que `pollFootballHoy`)
-- [ ] **OLLIN-17** — `sanitizeFootballFixture is not a function` en página partido individual
+- [ ] **OLLIN-19** — Goles en campo: `formatEventLabel` no detecta `Normal Goal`, `Own Goal`, `Penalty` en `detail`
 - [ ] **CHAT-1** — Conectar `ChatPartido.jsx` a backend chat real
 - [ ] **OLLIN-20** — Navbar active link bug
-- [ ] **CANCHA-3D** — Reemplazar `FootballFieldLive.jsx` con cancha 3D PixiJS estilo Playdoit (perspectiva isométrica, gradas, balón animado, jugadores con nombre/número, eventos flotantes, timeline, posesión animada)
 - [ ] Página Misión con contenido real
 - [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:` hola + proyectos)
 - [x] Footer global: `proyectos@jeeljel.com` + botón Contáctanos → mailto proyectos
@@ -354,3 +359,9 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
   - direccion@jeeljel.com — contacto personal y negocios de la empresa
   - equipo@jeeljel.com — comunicación interna y colaboradores
 - [ ] Migrar correos a otro proveedor cuando expire plan Hostinger
+
+## REGLA DE TRABAJO — NO ADIVINAR
+
+Antes de ejecutar cualquier comando en el VPS o proponer un fix, Claude debe primero buscar en Cursor, en el código del repo, o pedir al Licenciado que consulte con la herramienta más eficiente disponible. Nunca ejecutar comandos a ciegas en Redis o PM2 sin entender primero la causa raíz desde el código.
+
+**Reset créditos API-Sports:** 00:00 UTC = 18:00 CDT (hora Ciudad de México)
