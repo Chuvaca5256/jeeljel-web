@@ -1,5 +1,5 @@
 # SNAPSHOT — JeelJel Kaanab
-**Versión:** v24 — 15/06/2026 (cierre final)
+**Versión:** v25 — 15/06/2026 (LiveTicker + header partido)
 **Autor:** Carlos García Anaya + Claude
 
 ## ESTADO ACTUAL DEL SISTEMA
@@ -19,7 +19,12 @@
 - **TABLA** ✅ — tab renombrada desde POSICIONES; sub-selector Posiciones/Goleadores; deduplicación por `team.id` en `standingsService.js`; fix doble fetch en `useStandings.js`
 
 ### Archivos clave — estado final
-- `src/components/ollin/partido/FootballFieldLive.jsx` — OLLIN-19 ✅ `getEventKind` expandido + KIND_META completo con iconos para todos los tipos; timeline completa sin límite de 10 eventos; scroll visible con barra delgada y cursor grab; `eventZone` con jitter mejorado para goles
+- `src/components/ollin/partido/FootballFieldLive.jsx` — OLLIN-19 ✅ `getEventKind` expandido + KIND_META completo con iconos para todos los tipos; timeline completa sin límite de 10 eventos; scroll visible con barra delgada y cursor grab; `eventZone` con jitter mejorado para goles; LiveTicker integrado vía `useTickerEvents` + `partidoId` (commits `4dcc020`, `86b5ebb`); elapsed estático desde `summary` (sin timer local, commit `82afb84`)
+- `src/components/ollin/partido/PartidoHeader.jsx` — header horizontal compacto ollin-ph; timer elapsed local con sync visibilitychange (commits `65df7f3`, `c61e602`, `9a1f6e9`)
+- `src/hooks/usePartido.js` — socket `ollin:partido:{id}` aplica eventos directo sin re-fetch (commit `a112753`)
+- `src/hooks/useTickerEvents.js` — hook socket `ollin:ticker:{id}`; eventos sintéticos efímeros (commit `43c2625`)
+- `src/components/ollin/partido/LiveTicker.jsx` — banner efímero 8s por evento sintético (commit `2eb8fd3`)
+- `ollin-backend/src/services/statsDiffService.js` — detector de diffs de estadísticas entre snapshots consecutivos (commit `9cfedca`)
 - `src/components/ollin/tabs/TabEnVivo.jsx` — `getMatchTime`, `EnVivoMatchCard`, `EnVivoMatchGroupList`
 - `src/components/ollin/tabs/TabHoy.jsx` — import unificado `matchUtils`; normalización en extract
 - `src/components/ollin/tabs/TabProximos.jsx` — normalización con `normalizeFootballFixture`
@@ -37,7 +42,7 @@
 - `src/hooks/useStandings.js` — refs + fix doble fetch al activar tab POSICIONES
 - `ollin-backend/src/server.js` — al arrancar borra `ollin:polling:paused` + llave `requestsKey()` (INFRA-5 ✅)
 - `ollin-backend/src/lib/sanitize.js` — exporta `sanitizeFootballFixture` y `sanitizeBaseballGame` (OLLIN-17 ✅)
-- `ollin-backend/src/services/polling.js` — warm-up `pollFootballProximos` + `pollFootballPasados` al arrancar (BACKEND-1 ✅); live→idle refresh pasados (OLLIN-18 ✅)
+- `ollin-backend/src/services/polling.js` — warm-up `pollFootballProximos` + `pollFootballPasados` al arrancar (BACKEND-1 ✅); live→idle refresh pasados (OLLIN-18 ✅); emisión `ollin:ticker:{id}` vía `statsDiffService` en `pollLiveFixtureEvents` (commit `e7506df`)
 - `ollin-backend/src/services/partidoService.js` — OLLIN-19 ✅ `formatEventLabel` expandido: gol, propia, penal, tarjetas, corner, tiro, falta, tiro libre, banda, lesión, VAR, hidratación, detenido, tiempo extra; `parseFootballPlayers` con rating, pases, duelos, faltas, tarjetas
 - `ollin-backend/src/services/standingsService.js` — deduplica filas por `team.id` dentro de cada grupo
 - `ollin-backend/src/services/pasadosService.js` — `pollFootballPasados(redisIn)` recibe redis; ✅ sincronizado VPS con `origin/main` (INFRA-4 ✅)
@@ -154,6 +159,10 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 - **SESION-1** ✅ Completado (15/06/2026) — `onAuthStateChange` ChatPartido + cerrar sesión navbar, commit `20c000f`
 - **OLLIN-CHAT-BACKEND** ✅ Completado (15/06/2026) — tablas Supabase + fix `ws` Node 20, commit `152c4a9`
 - **OLLIN-20** ✅ Completado (15/06/2026) — navbar active link corregido
+- **LiveTicker sintético** ✅ Completado (15/06/2026) — `statsDiffService` + `ollin:ticker:{id}` backend; `useTickerEvents` + `LiveTicker` frontend; CSS `.ollin-ticker` (commits `9cfedca`–`39eb4db`)
+- **Header partido compacto** ✅ Completado (15/06/2026) — `PartidoHeader` layout `ollin-ph` + CSS (commits `65df7f3`, `c61e602`)
+- **Reloj partido visibilitychange** ✅ Completado (15/06/2026) — sync elapsed al volver a pestaña (commit `9a1f6e9`)
+- **usePartido socket events** ✅ Completado (15/06/2026) — eventos en vivo sin re-fetch HTTP (commit `a112753`)
 
 ### Completados sesión vespertina (referencia)
 - **OLLIN-21** ✅ Completado (14/06/2026) — LineupsTab rediseño alineaciones

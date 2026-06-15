@@ -97,6 +97,9 @@
 - ✅ **CHAT-1** (15/06/2026) — ChatPartido conectado a backend real; socket, batch, modal SSO, pick pinned
 - ✅ **OLLIN-19** (15/06/2026) — eventos completos en campo y backend; KIND_META con todos los iconos
 - ✅ **OLLIN-20** (15/06/2026) — navbar active link corregido con NavLink style función
+- ✅ **LiveTicker sintético por diff de estadísticas** — `ollin:ticker:{id}` ✅ 15/06/2026
+- ✅ **Header partido horizontal compacto** ✅ 15/06/2026
+- ✅ **Reloj partido sincronizado con visibilitychange** ✅ 15/06/2026
 
 ## 🟡 Ollin Deportes — Fase 2 (post-lanzamiento página principal)
 
