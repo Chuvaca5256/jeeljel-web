@@ -170,8 +170,10 @@
 - ✅ **SSO-5** — Registro end-to-end confirmado en producción (commit `e9223fc`); insert manual eliminado; trigger maneja perfil server-side
 - ✅ **CHAT-MODAL** — Modal chat partido enlaza con contexto `/registro?origen=ollin_deportes&return=/ollin-deportes/partido/${id}` (commit `96e4cab`)
 - ✅ **PANTALLA-ÉXITO** — UI bienvenida con rejilla ecosistema + botón condicional «Volver al partido» (commit `96e4cab`)
-- 🟡 **SSO-7** — `origenParam`/`returnTo` capturados en `Registro.jsx`; falta pasar `origen_registro: origenParam` en `options.data` del signUp
-- ✅ Modal registro en chat Ollin Deportes — input bloqueado + modal CTA con contexto de partido
+- ✅ **SESION-1** — `onAuthStateChange` en ChatPartido; Navbar con cerrar/iniciar sesión (commit `20c000f`)
+- ✅ **OLLIN-CHAT-BACKEND** — Tablas `ollin_chat`/`ollin_chat_moderacion` en Supabase; fix `ws` transport (commit `152c4a9`); mensajes persisten en DB
+- 🔴 **CHAT-WS-1** — Mensajes en Supabase pero UI invisible: Nginx WebSocket + carga histórica pendiente
+- 🟡 **SSO-7** — `origenParam` capturado en `Registro.jsx`; falta pasar en `options.data` del signUp
 - ⏳ Migración auth Ikan Naat → `jeeljel_users` post-torneo
 
 **Reglas críticas:**
@@ -205,6 +207,9 @@
 | **CHAT-UI-1** | — | Modal `ChatPartido.jsx`: X separada del enlace; botón «Iniciar sesión» | ✅ Completado (15/06/2026) — commit `20c000f` |
 | **SESION-1** | — | Persistencia sesión + `onAuthStateChange` + botón «Cerrar sesión» en navbar | ✅ Completado (15/06/2026) — commit `20c000f` |
 | **CHAT-UI-2** | 🟢 | Modal chat no se cierra al detectar sesión — agregar `setShowModal(false)` en `onAuthStateChange` | ⏳ Pendiente — baja prioridad |
+| **CHAT-UI-3** | 🟢 | `userMessage` spam duplicado usa texto genérico de moderación — corregir en `chatService.js` | ⏳ Pendiente — baja prioridad |
+| **CHAT-WS-1** | 🔴 | Mensajes en Supabase OK pero UI vacía: Nginx proxy WebSocket `/socket.io/` + GET histórico al montar chat | ⏳ Pendiente — crítico |
+| **OLLIN-CHAT-BACKEND** | — | Tablas chat Supabase + fix `ws` Node 20 en `supabaseClient.js` | ✅ Completado (15/06/2026) — commit `152c4a9` |
 | **INFRA-3** | 🔴 | VPS ↔ GitHub desincronizados — `pasadosService.js` solo en VPS; usar siempre `git pull --rebase`; verificar código real antes de cambios | ⏳ Pendiente |
 | **INFRA-4** | — | GitHub Actions deploy frontend | Infra | ❌ Desactivado — reemplazado por webhook (`webhook-deploy`, puerto 9000) |
 
@@ -380,22 +385,24 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - [x] **PANTALLA-ÉXITO** (15/06/2026) — rejilla ecosistema + volver al partido, commit `96e4cab`
 - [x] **CHAT-UI-1** (15/06/2026) — modal chat rediseñado (X separada, login + registro), commit `20c000f`
 - [x] **SESION-1** (15/06/2026) — `onAuthStateChange` ChatPartido + cerrar sesión navbar, commit `20c000f`
+- [x] **OLLIN-CHAT-BACKEND** (15/06/2026) — tablas Supabase + fix `ws` Node 20, commit `152c4a9`
 
 ## Pendientes activos — orden pre-lanzamiento
 
-1. **SMTP-1** 🔴 — Resend SMTP en Supabase (sin esto no hay registro en volumen)
-2. **SSO-6** 🔴 — RLS en `public.users` (sin esto datos personales sin candado)
-3. **SSO-7** 🟡 — `origenParam` en `options.data` del signUp (funnel torneo)
-4. **SEC-2** 🟡 — Optimizar políticas RLS (post-lanzamiento)
-5. **SEC-3** 🟡 — Checklist seguridad (post-lanzamiento)
-6. **CHAT-UI-2** 🟢 — Cerrar modal chat al detectar sesión activa
+1. **SMTP-1** 🔴 — Resend SMTP (sin esto no hay registro en volumen)
+2. **SSO-6** 🔴 — RLS `public.users` (sin esto datos personales sin candado)
+3. **CHAT-WS-1** 🔴 — Nginx WebSocket + carga histórica (sin esto chat invisible)
+4. **SSO-7** 🟡 — `origenParam` en signUp (funnel torneo)
+5. **CHAT-UI-2** / **CHAT-UI-3** 🟢 — pulido UX modal y mensaje spam duplicado
+6. **SEC-2** 🟡 — optimización políticas RLS (post-lanzamiento)
 
 - [ ] **SMTP-1** — Conectar Resend SMTP en Supabase Auth
 - [ ] **SSO-6** — Re-habilitar RLS en `public.users` (leer `pg_policies` primero)
+- [ ] **CHAT-WS-1** — Proxy WebSocket Nginx + GET mensajes históricos en ChatPartido
 - [ ] **SSO-7** — Pasar `origen_registro: origenParam` en signUp
-- [ ] **SEC-2** — Optimizar políticas RLS (*Auth RLS Initialization Plan*) post-lanzamiento
-- [ ] **SEC-3** — Checklist seguridad pre-lanzamiento con CEO post-lanzamiento
 - [ ] **CHAT-UI-2** — `if (session) setShowModal(false)` en `onAuthStateChange` de ChatPartido
+- [ ] **CHAT-UI-3** — Mensaje específico para spam duplicado en `chatService.js`
+- [ ] **SEC-2** — Optimizar políticas RLS (*Auth RLS Initialization Plan*) post-lanzamiento
 - [ ] Página Misión con contenido real
 - [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:` hola + proyectos)
 - [x] Footer global: `proyectos@jeeljel.com` + botón Contáctanos → mailto proyectos

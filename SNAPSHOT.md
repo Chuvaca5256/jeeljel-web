@@ -1,5 +1,5 @@
 # SNAPSHOT — JeelJel Kaanab
-**Versión:** v23 — 15/06/2026
+**Versión:** v24 — 15/06/2026 (cierre final)
 **Autor:** Carlos García Anaya + Claude
 
 ## ESTADO ACTUAL DEL SISTEMA
@@ -27,9 +27,12 @@
 - `src/components/ollin/partido/PlayersTab.jsx` — formato plano backend (`p.name`); selector Local/Visitante; columnas Goles y Asistencias; rating, pases, duelos, tarjetas; links Google en nombres de jugadores
 - `src/components/ollin/partido/LineupsTab.jsx` — selector Local/Visitante; campo SVG corregido (portero abajo, delanteros arriba); banca debajo del campo; iconos de eventos sobre jugadores (⚽🟨🟥🔴🟢🅰️); links Google en tabla fallback y banca
 - `src/components/ollin/StandingsView.jsx` — tab renombrada a TABLA; sub-selector Posiciones/Goleadores; links Google en nombres de jugadores goleadores
-- `src/components/ollin/partido/ChatPartido.jsx` — CHAT-1 ✅ + CHAT-MODAL ✅ enlace con contexto `origen=ollin_deportes&return=/ollin-deportes/partido/${id}` (commit `96e4cab`); socket, batch 500ms, 200 msgs máx, cooldown 4s, pick pinned Telaraña
-- `src/pages/Registro.jsx` — SSO-5 ✅ registro end-to-end; PANTALLA-ÉXITO ✅ rejilla ecosistema + botón condicional «Volver al partido»; `origenParam`/`returnTo` desde `useSearchParams` (commit `96e4cab`)
-- `src/components/Navbar.jsx` — OLLIN-20 ✅ NavLink con `style` función `isActive`, sin handlers mouse
+- `src/components/ollin/partido/ChatPartido.jsx` — CHAT-1 ✅ + modal rediseñado (X, login, registro con `return`/`origen`) + `onAuthStateChange` (commits `96e4cab`, `20c000f`); socket batch 500ms; **UI en vivo pendiente CHAT-WS-1**
+- `src/components/Navbar.jsx` + `Navbar.css` — SESION-1 ✅ cerrar sesión / iniciar sesión según sesión (commit `20c000f`)
+- `src/pages/Registro.jsx` — SSO-5 ✅ + PANTALLA-ÉXITO ✅ (commits `e9223fc`, `96e4cab`)
+- `ollin-backend/src/services/supabaseClient.js` — OLLIN-CHAT-BACKEND ✅ `ws` como transport Realtime Node 20 (commit `152c4a9`)
+- `ollin-backend/src/services/chatService.js` — pipeline moderación → Supabase `ollin_chat`; mensajes persisten con `user_id`, `display_name`, `match_id`, `ip_address`
+- `ollin-backend/docs/chat-schema.sql` — tablas `ollin_chat` + `ollin_chat_moderacion` en ikan-nat-prod; RLS + lectura pública chat
 - `src/pages/OllinPartido.jsx` — layout 2 columnas 65/35; chat sidebar solo tab EN VIVO; banner rotativo Ikan Naat; label dinámico tab live: RESUMEN (FT/AET/PEN), EN VIVO (1H/2H/ET), PARTIDO (NS/HT)
 - `src/hooks/useStandings.js` — refs + fix doble fetch al activar tab POSICIONES
 - `ollin-backend/src/server.js` — al arrancar borra `ollin:polling:paused` + llave `requestsKey()` (INFRA-5 ✅)
@@ -113,29 +116,31 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 - **INFRA-4** ✅ RESUELTO — Diagnóstico vía SSH confirmó que `pasadosService.js` en el VPS coincide con `origin/main` (MD5 `1a6f2974cd17043211b8e81cae893979`) y la rama está `up to date`. La desincronización reportada en SNAPSHOT v11 ya no aplica. Se eliminaron dos archivos vacíos basura (`0` y `1`, 0 bytes) de la raíz del repo en el VPS; `git status` quedó `working tree clean`.
 - **INFRA-6** ✅ RESUELTO — Diagnóstico confirmó que Redis NO se vacía con restart de PM2; el problema real era el TTL de caché corto (`cacheTtlMs = pollingIntervalMs * 2` = 6 min). Se desacopló el TTL del intervalo de polling: ahora `cacheTtlMs` lee la nueva env `CACHE_TTL_MS` con default fijo de 1h (3,600,000 ms). Verificado en VPS: TTL de `hoy`/`proximos` pasó de ~322s a ~3,590s. Sin consumo extra de API (el TTL es independiente del polling). Commit `7cd9348`.
 
-### SSO, registro y chat (cierre sesión)
-- **SSO-5** ✅ RESUELTO — Causa raíz identificada y corregida. Insert manual duplicado en `Registro.jsx` eliminado (commit `e9223fc`). Trigger `handle_new_user` en Supabase maneja perfil server-side con `ON CONFLICT (id) DO NOTHING`. Registro end-to-end confirmado funcionando en producción.
-- **SSO-7** 🟡 PARCIAL — `origenParam` y `returnTo` capturados desde `useSearchParams` en `Registro.jsx` (commit `96e4cab`). Falta pasar `origenParam` en `options.data` del signUp — sigue pendiente como SSO-7.
-- **CHAT-MODAL** ✅ — `ChatPartido.jsx`: enlace del modal incluye contexto completo `/registro?origen=ollin_deportes&return=/ollin-deportes/partido/${partidoId}` (commit `96e4cab`).
-- **PANTALLA-ÉXITO** ✅ — Nueva UI de bienvenida con rejilla del ecosistema: botón Ikan Naat (fénix difuminado de fondo), botón Ollin Deportes, tres apps próximas (Izydra OS, Virtyou, Inkógnito), y botón condicional «Volver al partido» que regresa al chat exacto donde el usuario intentó registrarse (commit `96e4cab`).
-- **CHAT-UI-1** ✅ — Modal `ChatPartido.jsx` rediseñado: X separada del enlace, botón «Crear cuenta gratis» y «Iniciar sesión» con `return` al partido (commit `20c000f`).
-- **SESION-1** ✅ — `onAuthStateChange` en `ChatPartido.jsx`; botón «Cerrar sesión» / «Iniciar sesión» en `Navbar.jsx` con `supabase.auth.signOut()` (commit `20c000f`).
+### SSO, registro y chat — cierre final sesión 15/06/2026
 
-### SSO y seguridad (pendientes identificados)
-- **SMTP-1** 🔴 BLOQUEANTE PRE-LANZAMIENTO — Conectar Resend como SMTP personalizado en Supabase para eliminar rate limit de 4 correos/hora del plan Free. Cuenta Resend activa. Config: Supabase → Project Settings → Auth → SMTP Settings. Host `smtp.resend.com`, Port `465`, Username `resend`, Password = API Key Resend, Sender `noreply@jeeljel.com`. Verificar dominio `jeeljel.com` en Resend antes de conectar.
-- **SSO-6** 🔴 BLOQUEANTE PRE-LANZAMIENTO — RLS desactivado en `public.users` (Security Advisor: *RLS Disabled in Public* + *Policy Exists RLS Disabled*). Leer políticas existentes con `SELECT policyname, cmd, roles, qual, with_check FROM pg_policies WHERE tablename = 'users' AND schemaname = 'public';` ANTES de activar RLS.
-- **SSO-7** 🟡 — `origenParam` declarado pero no se pasa en `options.data` del signUp; todos los registros caen al default `jeeljel_com` en el trigger. Fix: `origen_registro: origenParam` en `supabase.auth.signUp`.
-- **CHAT-UI-2** 🟢 — Modal `ChatPartido.jsx` no se cierra automáticamente cuando `onAuthStateChange` detecta sesión activa. Agregar `if (session) setShowModal(false)` en el callback, igual que `OllinChat.jsx` L27.
-- **SEC-2** 🟡 POST-LANZAMIENTO — Alertas *Auth RLS Initialization Plan* en `subscriptions`, `planificaciones`, `vc_credits`, `chat_history`.
-- **SEC-3** 🟡 POST-LANZAMIENTO — Checklist seguridad pre-lanzamiento: rate limiting registro, validación inputs, revisión RLS tablas sensibles.
+**Cerrados hoy:**
+- **SSO-5** ✅ — Registro end-to-end funcionando. Insert manual duplicado eliminado de `Registro.jsx` (commit `e9223fc`). Trigger `handle_new_user` maneja perfil server-side. Confirmado en producción.
+- **CHAT-MODAL** ✅ — Modal `ChatPartido.jsx` rediseñado: X en esquina separada, botón «Crear cuenta gratis» y «Ya tengo cuenta — Iniciar sesión», ambos con query params `return` y `origen` (commit `96e4cab`).
+- **PANTALLA-ÉXITO** ✅ — Nueva UI de bienvenida post-registro: botón Ikan Naat con logo fénix difuminado (Opción A), botón Ollin Deportes, tres apps próximas (Izydra OS, Virtyou, Inkógnito), botón condicional «Volver al partido» con `returnTo` exacto (commit `96e4cab`).
+- **SESION-1** ✅ — `onAuthStateChange` agregado a `ChatPartido.jsx`, sesión persiste al recargar. Navbar con botón «Cerrar sesión» / enlace «Iniciar sesión» según estado de sesión. Archivo `Navbar.css` creado (commit `20c000f`).
+- **OLLIN-CHAT-BACKEND** ✅ — Tablas `ollin_chat` y `ollin_chat_moderacion` creadas en Supabase (ikan-nat-prod) con RLS activado y policy de lectura pública. Fix Node.js 20: paquete `ws` instalado en `ollin-backend` y configurado como realtime transport en `supabaseClient.js` (commit `152c4a9`). Mensajes se guardan correctamente en Supabase con `user_id`, `display_name`, `match_id`, `ip_address` y timestamp.
+
+**Pendientes identificados:**
+- **SMTP-1** 🔴 BLOQUEANTE PRE-LANZAMIENTO — Conectar Resend como SMTP personalizado en Supabase (rate limit 4 correos/hora plan Free). Cuenta Resend activa. Supabase → Auth → SMTP: `smtp.resend.com:465`, user `resend`, password API Key Resend, sender `noreply@jeeljel.com`. Verificar dominio `jeeljel.com` en Resend.
+- **SSO-6** 🔴 BLOQUEANTE PRE-LANZAMIENTO — RLS desactivado en `public.users`. Dos alertas CRITICAL en Security Advisor. Políticas ya escritas — leer `pg_policies` ANTES de activar. Protege datos personales de todo el ecosistema.
+- **CHAT-WS-1** 🔴 — Mensajes se guardan en Supabase pero NO aparecen en la UI. (1) Socket.io WebSocket no conecta — `wss://jeeljel.com/socket.io/` falla; Nginx sin proxy WebSocket en `jeeljel-landing`. (2) Falta GET de mensajes históricos al montar `ChatPartido`. Chat invisible para el usuario aunque backend opere.
+- **SSO-7** 🟡 — `origenParam` declarado en `Registro.jsx` pero no se pasa en `options.data` del signUp; todos caen a default `jeeljel_com` en el trigger. Afecta funnel del torneo.
+- **CHAT-UI-2** 🟢 — Modal no se cierra al detectar sesión en `onAuthStateChange`. Agregar `if (session) setShowModal(false)` como `OllinChat.jsx`.
+- **CHAT-UI-3** 🟢 — `userMessage` del caso `spam_duplicate` usa texto genérico de moderación en lugar de mensaje específico de duplicado. Corregir en `chatService.js`.
+- **SEC-2** 🟡 POST-LANZAMIENTO — Security Advisor: alertas *Auth RLS Initialization Plan* en `subscriptions`, `planificaciones`, `vc_credits`, `chat_history`.
 
 ## PENDIENTES (prioridad pre-lanzamiento)
-1. **SMTP-1** 🔴 — Resend SMTP en Supabase — sin esto no hay registro en volumen durante el torneo
-2. **SSO-6** 🔴 — RLS en `public.users` — sin esto datos personales sin candado
-3. **SSO-7** 🟡 — Pasar `origenParam` en `options.data` del signUp — funnel del torneo
-4. **SEC-2** 🟡 — Optimizar políticas RLS (post-lanzamiento)
-5. **SEC-3** 🟡 — Checklist seguridad pre-lanzamiento (post-lanzamiento)
-6. **CHAT-UI-2** 🟢 — Cerrar modal chat automáticamente al detectar sesión (`setShowModal(false)`)
+1. **SMTP-1** 🔴 — Resend SMTP — sin esto no hay registro en volumen
+2. **SSO-6** 🔴 — RLS `public.users` — sin esto datos personales sin candado
+3. **CHAT-WS-1** 🔴 — Socket.io Nginx + carga histórica — sin esto el chat es invisible
+4. **SSO-7** 🟡 — `origenParam` en signUp — funnel del torneo
+5. **CHAT-UI-2** / **CHAT-UI-3** 🟢 — pulido UX modal y mensaje spam duplicado
+6. **SEC-2** 🟡 — optimización políticas RLS (post-lanzamiento)
 
 ### Completados sesión 15/06/2026
 - **INFRA-4** ✅ Completado (15/06/2026) — VPS sincronizado con main, MD5 verificado, archivos basura eliminados
@@ -147,6 +152,7 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 - **PANTALLA-ÉXITO** ✅ Completado (15/06/2026) — rejilla ecosistema + volver al partido, commit `96e4cab`
 - **CHAT-UI-1** ✅ Completado (15/06/2026) — modal chat rediseñado (X separada, login + registro), commit `20c000f`
 - **SESION-1** ✅ Completado (15/06/2026) — `onAuthStateChange` ChatPartido + cerrar sesión navbar, commit `20c000f`
+- **OLLIN-CHAT-BACKEND** ✅ Completado (15/06/2026) — tablas Supabase + fix `ws` Node 20, commit `152c4a9`
 - **OLLIN-20** ✅ Completado (15/06/2026) — navbar active link corregido
 
 ### Completados sesión vespertina (referencia)
