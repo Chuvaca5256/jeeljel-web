@@ -8,7 +8,7 @@
  * - Todos los tipos de evento visibles
  */
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import useTickerEvents from '../../../hooks/useTickerEvents'
 import LiveTicker from './LiveTicker'
 
@@ -158,50 +158,42 @@ export default function FootballFieldLive({
   /* Procesar eventos */
   const [activeDot, setActiveDot] = useState(null)
 
-  const prevStats = useRef({})
   const [statEvents, setStatEvents] = useState([])
+
   useEffect(() => {
     if (!statistics || !summary?.elapsed) return
     const elapsed = summary.elapsed
-    const homeStats = statistics.home || {}
-    const awayStats = statistics.away || {}
-    const newEvents = []
-    const check = (key, label, teamSide) => {
-      const val = teamSide === 'home' ? (homeStats[key] ?? 0) : (awayStats[key] ?? 0)
-      const prevKey = `${teamSide}_${key}`
-      const prev = prevStats.current[prevKey] ?? 0
-      if (Number(val) > Number(prev)) {
-        newEvents.push({
+    const h = statistics.home || {}
+    const a = statistics.away || {}
+    const evs = []
+
+    const add = (key, label, side) => {
+      const val = side === 'home' ? h[key] : a[key]
+      if (val && Number(val) > 0) {
+        evs.push({
           minute: elapsed,
           type: key,
           detail: key,
           label,
           player: null,
           assist: null,
-          teamId: teamSide === 'home' ? summary?.homeTeam?.id : summary?.awayTeam?.id,
+          teamId: side === 'home' ? summary?.homeTeam?.id : summary?.awayTeam?.id,
           _synthetic: true,
-          _side: teamSide,
+          _side: side,
         })
       }
-      prevStats.current[prevKey] = val
     }
-    check('Shots on Goal',  'TIRO A PUERTA 🥅', 'home')
-    check('Shots on Goal',  'TIRO A PUERTA 🥅', 'away')
-    check('Corner Kicks',   'CORNER 🚩',         'home')
-    check('Corner Kicks',   'CORNER 🚩',         'away')
-    check('Total Shots',    'TIRO TOTAL 👟',      'home')
-    check('Total Shots',    'TIRO TOTAL 👟',      'away')
-    check('Fouls',          'FALTA 🟨',           'home')
-    check('Fouls',          'FALTA 🟨',           'away')
-    check('Yellow Cards',   'TARJETA AMARILLA 🟨','home')
-    check('Yellow Cards',   'TARJETA AMARILLA 🟨','away')
-    check('Red Cards',      'TARJETA ROJA 🟥',    'home')
-    check('Red Cards',      'TARJETA ROJA 🟥',    'away')
-    if (newEvents.length > 0) {
-      setStatEvents(newEvents)
-      const t = setTimeout(() => setStatEvents([]), 30000)
-      return () => clearTimeout(t)
-    }
+
+    add('Shots on Goal',  'TIRO A PUERTA 🥅', 'home')
+    add('Shots on Goal',  'TIRO A PUERTA 🥅', 'away')
+    add('Corner Kicks',   'CORNER 🚩',         'home')
+    add('Corner Kicks',   'CORNER 🚩',         'away')
+    add('Total Shots',    'TIRO TOTAL 👟',      'home')
+    add('Total Shots',    'TIRO TOTAL 👟',      'away')
+    add('Fouls',          'FALTA 🟨',           'home')
+    add('Fouls',          'FALTA 🟨',           'away')
+
+    setStatEvents(evs)
   }, [statistics, summary?.elapsed]) // eslint-disable-line
 
   const allEvents = [...events, ...statEvents]
