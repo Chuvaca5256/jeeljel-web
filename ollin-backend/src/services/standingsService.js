@@ -75,9 +75,16 @@ function sanitizeStandingsResponse(apiRows, leagueId) {
   const groups = uniqueGroups.map((groupRows, index) => {
     const rawLabel = groupRows[0]?.group || String.fromCharCode(65 + index)
     const groupLabel = translateGroupLabel(rawLabel)
+    const seenTeams = new Set()
+    const uniqueRows = groupRows.filter((row) => {
+      const teamId = row?.team?.id
+      if (seenTeams.has(teamId)) return false
+      seenTeams.add(teamId)
+      return true
+    })
     return {
       group: groupLabel,
-      rows: groupRows.map((row) => ({
+      rows: uniqueRows.map((row) => ({
         ...sanitizeTeamRow(row),
         group: translateGroupLabel(row.group || rawLabel),
       })),
