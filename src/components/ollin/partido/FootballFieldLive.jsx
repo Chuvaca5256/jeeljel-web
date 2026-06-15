@@ -220,7 +220,7 @@ export default function FootballFieldLive({
   const timelineEvs = [...processed]
   // En campo: todos los eventos excepto cambios (no tienen ubicación táctica relevante)
   const fieldEvs = processed.filter(ev => ev.kind !== 'subst')
-  const visibleFieldEvs = fieldEvs.filter((ev, i) => ev.kind === 'goal' || i === activeDot)
+  const visibleFieldEvs = fieldEvs.filter((ev, i) => i === activeDot)
 
   /* Evento activo ciclado — muestra apellido + equipo del jugador activo */
   useEffect(() => {
