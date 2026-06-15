@@ -64,8 +64,9 @@ async function main() {
 
   await connectRedis()
   const redis = getClient()
+  const { requestsKey } = require('./lib/requestCounter')
   await redis.del('ollin:polling:paused')
-  await redis.del('ollin:api:requests:today')
+  await redis.del(requestsKey())
   startPolling(redis)
 
   server.listen(config.port, () => {
