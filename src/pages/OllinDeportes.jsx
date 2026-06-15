@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from 'react'
 import LeagueSidebar from '../components/ollin/LeagueSidebar'
 import StandingsView from '../components/ollin/StandingsView'
 import OllinLayout from '../components/ollin/OllinLayout'
-import OllinChat from '../components/ollin/OllinChat'
 import TabEnVivo from '../components/ollin/tabs/TabEnVivo'
 import TabHoy from '../components/ollin/tabs/TabHoy'
 import TabProximos from '../components/ollin/tabs/TabProximos'
@@ -134,7 +133,6 @@ export default function OllinDeportes() {
                 />
               )}
 
-              <OllinChat />
             </main>
           </div>
         </div>
