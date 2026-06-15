@@ -1,140 +1,110 @@
-# Review dump — partidoService fetch
+# Review dump — ticker (detectDiffs + useTickerEvents)
 
-## Resumen (sin editar código)
+## (A) `detectDiffs` — `ollin-backend/src/services/statsDiffService.js`
 
-### `fetchFootballPartido` — llamadas API-Sports
+```javascript
+function detectDiffs(prev, next, elapsed, homeTeam, awayTeam) {
+  const synthetic = []
 
-| # | Endpoint | Cuándo |
-|---|----------|--------|
-| 0–1 | `GET /fixtures?id=` | Solo si **no** hay `seedRaw` (fixture desde listas Redis) |
-| 5 en paralelo | `/fixtures/statistics`, `/fixtures/events`, `/fixtures/lineups`, `/fixtures/players`, `/fixtures/headtohead` | Siempre (H2H omitido si faltan IDs) |
+  for (const { stat, type, icon, label } of DIFF_KEYS) {
+    const prevHome = prev.home[stat] ?? 0
+    const nextHome = next.home[stat] ?? 0
+    const prevAway = prev.away[stat] ?? 0
+    const nextAway = next.away[stat] ?? 0
 
-**Total:** **5 llamadas** con seed de listas · **6 llamadas** sin seed.
+    const diffHome = nextHome - prevHome
+    const diffAway = nextAway - prevAway
 
-`apiGet(..., redis)` puede usar caché interna de `apiClient` (Redis por request key), además del caché del payload completo en `fetchPartido`.
+    // Generar un evento por cada incremento detectado
+    for (let i = 0; i < diffHome; i++) {
+      synthetic.push({
+        type,
+        icon,
+        label,
+        team: homeTeam,
+        side: 'home',
+        elapsed: elapsed ?? '—',
+        at: new Date().toISOString(),
+      })
+    }
 
-### Redis — caché del payload completo
+    for (let i = 0; i < diffAway; i++) {
+      synthetic.push({
+        type,
+        icon,
+        label,
+        team: awayTeam,
+        side: 'away',
+        elapsed: elapsed ?? '—',
+        at: new Date().toISOString(),
+      })
+    }
+  }
 
-- Clave: `ollin:partido:${id}` (`partidoKey`)
-- TTL: `PARTIDO_TTL_MS = 60 * 1000` (**60 segundos**)
-- `fetchPartido` devuelve caché si existe; si no, llama `fetchFootballPartido`, luego `setJson`.
+  return synthetic
+}
+```
 
-### Cada cuánto se llama `fetchPartido`
+**Contexto:** `DIFF_KEYS` (líneas 7–12 del mismo archivo):
 
-- **HTTP:** `GET /api/ollin/fixtures/partido/:id` → `routes/partido.js` → `fetchPartido(id, redis)` **en cada request**.
-- **Frontend `usePartido`:** `loadPartido()` al montar la página + en cada `ollin:update` (polling backend ~15s live / ~3min idle). `ollin:partido:{id}` **no** re-fetch (solo parchea `events`).
-- **Efecto caché:** como máximo **1 miss API completo por partido cada 60s** por usuario que dispare GET; hits Redis no llaman API-Sports.
+```javascript
+const DIFF_KEYS = [
+  { stat: 'Shots on Goal',  type: 'shot',    icon: '🥅', label: 'Tiro a puerta' },
+  { stat: 'Total Shots',    type: 'shot_off', icon: '💨', label: 'Tiro fuera'    },
+  { stat: 'Corner Kicks',   type: 'corner',   icon: '🚩', label: 'Tiro de esquina' },
+  { stat: 'Fouls',          type: 'foul',     icon: '⚠️', label: 'Falta'         },
+]
+```
 
 ---
 
-## Código — constantes y clave Redis
+## (B) `useTickerEvents.js` — completo
 
 ```javascript
-const PARTIDO_TTL_MS = 60 * 1000
+import { useEffect, useState } from 'react'
+import { io } from 'socket.io-client'
 
-function partidoKey(id) {
-  return `ollin:partido:${id}`
+const TICKER_DURATION_MS = 8000
+
+export default function useTickerEvents(partidoId) {
+  const [tickerEvent, setTickerEvent] = useState(null)
+
+  useEffect(() => {
+    if (!partidoId) return
+
+    let socket
+    let clearTimer = null
+
+    try {
+      socket = io(window.location.origin, {
+        path: '/socket.io',
+        transports: ['websocket', 'polling'],
+        reconnection: true,
+      })
+
+      socket.on(`ollin:ticker:${partidoId}`, (payload) => {
+        if (!payload?.events?.length) return
+
+        // Mostrar eventos uno por uno en secuencia
+        payload.events.forEach((ev, i) => {
+          setTimeout(() => {
+            setTickerEvent(ev)
+            if (clearTimer) clearTimeout(clearTimer)
+            clearTimer = setTimeout(() => setTickerEvent(null), TICKER_DURATION_MS)
+          }, i * (TICKER_DURATION_MS + 500))
+        })
+      })
+    } catch {
+      /* Socket opcional */
+    }
+
+    return () => {
+      socket?.off(`ollin:ticker:${partidoId}`)
+      socket?.disconnect()
+      if (clearTimer) clearTimeout(clearTimer)
+    }
+  }, [partidoId])
+
+  return tickerEvent
 }
-```
-
-## Código — `fetchFootballPartido`
-
-```javascript
-async function fetchFootballPartido(id, redis, seedRaw) {
-  let fixtureRaw = seedRaw
-
-  if (!fixtureRaw) {
-    const fx = await apiGet(footballClient, '/fixtures', { id }, redis)
-    if (!fx.ok || !fx.data?.length) return null
-    fixtureRaw = sanitizeFootballFixture(fx.data[0])
-  } else {
-    fixtureRaw = sanitizeFootballFixture(fixtureRaw)
-  }
-
-  const homeId = fixtureRaw.teams?.home?.id
-  const awayId = fixtureRaw.teams?.away?.id
-  const fixtureId = fixtureRaw.fixture?.id
-
-  const [statsRes, eventsRes, lineupsRes, playersRes, h2hRes] = await Promise.all([
-    apiGet(footballClient, '/fixtures/statistics', { fixture: fixtureId }, redis),
-    apiGet(footballClient, '/fixtures/events', { fixture: fixtureId }, redis),
-    apiGet(footballClient, '/fixtures/lineups', { fixture: fixtureId }, redis),
-    apiGet(footballClient, '/fixtures/players', { fixture: fixtureId }, redis),
-    homeId && awayId
-      ? apiGet(footballClient, '/fixtures/headtohead', { h2h: `${homeId}-${awayId}`, last: 5 }, redis)
-      : Promise.resolve({ ok: true, data: [] }),
-  ])
-
-  const statistics = statsRes.ok ? parseFootballStatistics(statsRes.data) : { home: {}, away: {}, items: [] }
-  const events = eventsRes.ok ? parseFootballEvents(eventsRes.data) : []
-  const lineups = lineupsRes.ok ? parseFootballLineups(lineupsRes.data, fixtureRaw) : { home: null, away: null }
-  const players = playersRes.ok ? parseFootballPlayers(playersRes.data) : { home: [], away: [] }
-  const h2h = h2hRes.ok ? parseFootballH2H(h2hRes.data) : []
-
-  const merged = { ...fixtureRaw, statistics: statsRes.ok ? statsRes.data : [] }
-
-  return {
-    sport: 'futbol',
-    summary: buildSummary(merged, 'futbol'),
-    statistics,
-    events,
-    lineups,
-    players,
-    h2h,
-    updatedAt: new Date().toISOString(),
-  }
-}
-```
-
-## Código — `fetchPartido` (orquestador + Redis)
-
-```javascript
-async function fetchPartido(id, redis) {
-  const cached = await getJson(partidoKey(id))
-  if (cached) return cached
-
-  const fromList = await findInLists(id)
-  let sport = fromList?.sport || 'futbol'
-
-  let payload = null
-
-  if (sport === 'futbol' || !fromList) {
-    payload = await fetchFootballPartido(id, redis, fromList?.sport === 'futbol' ? fromList.raw : null)
-    if (payload) sport = 'futbol'
-  }
-
-  if (!payload) {
-    payload = await fetchBaseballPartido(id, redis, fromList?.sport === 'beisbol' ? fromList.raw : null)
-    if (payload) sport = 'beisbol'
-  }
-
-  if (!payload && fromList) {
-    sport = fromList.sport
-    payload =
-      sport === 'beisbol'
-        ? await fetchBaseballPartido(id, redis, fromList.raw)
-        : await fetchFootballPartido(id, redis, fromList.raw)
-  }
-
-  if (!payload) return null
-
-  if (!payload.summary?.sport) {
-    payload.summary.sport = payload.sport || detectSportFromLeague(payload.summary?.leagueId)
-  }
-
-  await setJson(partidoKey(id), payload, PARTIDO_TTL_MS)
-  return payload
-}
-```
-
-## Ruta HTTP que lo invoca
-
-```javascript
-// ollin-backend/src/routes/partido.js
-router.get('/partido/:id', async (req, res) => {
-  ...
-  const data = await fetchPartido(id, redis)
-  ...
-  res.json(data)
-})
 ```
