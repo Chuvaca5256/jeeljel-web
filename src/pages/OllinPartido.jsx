@@ -67,6 +67,13 @@ export default function OllinPartido() {
   const summary = data?.summary
   const sport = resolveSport(summary, data)
 
+  const liveTabLabel = (() => {
+    const s = summary?.statusShort || ''
+    if (['FT', 'AET', 'PEN', 'AWD', 'WO'].includes(s)) return 'RESUMEN'
+    if (['1H', '2H', 'ET', 'BT', 'P', 'LIVE'].includes(s)) return 'EN VIVO'
+    return 'PARTIDO'
+  })()
+
   return (
     <OllinLayout pageTitle="Partido — Ollin Deportes">
       <div className="ollin-page">
@@ -106,7 +113,7 @@ export default function OllinPartido() {
                         className={`ollin-partido-tabs__btn${activeTab === tab.id ? ' is-active' : ''}`}
                         onClick={() => setActiveTab(tab.id)}
                       >
-                        {tab.label}
+                        {tab.id === 'live' ? liveTabLabel : tab.label}
                       </button>
                     ))}
                   </div>
