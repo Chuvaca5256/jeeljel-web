@@ -1,5 +1,4 @@
-import { Link } from 'react-router-dom'
-import TeamDisplay from '../TeamDisplay'
+import { useEffect, useState } from 'react'
 
 function formatStatus(summary) {
   if (!summary) return '—'
@@ -26,11 +25,34 @@ function miniStatLine(summary, sport) {
 }
 
 export default function PartidoHeader({ summary, sport }) {
-  if (!summary) return null
-
   const isLive = ['1H','2H','ET','BT','P','LIVE'].includes(summary?.statusShort || '')
-  const elapsed = summary?.elapsed ?? null
   const statusShort = summary?.statusShort || ''
+  const [elapsed, setElapsed] = useState(summary?.elapsed ?? null)
+
+  useEffect(() => {
+    setElapsed(summary?.elapsed ?? null)
+  }, [summary?.elapsed])
+
+  useEffect(() => {
+    if (!isLive) return
+    const t = setInterval(() => {
+      setElapsed(prev => (prev != null ? prev + 1 : prev))
+    }, 60000)
+    return () => clearInterval(t)
+  }, [isLive])
+
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') {
+        // Forzar re-render con el elapsed real del backend al volver a la pestaña
+        setElapsed(summary?.elapsed ?? null)
+      }
+    }
+    document.addEventListener('visibilitychange', onVisible)
+    return () => document.removeEventListener('visibilitychange', onVisible)
+  }, [summary?.elapsed])
+
+  if (!summary) return null
 
   const matchTime = (() => {
     if (['FT','AET','PEN'].includes(statusShort)) return 'FT'
