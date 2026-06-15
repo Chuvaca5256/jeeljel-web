@@ -68,11 +68,11 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 - PlayersTab reescrito, banner Ikan Naat IA, ChatPartido placeholder, chat global removido de `OllinDeportes.jsx`
 
 ## PENDIENTES (prioridad)
-1. **INFRA-4** 🔴 — `pasadosService.js` existe en el repo pero no llega al VPS con `git pull` — investigar con Cursor por qué, NO adivinar en terminal
-2. **INFRA-6** 🟡 — Cada restart de PM2 vacía Redis (PASADOS, HOY, PRÓXIMOS) — necesita estrategia de warm-up al arrancar sin depender de ciclo de 3 minutos
-3. **OLLIN-19** 🟡 — Goles no aparecen en eventos del campo — `formatEventLabel` no detecta `'Normal Goal'`, `'Own Goal'`, `'Penalty'` del campo `detail` de API-Sports
-4. **OLLIN-20** 🟡 — Navbar active link bug
-5. **CHAT-1** 🟡 — Conectar `ChatPartido.jsx` a `POST /chat/messages` + `GET /chat/status`
+1. **CHAT-1** 🔴🔴 MEGA URGENTE — Conectar `ChatPartido.jsx` a `POST /chat/messages` + `GET /chat/status` — sin esto la página del partido no tiene vida y el diferenciador de Ollin no existe
+2. **INFRA-4** 🔴 — `pasadosService.js` existe en el repo pero no llega al VPS con `git pull` — investigar con Cursor por qué, NO adivinar en terminal
+3. **INFRA-6** 🟡 — Cada restart de PM2 vacía Redis (PASADOS, HOY, PRÓXIMOS) — necesita estrategia de warm-up al arrancar sin depender de ciclo de 3 minutos
+4. **OLLIN-19** 🟡 — Goles no aparecen en eventos del campo — `formatEventLabel` no detecta `'Normal Goal'`, `'Own Goal'`, `'Penalty'` del campo `detail` de API-Sports
+5. **OLLIN-20** 🟡 — Navbar active link bug
 6. **SEC** 🟡 — Re-habilitar RLS en tabla `users` post-torneo
 
 ## REGLA DE TRABAJO — NO ADIVINAR
