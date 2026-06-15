@@ -1,1 +1,9 @@
 Al terminar cualquier cambio exitoso siempre ejecuta: git add -A, git commit con descripción del cambio, y git push origin main.
+
+## REGLA — RESPUESTAS LARGAS
+Cuando el contenido a mostrar supere 80 líneas (código, logs, dumps de archivos),
+NO lo pegues en el chat. En su lugar:
+1. Crea o sobreescribe `_review.md` en la raíz del repo
+2. Escribe ahí el contenido completo con encabezados ## por cada archivo
+3. Haz commit: `docs: review dump` y push a main
+4. En el chat solo di: "_review.md listo en repo
