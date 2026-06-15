@@ -9,6 +9,8 @@
  */
 
 import { useEffect, useState } from 'react'
+import useTickerEvents from '../../../hooks/useTickerEvents'
+import LiveTicker from './LiveTicker'
 
 /* ─── TIPO DE EVENTO ─────────────────────────────────────── */
 function getEventKind(ev) {
@@ -132,12 +134,14 @@ export default function FootballFieldLive({
   events     = [],
   lineups    = null,
   statistics = null,
+  partidoId  = null,
 }) {
   const homeTeam    = summary?.homeTeam?.name || 'Local'
   const awayTeam    = summary?.awayTeam?.name || 'Visitante'
   const elapsed     = summary?.elapsed ?? null
   const statusShort = summary?.statusShort || ''
   const isLive      = ['1H','2H','HT','ET','BT','P'].includes(statusShort)
+  const tickerEvent = useTickerEvents(isLive ? partidoId : null)
 
   /* Posesión */
   const rawPossH = parseInt(summary?.miniStats?.possessionHome) ||
@@ -186,6 +190,8 @@ export default function FootballFieldLive({
 
   return (
     <div className="ollin-field2">
+
+      <LiveTicker event={tickerEvent} />
 
       {/* ══ TIMELINE ══════════════════════════════════════════ */}
       <div className="ollin-field2__timeline">
