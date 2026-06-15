@@ -1,5 +1,5 @@
 # SNAPSHOT — JeelJel Kaanab
-**Versión:** v17 — 14/06/2026 (sesión vespertina)
+**Versión:** v18 — 15/06/2026
 **Autor:** Carlos García Anaya + Claude
 
 ## ESTADO ACTUAL DEL SISTEMA
@@ -19,7 +19,7 @@
 - **TABLA** ✅ — tab renombrada desde POSICIONES; sub-selector Posiciones/Goleadores; deduplicación por `team.id` en `standingsService.js`; fix doble fetch en `useStandings.js`
 
 ### Archivos clave — estado final
-- `src/components/ollin/partido/FootballFieldLive.jsx` — **CANCHA v3** SVG top-down; timeline completa sin límite de 10 eventos; scroll visible con barra delgada y cursor grab; `eventZone` con jitter mejorado para goles
+- `src/components/ollin/partido/FootballFieldLive.jsx` — OLLIN-19 ✅ `getEventKind` expandido + KIND_META completo con iconos para todos los tipos; timeline completa sin límite de 10 eventos; scroll visible con barra delgada y cursor grab; `eventZone` con jitter mejorado para goles
 - `src/components/ollin/tabs/TabEnVivo.jsx` — `getMatchTime`, `EnVivoMatchCard`, `EnVivoMatchGroupList`
 - `src/components/ollin/tabs/TabHoy.jsx` — import unificado `matchUtils`; normalización en extract
 - `src/components/ollin/tabs/TabProximos.jsx` — normalización con `normalizeFootballFixture`
@@ -27,13 +27,14 @@
 - `src/components/ollin/partido/PlayersTab.jsx` — formato plano backend (`p.name`); selector Local/Visitante; columnas Goles y Asistencias; rating, pases, duelos, tarjetas; links Google en nombres de jugadores
 - `src/components/ollin/partido/LineupsTab.jsx` — selector Local/Visitante; campo SVG corregido (portero abajo, delanteros arriba); banca debajo del campo; iconos de eventos sobre jugadores (⚽🟨🟥🔴🟢🅰️); links Google en tabla fallback y banca
 - `src/components/ollin/StandingsView.jsx` — tab renombrada a TABLA; sub-selector Posiciones/Goleadores; links Google en nombres de jugadores goleadores
-- `src/components/ollin/partido/ChatPartido.jsx` — placeholder con input/enviar; validación 50 palabras; backend pendiente CHAT-1
+- `src/components/ollin/partido/ChatPartido.jsx` — CHAT-1 ✅ conectado a backend real; socket propio, batch 500ms, 200 msgs máx, cooldown 4s, modal SSO, pick pinned Telaraña
+- `src/components/Navbar.jsx` — OLLIN-20 ✅ NavLink con `style` función `isActive`, sin handlers mouse
 - `src/pages/OllinPartido.jsx` — layout 2 columnas 65/35; chat sidebar solo tab EN VIVO; banner rotativo Ikan Naat; label dinámico tab live: RESUMEN (FT/AET/PEN), EN VIVO (1H/2H/ET), PARTIDO (NS/HT)
 - `src/hooks/useStandings.js` — refs + fix doble fetch al activar tab POSICIONES
 - `ollin-backend/src/server.js` — al arrancar borra `ollin:polling:paused` + llave `requestsKey()` (INFRA-5 ✅)
 - `ollin-backend/src/lib/sanitize.js` — exporta `sanitizeFootballFixture` y `sanitizeBaseballGame` (OLLIN-17 ✅)
 - `ollin-backend/src/services/polling.js` — warm-up `pollFootballProximos` + `pollFootballPasados` al arrancar (BACKEND-1 ✅); live→idle refresh pasados (OLLIN-18 ✅)
-- `ollin-backend/src/services/partidoService.js` — `parseFootballPlayers` con rating, pases, duelos, faltas, tarjetas
+- `ollin-backend/src/services/partidoService.js` — OLLIN-19 ✅ `formatEventLabel` expandido: gol, propia, penal, tarjetas, corner, tiro, falta, tiro libre, banda, lesión, VAR, hidratación, detenido, tiempo extra; `parseFootballPlayers` con rating, pases, duelos, faltas, tarjetas
 - `ollin-backend/src/services/standingsService.js` — deduplica filas por `team.id` dentro de cada grupo
 - `ollin-backend/src/services/pasadosService.js` — `pollFootballPasados(redisIn)` recibe redis; ✅ en GitHub; ⚠️ no llega al VPS con `git pull` (INFRA-4)
 
@@ -97,13 +98,24 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 - **OLLIN-24** ✅ — Links Google en jugadores: Goleadores, Banca, Alineaciones fallback, Jugadores
 - **OLLIN-25** ✅ — Tab POSICIONES renombrada a TABLA + sub-selector Posiciones/Goleadores en `StandingsView`
 
+## SESIÓN 15/06/2026
+
+### Página partido y navegación
+- **CHAT-1** ✅ — `ChatPartido.jsx` conectado a backend real (`POST /chat/messages`, `GET /chat/status`, socket `ollin:chat:message`)
+- **OLLIN-19** ✅ — `formatEventLabel` + `getEventKind` + `KIND_META` expandidos (campo y backend)
+- **OLLIN-19b** ✅ — `KIND_META` con iconos para shot, freekick, throwin, injury, hydration, stoppage, addedtime
+- **OLLIN-20** ✅ — Navbar active link corregido (`NavLink` con `style={({ isActive }) => ...}`)
+
 ## PENDIENTES (prioridad)
-1. **CHAT-1** 🔴🔴 MEGA URGENTE — Conectar `ChatPartido.jsx` a `POST /chat/messages` + `GET /chat/status` — sin esto la página del partido no tiene vida y el diferenciador de Ollin no existe — **primer pendiente de mañana**
-2. **INFRA-4** 🔴 — `pasadosService.js` existe en el repo pero no llega al VPS con `git pull` — investigar con Cursor por qué, NO adivinar en terminal
-3. **INFRA-6** 🟡 — Cada restart de PM2 vacía Redis (PASADOS, HOY, PRÓXIMOS) — necesita estrategia de warm-up al arrancar sin depender de ciclo de 3 minutos
-4. **OLLIN-19** 🟡 — Goles no aparecen en eventos del campo — `formatEventLabel` no detecta `'Normal Goal'`, `'Own Goal'`, `'Penalty'` del campo `detail` de API-Sports
-5. **OLLIN-20** 🟡 — Navbar active link bug
-6. **SEC** 🟡 — Re-habilitar RLS en tabla `users` post-torneo
+1. **INFRA-4** 🔴 — `pasadosService.js` existe en el repo pero no llega al VPS con `git pull` — investigar con Cursor por qué, NO adivinar en terminal
+2. **INFRA-6** 🟡 — Cada restart de PM2 vacía Redis (PASADOS, HOY, PRÓXIMOS) — necesita estrategia de warm-up al arrancar sin depender de ciclo de 3 minutos
+3. **SEC** 🟡 — Re-habilitar RLS en tabla `users` post-torneo
+4. **SSO-5** 🔴 — Confirmar registro end-to-end jeeljel.com/registro
+
+### Completados sesión 15/06/2026
+- **CHAT-1** ✅ Completado (15/06/2026) — ChatPartido conectado a backend real
+- **OLLIN-19** ✅ Completado (15/06/2026) — eventos completos en campo y backend
+- **OLLIN-20** ✅ Completado (15/06/2026) — navbar active link corregido
 
 ### Completados sesión vespertina (referencia)
 - **OLLIN-21** ✅ Completado (14/06/2026) — LineupsTab rediseño alineaciones
@@ -111,6 +123,16 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 - **OLLIN-23** ✅ Completado (14/06/2026) — Timeline completa + scroll grab desktop
 - **OLLIN-24** ✅ Completado (14/06/2026) — Links Google jugadores
 - **OLLIN-25** ✅ Completado (14/06/2026) — Tab TABLA + sub-selector Posiciones/Goleadores
+
+## PENDIENTES VERIFICAR EN PARTIDO VIVO — 15/06/2026 10:00am CDT
+
+- Chat en vivo: mensajes se envían y aparecen en tiempo real
+- Chat: modal de registro aparece si no hay sesión SSO
+- Chat: pick pinned de Telaraña aparece en parte superior
+- Chat: cooldown 4s entre mensajes funciona
+- Eventos en campo: goles, tarjetas y demás aparecen con icono correcto
+- Eventos en campo: timeline sin límite de 10 eventos funciona
+- Créditos API-Sports: verificar consumo durante partido en vivo
 
 ## REGLA DE TRABAJO — NO ADIVINAR
 Antes de ejecutar cualquier comando en el VPS o proponer un fix, Claude debe primero buscar en Cursor, en el código del repo, o pedir al Licenciado que consulte con la herramienta más eficiente disponible. Nunca ejecutar comandos a ciegas en Redis o PM2 sin entender primero la causa raíz desde el código.

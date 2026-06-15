@@ -765,15 +765,15 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **POSICIONES-DEDUP** | — | `standingsService.js` deduplica filas por `team.id` dentro de cada grupo | Ollin Deportes | ✅ Completado (14/06/2026) |
 | **JUGADORES-TAB** | — | Formato backend plano; selector Local/Visitante; Goles/Asistencias; stats completas | Ollin Deportes | ✅ Completado (14/06/2026) |
 | **LAYOUT-PARTIDO** | — | 2 columnas 65/35; banner Ikan Naat rotativo; chat sidebar solo tab EN VIVO | Ollin Deportes | ✅ Completado (14/06/2026) |
-| **CHAT-UI** | — | `ChatPartido.jsx` placeholder input/enviar + límite 50 palabras | Ollin Deportes | ✅ Placeholder (14/06/2026) |
+| **CHAT-UI** | — | `ChatPartido.jsx` conectado a backend real — socket, batch, modal SSO, pick pinned | Ollin Deportes | ✅ Completado (15/06/2026) |
 | **USE-STANDINGS** | — | Fix doble fetch al activar tab POSICIONES | Ollin Deportes | ✅ Completado (14/06/2026) |
 | **LINEUPS-PARCIAL** | — | SVG campo por `grid`; tabla fallback sin grid | Ollin Deportes | 🟡 Parcial (14/06/2026) |
 | **OLLIN-21** | 🟡 | ALINEACIONES — rediseño campo horizontal estilo Sofascore: ambos equipos + suplentes + iconos gol/sustitución | Ollin Deportes | ⏳ Pendiente |
 | **INFRA-4** | 🔴 | `pasadosService.js` en repo pero no llega al VPS con `git pull` — investigar con Cursor, NO adivinar en terminal | Infra | ⏳ Pendiente |
 | **INFRA-6** | 🟡 | Cada restart PM2 vacía Redis — warm-up al arrancar sin depender de ciclo IDLE 3 min | Infra | ⏳ Pendiente |
-| **OLLIN-19** | 🟡 | Goles no en campo — `formatEventLabel` no detecta `Normal Goal`, `Own Goal`, `Penalty` en `detail` API-Sports | Ollin Deportes | ⏳ Pendiente |
-| **OLLIN-20** | 🟡 | Navbar active link bug — todos los links amarillos al navegar | Ollin Deportes | ⏳ Pendiente |
-| **CHAT-1** | 🔴🔴 | Conectar `ChatPartido.jsx` a `POST /chat/messages` + `GET /chat/status` — MEGA URGENTE | Ollin Deportes | ⏳ Pendiente |
+| **OLLIN-19** | — | `formatEventLabel` + `getEventKind` + `KIND_META` expandidos — eventos completos campo y backend | Ollin Deportes | ✅ Completado (15/06/2026) |
+| **OLLIN-20** | — | Navbar active link — `NavLink` con `style` función `isActive` | Ollin Deportes | ✅ Completado (15/06/2026) |
+| **CHAT-1** | — | `ChatPartido.jsx` conectado a backend real — socket, batch, modal SSO, pick pinned | Ollin Deportes | ✅ Completado (15/06/2026) |
 | **SEC** | 🟡 | Re-habilitar RLS en tabla `users` post-torneo | Infra | ⏳ Post-torneo |
 
 ## REGLA DE TRABAJO — NO ADIVINAR
@@ -787,5 +787,5 @@ Antes de ejecutar cualquier comando en el VPS o proponer un fix, Claude debe pri
 *Documento generado: 10/06/2026 | Versión: **v2.1** (14/06 sesión completa — INFRA-5, BACKEND-1, POSICIONES dedup, JUGADORES, layout partido, CHAT placeholder) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
 *Unifica: JeelJel_Coins_Ecosistema_Master_v13.md + CURSOR_OllinDeportes_v1.md + alias Coins Master*
 
-*Documentos hermanos: SNAPSHOT.md (estado actual — v16 sesión 14/06) · MASTER_BLUEPRINT.md (hoja de ruta)*
+*Documentos hermanos: SNAPSHOT.md (estado actual — v18 sesión 15/06) · MASTER_BLUEPRINT.md (hoja de ruta)*
 *Próxima revisión: 01/07/2026 (TC mensual + post-torneo)*

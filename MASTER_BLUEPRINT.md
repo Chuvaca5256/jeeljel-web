@@ -94,6 +94,9 @@
 - ✅ **OLLIN-23** — Timeline sin límite de eventos + scroll grab desktop
 - ✅ **OLLIN-24** — Links Google en jugadores (Goleadores, Banca, Alineaciones, Jugadores)
 - ✅ **OLLIN-25** — Tab TABLA + sub-selector Posiciones/Goleadores
+- ✅ **CHAT-1** (15/06/2026) — ChatPartido conectado a backend real; socket, batch, modal SSO, pick pinned
+- ✅ **OLLIN-19** (15/06/2026) — eventos completos en campo y backend; KIND_META con todos los iconos
+- ✅ **OLLIN-20** (15/06/2026) — navbar active link corregido con NavLink style función
 
 ## 🟡 Ollin Deportes — Fase 2 (post-lanzamiento página principal)
 
@@ -115,7 +118,7 @@
 | SSO jeeljel.com/registro | ✅ **Completado** — tabla `users` + trigger `on_auth_user_created` (SNAPSHOT v9) |
 | Modal registro en chat | ✅ **Completado** — input bloqueado + modal CTA (SNAPSHOT v9) |
 | CTA tarjeta Ollin en `/apps` | ✅ **Completado** — enlace «¡Ingresa aquí!» activo (SNAPSHOT v9) |
-| Chat en vivo UI (frontend) | 🟡 **Placeholder listo** — `ChatPartido.jsx` input/enviar + 50 palabras; conectar backend pendiente CHAT-1 |
+| Chat en vivo UI (frontend) | ✅ **Conectado** — `ChatPartido.jsx` backend real; socket, batch 500ms, modal SSO, pick pinned (CHAT-1 ✅ 15/06/2026) |
 | Bot Telaraña × Ollin | ⏳ Pendiente — worker picks min ~20/~45/~70; campo `tipo` en `ollin_chat`; API_SPORTS_KEY + ODDS_API_KEY disponibles |
 | Workflow auto-deploy backend | ⏳ Pendiente — GitHub Actions `git pull` + `pm2 restart ollin-deportes` (SSH bloqueado Hostinger) |
 | RLS tabla `users` | ⏳ Re-habilitar post-torneo con políticas correctas |
@@ -358,11 +361,19 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - [x] **OLLIN-23** — Timeline sin límite de eventos + scroll grab desktop
 - [x] **OLLIN-24** — Links Google en jugadores (Goleadores, Banca, Alineaciones, Jugadores)
 - [x] **OLLIN-25** — Tab TABLA + sub-selector Posiciones/Goleadores
+- [x] **CHAT-1** (15/06/2026) — ChatPartido conectado a backend real; socket, batch, modal SSO, pick pinned
+- [x] **OLLIN-19** (15/06/2026) — eventos completos en campo y backend; KIND_META con todos los iconos
+- [x] **OLLIN-20** (15/06/2026) — navbar active link corregido con NavLink style función
+
+## Pendientes activos
+
+- **INFRA-4** 🔴 — `pasadosService.js` no llega al VPS con `git pull`
+- **INFRA-6** 🟡 — warm-up Redis al arrancar PM2
+- **SEC** 🟡 — re-habilitar RLS tabla `users` post-torneo
+- **SSO-5** 🔴 — confirmar registro end-to-end
+
 - [ ] **INFRA-4** — `pasadosService.js` en repo pero no llega al VPS con `git pull` — investigar con Cursor, NO adivinar
 - [ ] **INFRA-6** — Warm-up Redis al arrancar PM2 (PASADOS, HOY, PRÓXIMOS) sin esperar ciclo IDLE 3 min
-- [ ] **OLLIN-19** — Goles en campo: `formatEventLabel` no detecta `Normal Goal`, `Own Goal`, `Penalty` en `detail`
-- [ ] **CHAT-1** 🔴🔴 — Conectar `ChatPartido.jsx` a backend chat real — **primer pendiente de mañana**
-- [ ] **OLLIN-20** — Navbar active link bug
 - [ ] Página Misión con contenido real
 - [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:` hola + proyectos)
 - [x] Footer global: `proyectos@jeeljel.com` + botón Contáctanos → mailto proyectos
