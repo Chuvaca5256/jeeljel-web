@@ -1,5 +1,5 @@
 # SNAPSHOT — JeelJel Kaanab
-**Versión:** v20 — 15/06/2026
+**Versión:** v21 — 15/06/2026
 **Autor:** Carlos García Anaya + Claude
 
 ## ESTADO ACTUAL DEL SISTEMA
@@ -112,15 +112,26 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 - **INFRA-4** ✅ RESUELTO — Diagnóstico vía SSH confirmó que `pasadosService.js` en el VPS coincide con `origin/main` (MD5 `1a6f2974cd17043211b8e81cae893979`) y la rama está `up to date`. La desincronización reportada en SNAPSHOT v11 ya no aplica. Se eliminaron dos archivos vacíos basura (`0` y `1`, 0 bytes) de la raíz del repo en el VPS; `git status` quedó `working tree clean`.
 - **INFRA-6** ✅ RESUELTO — Diagnóstico confirmó que Redis NO se vacía con restart de PM2; el problema real era el TTL de caché corto (`cacheTtlMs = pollingIntervalMs * 2` = 6 min). Se desacopló el TTL del intervalo de polling: ahora `cacheTtlMs` lee la nueva env `CACHE_TTL_MS` con default fijo de 1h (3,600,000 ms). Verificado en VPS: TTL de `hoy`/`proximos` pasó de ~322s a ~3,590s. Sin consumo extra de API (el TTL es independiente del polling). Commit `7cd9348`.
 
+### SSO y seguridad
+- **SSO-5** 🟡 AVANCE — Causa raíz identificada y corregida. El trigger `handle_new_user` (Supabase, `SECURITY DEFINER`) ya inserta el perfil en `public.users` con todas las columnas y `ON CONFLICT (id) DO NOTHING`. El insert manual duplicado en `Registro.jsx` era la causa del error *"hubo un problema al guardar tu perfil"*; se eliminó en commit `e9223fc`. Pendiente: confirmar prueba de registro end-to-end limpia tras deploy.
+- **SSO-6 / SEC** 🔴 — Security Advisor Supabase confirma RLS desactivado en `public.users` (alertas CRITICAL: *RLS Disabled in Public* y *Policy Exists RLS Disabled* — políticas escritas pero inactivas). Debe re-habilitarse RLS antes del lanzamiento público del torneo. **REGLA:** leer las políticas existentes ANTES de activar RLS para no bloquear el registro.
+- **SSO-7** 🟡 NUEVO — `origen_registro` no se está capturando. `Registro.jsx` ya no envía `origen_registro` al signUp; todos los registros caen al default `jeeljel_com` vía `COALESCE` del trigger. Falta pasar `origen_registro` dentro de `options.data` en `supabase.auth.signUp` para distinguir usuarios que entran por Ollin Deportes durante el torneo. Afecta el funnel de adquisición.
+- **SEC-2** 🟡 NUEVO — Security Advisor reporta alertas de rendimiento *Auth RLS Initialization Plan* en `public.subscriptions`, `public.planificaciones`, `public.vc_credits` y `public.chat_history`. Optimización de evaluación de políticas RLS. Revisar post-lanzamiento.
+- **SEC-3** 🟡 NUEVO — Pendiente definir checklist de seguridad pre-lanzamiento: rate limiting del registro, validación de inputs, revisión de RLS en tablas con datos sensibles (`subscriptions`, `vc_credits`). Priorizar junto al CEO tras cerrar SSO-6.
+
 ## PENDIENTES (prioridad)
-1. **SEC** 🟡 — Re-habilitar RLS en tabla `users` post-torneo
-2. **SSO-5** 🔴 — Confirmar registro end-to-end jeeljel.com/registro
+1. **SSO-6 / SEC** 🔴 CRÍTICO — BLOQUEANTE PRE-LANZAMIENTO — RLS desactivado en `public.users`; re-habilitar antes del torneo leyendo políticas existentes primero
+2. **SSO-5** 🟡 — Confirmar prueba de registro end-to-end limpia tras deploy (fix `e9223fc` aplicado; causa raíz resuelta)
+3. **SSO-7** 🟡 — Pasar `origen_registro` en `options.data` del signUp para funnel Ollin Deportes
+4. **SEC-3** 🟡 — Checklist seguridad pre-lanzamiento (rate limit registro, validación inputs, RLS tablas sensibles)
+5. **SEC-2** 🟡 — Optimizar políticas RLS (*Auth RLS Initialization Plan*) en `subscriptions`, `planificaciones`, `vc_credits`, `chat_history` — post-lanzamiento
 
 ### Completados sesión 15/06/2026
 - **INFRA-4** ✅ Completado (15/06/2026) — VPS sincronizado con main, MD5 verificado, archivos basura eliminados
 - **CHAT-1** ✅ Completado (15/06/2026) — ChatPartido conectado a backend real
 - **OLLIN-19** ✅ Completado (15/06/2026) — eventos completos en campo y backend
-- **OLLIN-20** ✅ Completado (15/06/2026) — navbar active link corregido
+- **INFRA-6** ✅ Completado (15/06/2026) — TTL caché desacoplado, fijo 1h, commit `7cd9348`
+- **SSO-5** 🟡 Avance (15/06/2026) — insert manual eliminado; trigger `handle_new_user` maneja perfil, commit `e9223fc`
 
 ### Completados sesión vespertina (referencia)
 - **OLLIN-21** ✅ Completado (14/06/2026) — LineupsTab rediseño alineaciones

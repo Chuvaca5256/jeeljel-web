@@ -166,7 +166,9 @@
 
 ### SSO — estado actual
 
-- ✅ `jeeljel.com/registro` — Supabase Auth + tabla `users` + trigger `on_auth_user_created`
+- ✅ `jeeljel.com/registro` — Supabase Auth + tabla `users` + trigger `on_auth_user_created` / `handle_new_user` (`SECURITY DEFINER`, `ON CONFLICT DO NOTHING`)
+- 🟡 **SSO-5** — Causa raíz corregida (commit `e9223fc`): insert manual duplicado en `Registro.jsx` eliminado; trigger inserta perfil server-side. Pendiente: prueba end-to-end limpia tras deploy
+- 🟡 **SSO-7** — `origen_registro` no capturado en signUp; todos los registros caen a default `jeeljel_com` vía trigger. Falta pasar en `options.data` para funnel Ollin Deportes
 - ✅ Modal registro en chat Ollin Deportes — input bloqueado + modal CTA
 - ⏳ Migración auth Ikan Naat → `jeeljel_users` post-torneo
 
@@ -184,10 +186,10 @@
 | ID | Prioridad | Descripción | Estado |
 |----|-----------|-------------|--------|
 | **SEC-1** | — | `pm2 reload` en lugar de `pm2 restart` en deploy backend — elimina downtime | ✅ Completado — confirmado en VPS |
-| **SEC-2** | 🔴 | `express-rate-limit` en rutas de `ollin-backend` — evitar quema de API-Sports y ataques | ⏳ Pendiente |
-| **SEC-3** | 🔴 | Habilitar RLS en tablas `users` y `ollin_chat` en Supabase antes de usuarios reales | ⏳ Pendiente |
+| **SEC-2** | 🟡 | `express-rate-limit` en rutas de `ollin-backend` — evitar quema de API-Sports y ataques | ⏳ Pendiente |
+| **SEC-3** | 🔴 | **SSO-6 / SEC — BLOQUEANTE PRE-LANZAMIENTO** — RLS desactivado en `public.users`; Security Advisor CRITICAL (*RLS Disabled in Public*, *Policy Exists RLS Disabled*). Políticas escritas pero inactivas. Re-habilitar RLS antes del torneo; **leer políticas existentes ANTES de activar** | ⏳ Pendiente — crítico |
 | **SEC-4** | 🟡 | Confirmar que `vite.config.js` NO tiene `sourcemap: true` en producción | ⏳ Pendiente |
-| **SEC-5** | 🟡 | Confirmar registro end-to-end jeeljel.com/registro (rate limit Supabase liberado) | ⏳ Pendiente |
+| **SEC-5** | 🟡 | **SSO-5** — Confirmar registro end-to-end jeeljel.com/registro tras deploy (fix `e9223fc`; trigger maneja perfil) | 🟡 Avance — pendiente prueba |
 | **SEC-6** | 🟡 | Agregar `helmet.js` y CORS explícito en `ollin-backend` | ⏳ Post-lanzamiento |
 | **SEC-7** | 🟡 | Workflow GitHub Actions auto-deploy backend con `pm2 reload` (SSH bloqueado Hostinger) | ⏳ Post-lanzamiento |
 | **SEC-8** | 🟡 | PASADOS — backend ✅ en VPS (`pasadosService.js`, key `ollin:futbol:pasados`, **7 FT** en Redis); archivo **no en GitHub**; frontend ⏳ tab PASADOS no consume `/pasados` | 🟡 Backend VPS ✅ · Repo ⏳ · Frontend ⏳ |
@@ -195,6 +197,8 @@
 | **SEC-10** | 🟡 | POSICIONES — actualizar standings inmediatamente después de cada transición live→idle además del timer de 6h | ⏳ Pendiente |
 | **SEC-11** | 🟡 | Navbar — active link bug: todos los links quedan amarillos al navegar entre páginas | ⏳ Pendiente |
 | **SEC-12** | 🟡 | PRÓXIMOS — mensaje «limitación FREE» eliminado en repo; **pendiente deploy frontend** | ⏳ Deploy manual |
+| **SEC-13** | 🟡 | **SEC-2 (Supabase)** — Alertas rendimiento *Auth RLS Initialization Plan* en `subscriptions`, `planificaciones`, `vc_credits`, `chat_history`. Optimizar evaluación políticas RLS | ⏳ Post-lanzamiento |
+| **SEC-14** | 🟡 | **SEC-3 (Supabase)** — Checklist seguridad pre-lanzamiento: rate limiting registro, validación inputs, RLS tablas sensibles. Priorizar con CEO tras cerrar SSO-6 | ⏳ Pre-lanzamiento |
 | **INFRA-3** | 🔴 | VPS ↔ GitHub desincronizados — `pasadosService.js` solo en VPS; usar siempre `git pull --rebase`; verificar código real antes de cambios | ⏳ Pendiente |
 | **INFRA-4** | — | GitHub Actions deploy frontend | Infra | ❌ Desactivado — reemplazado por webhook (`webhook-deploy`, puerto 9000) |
 
@@ -364,16 +368,22 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - [x] **CHAT-1** (15/06/2026) — ChatPartido conectado a backend real; socket, batch, modal SSO, pick pinned
 - [x] **OLLIN-19** (15/06/2026) — eventos completos en campo y backend; KIND_META con todos los iconos
 - [x] **OLLIN-20** (15/06/2026) — navbar active link corregido con NavLink style función
+- [x] **INFRA-6** (15/06/2026) — TTL caché desacoplado del polling, fijo 1h (`CACHE_TTL_MS`), commit `7cd9348`
+- [x] **SSO-5** (15/06/2026) — insert manual `users` eliminado; trigger `handle_new_user` maneja perfil server-side, commit `e9223fc`
 
 ## Pendientes activos
 
-- **INFRA-4** 🔴 — `pasadosService.js` no llega al VPS con `git pull`
-- **INFRA-6** 🟡 — warm-up Redis al arrancar PM2
-- **SEC** 🟡 — re-habilitar RLS tabla `users` post-torneo
-- **SSO-5** 🔴 — confirmar registro end-to-end
+- **SSO-6 / SEC** 🔴 CRÍTICO — RLS desactivado en `public.users`; Security Advisor CRITICAL; re-habilitar antes del torneo (leer políticas existentes primero)
+- **SSO-5** 🟡 — confirmar registro end-to-end limpia tras deploy (fix aplicado)
+- **SSO-7** 🟡 — pasar `origen_registro` en `options.data` del signUp (funnel Ollin Deportes)
+- **SEC-3 (checklist)** 🟡 — rate limit registro, validación inputs, RLS tablas sensibles — priorizar con CEO tras SSO-6
+- **SEC-2 (Supabase RLS perf)** 🟡 — *Auth RLS Initialization Plan* en `subscriptions`, `planificaciones`, `vc_credits`, `chat_history` — post-lanzamiento
 
-- [ ] **INFRA-4** — `pasadosService.js` en repo pero no llega al VPS con `git pull` — investigar con Cursor, NO adivinar
-- [ ] **INFRA-6** — Warm-up Redis al arrancar PM2 (PASADOS, HOY, PRÓXIMOS) sin esperar ciclo IDLE 3 min
+- [ ] **SSO-6 / SEC** — Re-habilitar RLS en `public.users` antes del lanzamiento del torneo
+- [ ] **SSO-5** — Prueba registro end-to-end jeeljel.com/registro tras deploy
+- [ ] **SSO-7** — Capturar `origen_registro` en signUp para usuarios de Ollin Deportes
+- [ ] **SEC-3** — Definir checklist seguridad pre-lanzamiento con CEO
+- [ ] **SEC-2** — Optimizar políticas RLS (Auth RLS Initialization Plan) post-lanzamiento
 - [ ] Página Misión con contenido real
 - [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:` hola + proyectos)
 - [x] Footer global: `proyectos@jeeljel.com` + botón Contáctanos → mailto proyectos
