@@ -1,16 +1,6 @@
-function gridToPosition(grid, formation) {
-  if (!grid) return null
-  const [row, col] = String(grid).split(':').map(Number)
-  if (!row || !col) return null
-  const rows = formation ? parseInt(String(formation).split('-')[0], 10) + 1 : 5
-  const x = 10 + ((col - 1) / 3) * 80
-  const y = 85 - ((row - 1) / Math.max(rows, 4)) * 70
-  return { x, y }
-}
-
-function FormationPitch({ lineup, side }) {
+function FormationPitch({ lineup, side, teamName }) {
   const players = lineup?.startXI || []
-  const formation = lineup?.formation || '4-3-3'
+  const formation = lineup?.formation || ''
 
   if (players.length === 0) {
     return <p className="ollin-partido-empty">Sin alineación disponible</p>
@@ -32,20 +22,61 @@ function FormationPitch({ lineup, side }) {
     )
   }
 
+  const VW = 400
+  const VH = 560
+
   return (
-    <svg viewBox="0 0 100 100" className="ollin-formation-svg" role="img" aria-label={`Formación ${formation}`}>
-      <rect x="2" y="2" width="96" height="96" rx="4" fill="rgba(26,92,66,0.5)" stroke="#4ecdc4" strokeWidth="0.5" />
+    <svg viewBox={`0 0 ${VW} ${VH}`} style={{ width: '100%', maxWidth: '420px', display: 'block', margin: '0 auto' }}>
+      {/* Campo */}
+      <rect x="0" y="0" width={VW} height={VH} fill="#2d6a4f" />
+      {/* Franjas */}
+      {Array.from({ length: 8 }).map((_, i) => (
+        <rect key={i} x={0} y={i * 70} width={VW} height={35} fill="rgba(0,0,0,0.06)" />
+      ))}
+      {/* Líneas campo */}
+      <rect x="10" y="10" width={VW - 20} height={VH - 20} fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
+      {/* Círculo central */}
+      <circle cx={VW / 2} cy={VH / 2} r="50" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
+      <circle cx={VW / 2} cy={VH / 2} r="3" fill="rgba(255,255,255,0.7)" />
+      {/* Línea media */}
+      <line x1="10" y1={VH / 2} x2={VW - 10} y2={VH / 2} stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
+      {/* Área grande local (abajo) */}
+      <rect x={VW * 0.2} y={VH - 10 - 100} width={VW * 0.6} height={100} fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
+      {/* Área chica local */}
+      <rect x={VW * 0.35} y={VH - 10 - 50} width={VW * 0.3} height={50} fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
+      {/* Área grande visitante (arriba) */}
+      <rect x={VW * 0.2} y="10" width={VW * 0.6} height={100} fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
+      {/* Área chica visitante */}
+      <rect x={VW * 0.35} y="10" width={VW * 0.3} height={50} fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1.5" />
+
+      {/* Jugadores */}
       {players.map((p) => {
-        const pos = gridToPosition(p.grid, formation) || { x: 50, y: 50 }
-        const flipX = side === 'away' ? 100 - pos.x : pos.x
+        if (!p.grid) return null
+        const [row, col] = String(p.grid).split(':').map(Number)
+        const totalRows = formation ? formation.split('-').length + 1 : 5
+        const totalCols = 4
+
+        let x, y
+        if (side === 'home') {
+          x = 20 + ((col - 1) / (totalCols - 1)) * (VW - 40)
+          y = VH - 40 - ((row - 1) / (totalRows - 1)) * (VH - 80)
+        } else {
+          x = VW - 20 - ((col - 1) / (totalCols - 1)) * (VW - 40)
+          y = 40 + ((row - 1) / (totalRows - 1)) * (VH - 80)
+        }
+
+        const apellido = (p.name || '').split(' ').pop().slice(0, 10)
+        const isHome = side === 'home'
+
         return (
-          <g key={p.id || p.number} transform={`translate(${flipX}, ${pos.y})`}>
-            <circle r="5" fill={side === 'home' ? '#4ecdc4' : '#f0c030'} />
-            <text y="-7" textAnchor="middle" fontSize="3.5" fill="#fff" fontWeight="700">
+          <g key={p.id || p.number} transform={`translate(${x}, ${y})`}>
+            <circle r="18" fill={isHome ? '#fff' : '#1a1a2e'} stroke={isHome ? '#4ecdc4' : '#f0c030'} strokeWidth="2" />
+            <text textAnchor="middle" dominantBaseline="central" fontSize="13" fontWeight="700" fill={isHome ? '#1a1a2e' : '#fff'}>
               {p.number}
             </text>
-            <text y="10" textAnchor="middle" fontSize="2.8" fill="#fff">
-              {p.name ? p.name.split(' ').pop().slice(0, 10) : ''}
+            <text y="26" textAnchor="middle" fontSize="9" fill="#fff" fontWeight="600"
+              style={{ textShadow: '0 1px 2px rgba(0,0,0,0.8)' }}>
+              {apellido}
             </text>
           </g>
         )
@@ -63,7 +94,6 @@ function BaseballLineup({ rows, title }) {
       </div>
     )
   }
-
   return (
     <div className="ollin-lineup-block">
       <h3>{title}</h3>
@@ -90,19 +120,22 @@ export default function LineupsTab({ lineups, sport, summary }) {
     )
   }
 
+  const homeName = summary?.homeTeam?.name || 'Local'
+  const awayName = summary?.awayTeam?.name || 'Visitante'
+
   return (
-    <div className="ollin-lineups-tab">
-      <div className="ollin-lineup-block">
-        <h3>
-          {summary?.homeTeam?.name} — {lineups?.home?.formation || 'Formación'}
+    <div className="ollin-lineups-tab" style={{ padding: '12px 8px' }}>
+      <div style={{ marginBottom: '32px' }}>
+        <h3 style={{ color: '#4ecdc4', fontSize: '0.9rem', fontWeight: 700, marginBottom: '12px', textAlign: 'center' }}>
+          {homeName} — {lineups?.home?.formation || ''}
         </h3>
-        <FormationPitch lineup={lineups?.home} side="home" />
+        <FormationPitch lineup={lineups?.home} side="home" teamName={homeName} />
       </div>
-      <div className="ollin-lineup-block">
-        <h3>
-          {summary?.awayTeam?.name} — {lineups?.away?.formation || 'Formación'}
+      <div>
+        <h3 style={{ color: '#f0c030', fontSize: '0.9rem', fontWeight: 700, marginBottom: '12px', textAlign: 'center' }}>
+          {awayName} — {lineups?.away?.formation || ''}
         </h3>
-        <FormationPitch lineup={lineups?.away} side="away" />
+        <FormationPitch lineup={lineups?.away} side="away" teamName={awayName} />
       </div>
     </div>
   )
