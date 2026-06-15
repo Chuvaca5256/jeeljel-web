@@ -236,8 +236,8 @@ export default function LineupsTab({ lineups, sport, summary, events = [] }) {
     return <p className="ollin-partido-empty">Alineaciones no disponibles aún</p>
   }
 
-  const homeTeamId = summary?.homeTeamId ?? summary?.homeTeam?.id ?? home?.team?.id ?? null
-  const awayTeamId = summary?.awayTeamId ?? summary?.awayTeam?.id ?? away?.team?.id ?? null
+  const homeTeamId = summary?.homeTeam?.id ?? home?.team?.id ?? null
+  const awayTeamId = summary?.awayTeam?.id ?? away?.team?.id ?? null
 
   const homeEventMap = buildPlayerEventMap(events, homeTeamId)
   const awayEventMap = buildPlayerEventMap(events, awayTeamId)
