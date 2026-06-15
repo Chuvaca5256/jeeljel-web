@@ -16,6 +16,7 @@ function isBaseballLive(_game) {
 }
 const { fetchStandings } = require('./standingsService')
 const { pollFootballPasados } = require('./pasadosService')
+const { parseStatMap, detectDiffs } = require('./statsDiffService')
 
 const LIVE_INTERVAL_MS = 15000
 const IDLE_INTERVAL_MS = 180000
@@ -25,6 +26,8 @@ let standingsTimer = null
 let pasadosTimer = null
 let liveTransitionTimer = null
 let ioRef = null
+// Mapa en memoria: fixtureId → último snapshot de stats { home: {}, away: {} }
+const lastStatsSnapshot = {}
 let currentIntervalMs = IDLE_INTERVAL_MS
 
 function attachSocketIO(io) {
@@ -83,6 +86,28 @@ async function pollLiveFixtureEvents(redis, liveFixtures, ttl) {
     }
 
     await setJson(eventsKey(fixtureId), result.data, ttl)
+
+    // Detectar diffs de estadísticas y emitir eventos sintéticos
+    const statsResult = await apiGet(
+      footballClient,
+      '/fixtures/statistics',
+      { fixture: fixtureId },
+      redis
+    )
+    if (statsResult.ok && Array.isArray(statsResult.data) && statsResult.data.length > 0) {
+      const nextSnap = parseStatMap(statsResult.data)
+      const prevSnap = lastStatsSnapshot[fixtureId] || { home: {}, away: {} }
+      const elapsed  = fixture?.fixture?.status?.elapsed ?? null
+      const homeTeam = fixture?.teams?.home?.name || 'Local'
+      const awayTeam = fixture?.teams?.away?.name || 'Visitante'
+
+      const synthetic = detectDiffs(prevSnap, nextSnap, elapsed, homeTeam, awayTeam)
+      lastStatsSnapshot[fixtureId] = nextSnap
+
+      if (synthetic.length > 0 && ioRef) {
+        ioRef.emit(`ollin:ticker:${fixtureId}`, { events: synthetic, at: new Date().toISOString() })
+      }
+    }
 
     if (ioRef) {
       ioRef.emit(`ollin:partido:${fixtureId}`, {
