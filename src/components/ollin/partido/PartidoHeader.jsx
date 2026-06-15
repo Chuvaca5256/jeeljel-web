@@ -81,10 +81,6 @@ export default function PartidoHeader({ summary, sport }) {
             <span className="ollin-ph__score-sep">–</span>
             <span>{summary?.awayScore ?? 0}</span>
           </div>
-          <div className={`ollin-ph__time${isLive ? ' ollin-ph__time--live' : ''}`}>
-            {isLive && <span className="ollin-ph__live-dot" />}
-            {matchTime}
-          </div>
         </div>
 
         {/* VISITANTE */}
@@ -97,20 +93,6 @@ export default function PartidoHeader({ summary, sport }) {
 
       </div>
 
-      {/* POSESIÓN si está disponible */}
-      {summary?.miniStats?.possessionHome != null && (
-        <div className="ollin-ph__poss-bar-wrap">
-          <span className="ollin-ph__poss-num" style={{color:'#f97316'}}>
-            {summary.miniStats.possessionHome}%
-          </span>
-          <div className="ollin-ph__poss-track">
-            <div className="ollin-ph__poss-fill" style={{width:`${summary.miniStats.possessionHome}%`}} />
-          </div>
-          <span className="ollin-ph__poss-num" style={{color:'#38bdf8'}}>
-            {100 - parseInt(summary.miniStats.possessionHome)}%
-          </span>
-        </div>
-      )}
     </div>
   )
 }
