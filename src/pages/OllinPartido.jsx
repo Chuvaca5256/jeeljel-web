@@ -122,7 +122,7 @@ export default function OllinPartido() {
                     {activeTab === 'live' && (sport === 'beisbol' ? (
                       <BaseballDiamondLive summary={summary} />
                     ) : (
-                      <FootballFieldLive summary={summary} events={data.events} />
+                      <FootballFieldLive summary={summary} events={data.events} partidoId={id} />
                     ))}
                     {activeTab === 'stats' && <StatsTab statistics={data.statistics} sport={sport} summary={summary} />}
                     {activeTab === 'players' && <PlayersTab players={data.players} sport={sport} summary={summary} />}
