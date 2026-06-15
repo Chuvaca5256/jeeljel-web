@@ -218,12 +218,15 @@ async function runPollingCycle(redis) {
 
   // Transición live→idle: uno o más partidos acaban de terminar — refrescar "hoy"
   if (wasLive && !nowLive) {
-    console.log('[ollin][polling] Transición live→idle — refrescando futbolHoy')
+    console.log('[ollin][polling] Transición live→idle — refrescando futbolHoy + pasados')
     const hoy = await pollFootballHoy(redis)
     if (hoy.hoy !== null) {
       await setJson(KEYS.futbolHoy, hoy.hoy, ttl)
       await emitUpdate('futbol', 'hoy', hoy.hoy)
     }
+    pollFootballPasados().catch((err) =>
+      console.warn('[ollin][polling] pollFootballPasados post-live falló:', err.message)
+    )
   }
 
   const hoyAfter = (await getJson(KEYS.futbolHoy, [])) || []

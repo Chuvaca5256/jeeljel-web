@@ -130,7 +130,9 @@ function sanitizeBaseballGames(games) {
 
 module.exports = {
   buildTeamDisplay,
+  sanitizeFootballFixture,
   sanitizeFootballFixtures,
+  sanitizeBaseballGame,
   sanitizeBaseballGames,
   sanitizeText,
 }
