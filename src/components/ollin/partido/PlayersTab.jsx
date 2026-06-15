@@ -43,6 +43,12 @@ function sortRows(rows, key, dir) {
   })
 }
 
+function buildPlayerGoogleUrl(name) {
+  if (!name) return null
+  const q = `${name} jugador futbol`.replace(/\s+/g, '+')
+  return `https://www.google.com/search?q=${q}`
+}
+
 function mapPlayer(p) {
   const didPlay = (p?.minutes ?? 0) > 0
   return {
@@ -119,7 +125,9 @@ function PlayersTable({ title, rawPlayers, columns }) {
                   borderBottom: '1px solid rgba(255,255,255,0.05)',
                 }}>
                 <td style={{ padding: '6px 8px', color: '#fff', fontWeight: 500 }}>
-                  {row.name}
+                  {buildPlayerGoogleUrl(row.name)
+                    ? <a href={buildPlayerGoogleUrl(row.name)} className="ollin-standings-team-link" target="_blank" rel="noopener noreferrer">{row.name}</a>
+                    : row.name}
                   {!row.didPlay && <span style={{ marginLeft: '6px', fontSize: '0.7rem', color: '#888' }}>No jugó</span>}
                 </td>
                 {columns.map((col) => (
