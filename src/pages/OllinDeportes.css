@@ -1673,15 +1673,12 @@
 .ollin-partido-sidebar {
   flex: 0 0 35%;
   width: 35%;
-  position: sticky;
-  top: 60px;
-  align-self: flex-start;
-  max-height: 650px;
-  overflow-y: auto;
+  align-self: stretch;
+  min-height: 600px;
   display: flex;
   flex-direction: column;
-  border: 1px solid rgba(249,115,22,0.3);
-  border-radius: 6px;
+  border-left: 1px solid rgba(249,115,22,0.3);
+  border-radius: 0 6px 6px 0;
 }
 
 /* BANNER ROTATIVO */
@@ -1732,12 +1729,6 @@
     border-right: none;
     border-bottom: 1px solid rgba(255,255,255,0.07);
   }
-  .ollin-partido-sidebar {
-    flex: none;
-    width: 100%;
-    position: static;
-    height: 400px;
-  }
 }
 
 .ollin-partido-layout--full .ollin-partido-main {
@@ -1745,11 +1736,13 @@
   width: 100%;
   border-right: none;
 }
-.ollin-partido-sidebar {
-  flex: 0 0 35%;
-  width: 35%;
-  align-self: stretch;
-  display: flex;
-  flex-direction: column;
-  border-left: 1px solid rgba(255,255,255,0.07);
+
+@media (max-width: 767px) {
+  .ollin-partido-sidebar {
+    flex: none;
+    width: 100%;
+    min-height: 400px;
+    border-left: none;
+    border-top: 1px solid rgba(249,115,22,0.3);
+  }
 }
