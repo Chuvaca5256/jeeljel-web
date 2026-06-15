@@ -51,8 +51,8 @@ function eventZone(ev, isHome) {
   const kind = getEventKind(ev)
   // Semilla determinista basada en minuto para no moverse en re-renders
   const seed = (ev.minute || 0) * 7 + (ev.player || '').length * 3
-  const jx   = (seed % 9) / 9        // 0-1 jitter horizontal
-  const jy   = ((seed * 3) % 11) / 11 // 0-1 jitter vertical
+  const jx = (seed % 9) / 9
+  const jy = ((seed * 13 + (ev.minute || 0) * 31) % 97) / 97
 
   // Franjas verticales del campo (% de ancho):
   // 0-16: área propia local / 84-100: área propia visitante
@@ -60,8 +60,8 @@ function eventZone(ev, isHome) {
 
   if (kind === 'goal') {
     return isHome
-      ? [85 + jx * 8,  32 + jy * 36]   // gol local → área derecha
-      : [7  + jx * 8,  32 + jy * 36]   // gol visitante → área izquierda
+      ? [83 + jx * 10, 20 + jy * 60]
+      : [7  + jx * 10, 20 + jy * 60]
   }
   if (kind === 'penalty') {
     return isHome
