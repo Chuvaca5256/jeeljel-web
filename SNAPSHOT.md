@@ -1,5 +1,5 @@
 # SNAPSHOT — JeelJel Kaanab
-**Versión:** v21 — 15/06/2026
+**Versión:** v22 — 15/06/2026
 **Autor:** Carlos García Anaya + Claude
 
 ## ESTADO ACTUAL DEL SISTEMA
@@ -27,7 +27,8 @@
 - `src/components/ollin/partido/PlayersTab.jsx` — formato plano backend (`p.name`); selector Local/Visitante; columnas Goles y Asistencias; rating, pases, duelos, tarjetas; links Google en nombres de jugadores
 - `src/components/ollin/partido/LineupsTab.jsx` — selector Local/Visitante; campo SVG corregido (portero abajo, delanteros arriba); banca debajo del campo; iconos de eventos sobre jugadores (⚽🟨🟥🔴🟢🅰️); links Google en tabla fallback y banca
 - `src/components/ollin/StandingsView.jsx` — tab renombrada a TABLA; sub-selector Posiciones/Goleadores; links Google en nombres de jugadores goleadores
-- `src/components/ollin/partido/ChatPartido.jsx` — CHAT-1 ✅ conectado a backend real; socket propio, batch 500ms, 200 msgs máx, cooldown 4s, modal SSO, pick pinned Telaraña
+- `src/components/ollin/partido/ChatPartido.jsx` — CHAT-1 ✅ + CHAT-MODAL ✅ enlace con contexto `origen=ollin_deportes&return=/ollin-deportes/partido/${id}` (commit `96e4cab`); socket, batch 500ms, 200 msgs máx, cooldown 4s, pick pinned Telaraña
+- `src/pages/Registro.jsx` — SSO-5 ✅ registro end-to-end; PANTALLA-ÉXITO ✅ rejilla ecosistema + botón condicional «Volver al partido»; `origenParam`/`returnTo` desde `useSearchParams` (commit `96e4cab`)
 - `src/components/Navbar.jsx` — OLLIN-20 ✅ NavLink con `style` función `isActive`, sin handlers mouse
 - `src/pages/OllinPartido.jsx` — layout 2 columnas 65/35; chat sidebar solo tab EN VIVO; banner rotativo Ikan Naat; label dinámico tab live: RESUMEN (FT/AET/PEN), EN VIVO (1H/2H/ET), PARTIDO (NS/HT)
 - `src/hooks/useStandings.js` — refs + fix doble fetch al activar tab POSICIONES
@@ -45,7 +46,7 @@
 - Modo LIVE: 15,000ms — solo actualiza `futbolLive`
 - **INFRA-5** ✅ — `server.js` limpia `ollin:polling:paused` y `requestsKey()` al arrancar
 - **BACKEND-1** ✅ — warm-up `pollFootballProximos(redis)` + `pollFootballPasados(redis)` en `startPolling`
-- **Bug conocido:** cada restart PM2 vacía Redis — tabs vacías hasta ciclo IDLE de 3 min (INFRA-6)
+- **INFRA-6** ✅ — TTL caché desacoplado del polling; `CACHE_TTL_MS` default 1h (commit `7cd9348`)
 
 ### REGLA CRÍTICA — Verificar créditos API-Sports
 
@@ -112,26 +113,39 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 - **INFRA-4** ✅ RESUELTO — Diagnóstico vía SSH confirmó que `pasadosService.js` en el VPS coincide con `origin/main` (MD5 `1a6f2974cd17043211b8e81cae893979`) y la rama está `up to date`. La desincronización reportada en SNAPSHOT v11 ya no aplica. Se eliminaron dos archivos vacíos basura (`0` y `1`, 0 bytes) de la raíz del repo en el VPS; `git status` quedó `working tree clean`.
 - **INFRA-6** ✅ RESUELTO — Diagnóstico confirmó que Redis NO se vacía con restart de PM2; el problema real era el TTL de caché corto (`cacheTtlMs = pollingIntervalMs * 2` = 6 min). Se desacopló el TTL del intervalo de polling: ahora `cacheTtlMs` lee la nueva env `CACHE_TTL_MS` con default fijo de 1h (3,600,000 ms). Verificado en VPS: TTL de `hoy`/`proximos` pasó de ~322s a ~3,590s. Sin consumo extra de API (el TTL es independiente del polling). Commit `7cd9348`.
 
-### SSO y seguridad
-- **SSO-5** 🟡 AVANCE — Causa raíz identificada y corregida. El trigger `handle_new_user` (Supabase, `SECURITY DEFINER`) ya inserta el perfil en `public.users` con todas las columnas y `ON CONFLICT (id) DO NOTHING`. El insert manual duplicado en `Registro.jsx` era la causa del error *"hubo un problema al guardar tu perfil"*; se eliminó en commit `e9223fc`. Pendiente: confirmar prueba de registro end-to-end limpia tras deploy.
-- **SSO-6 / SEC** 🔴 — Security Advisor Supabase confirma RLS desactivado en `public.users` (alertas CRITICAL: *RLS Disabled in Public* y *Policy Exists RLS Disabled* — políticas escritas pero inactivas). Debe re-habilitarse RLS antes del lanzamiento público del torneo. **REGLA:** leer las políticas existentes ANTES de activar RLS para no bloquear el registro.
-- **SSO-7** 🟡 NUEVO — `origen_registro` no se está capturando. `Registro.jsx` ya no envía `origen_registro` al signUp; todos los registros caen al default `jeeljel_com` vía `COALESCE` del trigger. Falta pasar `origen_registro` dentro de `options.data` en `supabase.auth.signUp` para distinguir usuarios que entran por Ollin Deportes durante el torneo. Afecta el funnel de adquisición.
-- **SEC-2** 🟡 NUEVO — Security Advisor reporta alertas de rendimiento *Auth RLS Initialization Plan* en `public.subscriptions`, `public.planificaciones`, `public.vc_credits` y `public.chat_history`. Optimización de evaluación de políticas RLS. Revisar post-lanzamiento.
-- **SEC-3** 🟡 NUEVO — Pendiente definir checklist de seguridad pre-lanzamiento: rate limiting del registro, validación de inputs, revisión de RLS en tablas con datos sensibles (`subscriptions`, `vc_credits`). Priorizar junto al CEO tras cerrar SSO-6.
+### SSO, registro y chat (cierre sesión)
+- **SSO-5** ✅ RESUELTO — Causa raíz identificada y corregida. Insert manual duplicado en `Registro.jsx` eliminado (commit `e9223fc`). Trigger `handle_new_user` en Supabase maneja perfil server-side con `ON CONFLICT (id) DO NOTHING`. Registro end-to-end confirmado funcionando en producción.
+- **SSO-7** 🟡 PARCIAL — `origenParam` y `returnTo` capturados desde `useSearchParams` en `Registro.jsx` (commit `96e4cab`). Falta pasar `origenParam` en `options.data` del signUp — sigue pendiente como SSO-7.
+- **CHAT-MODAL** ✅ — `ChatPartido.jsx`: enlace del modal incluye contexto completo `/registro?origen=ollin_deportes&return=/ollin-deportes/partido/${partidoId}` (commit `96e4cab`).
+- **PANTALLA-ÉXITO** ✅ — Nueva UI de bienvenida con rejilla del ecosistema: botón Ikan Naat (fénix difuminado de fondo), botón Ollin Deportes, tres apps próximas (Izydra OS, Virtyou, Inkógnito), y botón condicional «Volver al partido» que regresa al chat exacto donde el usuario intentó registrarse (commit `96e4cab`).
 
-## PENDIENTES (prioridad)
-1. **SSO-6 / SEC** 🔴 CRÍTICO — BLOQUEANTE PRE-LANZAMIENTO — RLS desactivado en `public.users`; re-habilitar antes del torneo leyendo políticas existentes primero
-2. **SSO-5** 🟡 — Confirmar prueba de registro end-to-end limpia tras deploy (fix `e9223fc` aplicado; causa raíz resuelta)
-3. **SSO-7** 🟡 — Pasar `origen_registro` en `options.data` del signUp para funnel Ollin Deportes
-4. **SEC-3** 🟡 — Checklist seguridad pre-lanzamiento (rate limit registro, validación inputs, RLS tablas sensibles)
-5. **SEC-2** 🟡 — Optimizar políticas RLS (*Auth RLS Initialization Plan*) en `subscriptions`, `planificaciones`, `vc_credits`, `chat_history` — post-lanzamiento
+### SSO y seguridad (pendientes identificados)
+- **SMTP-1** 🔴 BLOQUEANTE PRE-LANZAMIENTO — Conectar Resend como SMTP personalizado en Supabase para eliminar rate limit de 4 correos/hora del plan Free. Cuenta Resend activa. Config: Supabase → Project Settings → Auth → SMTP Settings. Host `smtp.resend.com`, Port `465`, Username `resend`, Password = API Key Resend, Sender `noreply@jeeljel.com`. Verificar dominio `jeeljel.com` en Resend antes de conectar.
+- **SSO-6** 🔴 BLOQUEANTE PRE-LANZAMIENTO — RLS desactivado en `public.users` (Security Advisor: *RLS Disabled in Public* + *Policy Exists RLS Disabled*). Leer políticas existentes con `SELECT policyname, cmd, roles, qual, with_check FROM pg_policies WHERE tablename = 'users' AND schemaname = 'public';` ANTES de activar RLS.
+- **SSO-7** 🟡 — `origenParam` declarado pero no se pasa en `options.data` del signUp; todos los registros caen al default `jeeljel_com` en el trigger. Fix: `origen_registro: origenParam` en `supabase.auth.signUp`.
+- **CHAT-UI-1** 🟡 — Modal `ChatPartido.jsx`: X de cerrar pegada al enlace; falta botón «Iniciar sesión» para usuarios con cuenta existente.
+- **SESION-1** 🟡 — Verificar persistencia de sesión al recargar; confirmar `onAuthStateChange` o equivalente; agregar botón «Cerrar sesión» en UI (no existe `supabase.auth.signOut()` en el proyecto).
+- **SEC-2** 🟡 POST-LANZAMIENTO — Alertas *Auth RLS Initialization Plan* en `subscriptions`, `planificaciones`, `vc_credits`, `chat_history`.
+- **SEC-3** 🟡 POST-LANZAMIENTO — Checklist seguridad pre-lanzamiento: rate limiting registro, validación inputs, revisión RLS tablas sensibles.
+
+## PENDIENTES (prioridad pre-lanzamiento)
+1. **SMTP-1** 🔴 — Resend SMTP en Supabase — sin esto no hay registro en volumen durante el torneo
+2. **SSO-6** 🔴 — RLS en `public.users` — sin esto datos personales sin candado
+3. **SSO-7** 🟡 — Pasar `origenParam` en `options.data` del signUp — funnel del torneo
+4. **CHAT-UI-1** 🟡 — Fixes modal chat (separación X, botón login)
+5. **SESION-1** 🟡 — Persistencia sesión + botón cerrar sesión
+6. **SEC-2** 🟡 — Optimizar políticas RLS (post-lanzamiento)
+7. **SEC-3** 🟡 — Checklist seguridad pre-lanzamiento (post-lanzamiento)
 
 ### Completados sesión 15/06/2026
 - **INFRA-4** ✅ Completado (15/06/2026) — VPS sincronizado con main, MD5 verificado, archivos basura eliminados
 - **CHAT-1** ✅ Completado (15/06/2026) — ChatPartido conectado a backend real
 - **OLLIN-19** ✅ Completado (15/06/2026) — eventos completos en campo y backend
 - **INFRA-6** ✅ Completado (15/06/2026) — TTL caché desacoplado, fijo 1h, commit `7cd9348`
-- **SSO-5** 🟡 Avance (15/06/2026) — insert manual eliminado; trigger `handle_new_user` maneja perfil, commit `e9223fc`
+- **SSO-5** ✅ Completado (15/06/2026) — registro end-to-end en producción; insert manual eliminado, commit `e9223fc`
+- **CHAT-MODAL** ✅ Completado (15/06/2026) — enlace modal con contexto partido, commit `96e4cab`
+- **PANTALLA-ÉXITO** ✅ Completado (15/06/2026) — rejilla ecosistema + volver al partido, commit `96e4cab`
+- **OLLIN-20** ✅ Completado (15/06/2026) — navbar active link corregido
 
 ### Completados sesión vespertina (referencia)
 - **OLLIN-21** ✅ Completado (14/06/2026) — LineupsTab rediseño alineaciones

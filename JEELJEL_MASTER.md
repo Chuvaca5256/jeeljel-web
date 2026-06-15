@@ -722,11 +722,13 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | ID | Prioridad | Descripción | App | Estado |
 |----|-----------|-------------|-----|--------|
 | **SSO-1** | — | Crear página jeeljel.com/registro con SSO Supabase | jeeljel.com | ✅ Completado — formulario completo, trigger `on_auth_user_created`, tabla `users` |
-| **SSO-2** | — | Modal de registro en Ollin Deportes al intentar chatear | Ollin Deportes | ✅ Completado — input bloqueado + modal CTA a `/registro` |
+| **SSO-2** | — | Modal de registro en Ollin Deportes al intentar chatear | Ollin Deportes | ✅ Completado — input bloqueado + modal CTA con contexto partido (`96e4cab`) |
 | **SSO-3** | 🟡 | Migrar auth Ikan Naat a jeeljel_users (post-torneo) | Ikan Naat | ⏳ Pendiente |
 | **SSO-4** | — | Tabla `users` en Supabase con `origen_registro` y `consentimiento_comunicaciones` | jeeljel.com | ✅ Completado — proyecto `ikan-nat-prod` |
-| **SSO-5** | 🔴 | Confirmar registro end-to-end — bloqueado por email rate limit Supabase; verificar cuando se libere | jeeljel.com | ⏳ Pendiente |
-| **SSO-6** | 🟡 | Re-habilitar RLS en tabla `users` con políticas correctas | jeeljel.com | ⏳ Post-torneo |
+| **SSO-5** | — | Registro end-to-end jeeljel.com/registro | jeeljel.com | ✅ Completado (15/06/2026) — insert manual eliminado, trigger `handle_new_user`, commit `e9223fc`; confirmado en producción |
+| **SSO-6** | 🔴 | Re-habilitar RLS en `public.users` — Security Advisor CRITICAL; leer `pg_policies` ANTES de activar | jeeljel.com | ⏳ BLOQUEANTE PRE-LANZAMIENTO |
+| **SSO-7** | 🟡 | Pasar `origen_registro: origenParam` en `options.data` del signUp — funnel torneo | jeeljel.com | 🟡 Parcial — `origenParam`/`returnTo` capturados (`96e4cab`); falta enviar al signUp |
+| **SMTP-1** | 🔴 | Resend SMTP en Supabase Auth — eliminar rate limit 4 correos/hora | Infra | ⏳ BLOQUEANTE PRE-LANZAMIENTO |
 | **FIN-4** | 🔴 | Display moneda local automático por país | Todas | ⏳ Pendiente |
 | **FIN-5** | 🟡 | Argentina ARS dinámico vía dLocal | Todas | ⏳ Pendiente |
 | **FIN-6** | 🟡 | Verificar cross-app jeeljel_coins entre apps | Todas | ⏳ Pendiente |
@@ -774,7 +776,22 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **OLLIN-19** | — | `formatEventLabel` + `getEventKind` + `KIND_META` expandidos — eventos completos campo y backend | Ollin Deportes | ✅ Completado (15/06/2026) |
 | **OLLIN-20** | — | Navbar active link — `NavLink` con `style` función `isActive` | Ollin Deportes | ✅ Completado (15/06/2026) |
 | **CHAT-1** | — | `ChatPartido.jsx` conectado a backend real — socket, batch, modal SSO, pick pinned | Ollin Deportes | ✅ Completado (15/06/2026) |
-| **SEC** | 🟡 | Re-habilitar RLS en tabla `users` post-torneo | Infra | ⏳ Post-torneo |
+| **CHAT-MODAL** | — | Enlace modal con contexto `origen=ollin_deportes&return=/ollin-deportes/partido/${id}` | Ollin Deportes | ✅ Completado (15/06/2026) — commit `96e4cab` |
+| **PANTALLA-ÉXITO** | — | UI bienvenida post-registro: rejilla ecosistema + «Volver al partido» condicional | jeeljel.com | ✅ Completado (15/06/2026) — commit `96e4cab` |
+| **CHAT-UI-1** | 🟡 | Modal chat: separar X del enlace; agregar botón «Iniciar sesión» | Ollin Deportes | ⏳ Pendiente |
+| **SESION-1** | 🟡 | Persistencia sesión al recargar + `onAuthStateChange` + botón «Cerrar sesión» en UI | jeeljel.com | ⏳ Pendiente |
+| **SEC-2** | 🟡 | Optimizar políticas RLS — alertas *Auth RLS Initialization Plan* en `subscriptions`, `planificaciones`, `vc_credits`, `chat_history` | Infra | ⏳ Post-lanzamiento |
+| **SEC-3** | 🟡 | Checklist seguridad pre-lanzamiento: rate limit registro, validación inputs, RLS tablas sensibles | Infra | ⏳ Post-lanzamiento |
+| **SEC** | 🔴 | Re-habilitar RLS en `public.users` — ver SSO-6 | Infra | ⏳ BLOQUEANTE PRE-LANZAMIENTO |
+
+### Orden de prioridad pre-lanzamiento (15/06/2026)
+
+1. **SMTP-1** — Resend SMTP (sin esto no hay registro en volumen)
+2. **SSO-6** — RLS `public.users` (sin esto datos personales sin candado)
+3. **SSO-7** — `origenParam` en signUp (funnel del torneo)
+4. **CHAT-UI-1** — Fixes modal chat
+5. **SESION-1** — Persistencia y cierre de sesión
+6. **SEC-2** / **SEC-3** — Post-lanzamiento
 
 ## REGLA DE TRABAJO — NO ADIVINAR
 
@@ -784,8 +801,8 @@ Antes de ejecutar cualquier comando en el VPS o proponer un fix, Claude debe pri
 
 ---
 
-*Documento generado: 10/06/2026 | Versión: **v2.1** (14/06 sesión completa — INFRA-5, BACKEND-1, POSICIONES dedup, JUGADORES, layout partido, CHAT placeholder) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
+*Documento generado: 10/06/2026 | Versión: **v2.2** (15/06/2026 cierre sesión — SSO-5 ✅, CHAT-MODAL, PANTALLA-ÉXITO, pendientes pre-lanzamiento) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
 *Unifica: JeelJel_Coins_Ecosistema_Master_v13.md + CURSOR_OllinDeportes_v1.md + alias Coins Master*
 
-*Documentos hermanos: SNAPSHOT.md (estado actual — v19 sesión 15/06) · MASTER_BLUEPRINT.md (hoja de ruta)*
+*Documentos hermanos: SNAPSHOT.md (estado actual — v22 sesión 15/06) · MASTER_BLUEPRINT.md (hoja de ruta)*
 *Próxima revisión: 01/07/2026 (TC mensual + post-torneo)*
