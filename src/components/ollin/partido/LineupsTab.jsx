@@ -4,6 +4,12 @@ function normalizeForMatch(name = '') {
   return name.toLowerCase().replace(/[^a-z0-9]/g, '')
 }
 
+function buildPlayerGoogleUrl(name) {
+  if (!name) return null
+  const q = `${name} jugador futbol`.replace(/\s+/g, '+')
+  return `https://www.google.com/search?q=${q}`
+}
+
 function buildPlayerEventMap(events = [], teamId) {
   const map = {}
   if (!teamId) return map
@@ -66,7 +72,9 @@ function BancaTable({ subs, eventMap }) {
           return (
             <div key={p.id || p.number} className="ollin-lineups-tab__bench-row">
               <span className="ollin-lineups-tab__bench-num">{p.number}</span>
-              <span className="ollin-lineups-tab__bench-name">{p.name}</span>
+              {buildPlayerGoogleUrl(p.name)
+                ? <a href={buildPlayerGoogleUrl(p.name)} className="ollin-standings-team-link" target="_blank" rel="noopener noreferrer">{p.name}</a>
+                : <span className="ollin-lineups-tab__bench-name">{p.name}</span>}
               {p.pos && <span className="ollin-lineups-tab__bench-pos">{p.pos}</span>}
               <EventBadges badges={badges} />
             </div>
@@ -105,7 +113,12 @@ function FormationPitch({ lineup, side, eventMap }) {
                 return (
                   <tr key={p.id || p.number} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', background: i % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'transparent' }}>
                     <td style={{ padding: '7px 8px', color: '#f0c030', fontWeight: 700 }}>{p.number ?? '—'}</td>
-                    <td style={{ padding: '7px 8px', color: '#fff' }}>{p.name}<EventBadges badges={badges} /></td>
+                    <td style={{ padding: '7px 8px', color: '#fff' }}>
+                      {buildPlayerGoogleUrl(p.name)
+                        ? <a href={buildPlayerGoogleUrl(p.name)} className="ollin-standings-team-link" target="_blank" rel="noopener noreferrer">{p.name}</a>
+                        : p.name}
+                      <EventBadges badges={badges} />
+                    </td>
                     <td style={{ padding: '7px 8px', color: '#aaa', textAlign: 'right' }}>{p.pos}</td>
                   </tr>
                 )

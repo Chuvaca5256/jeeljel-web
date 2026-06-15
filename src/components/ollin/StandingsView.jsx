@@ -10,6 +10,12 @@ function buildTeamGoogleSearchUrl(spanishName) {
   return `https://www.google.com/search?q=${q}`
 }
 
+function buildPlayerGoogleUrl(name) {
+  if (!name) return null
+  const q = `${name} jugador futbol`.replace(/\s+/g, '+')
+  return `https://www.google.com/search?q=${q}`
+}
+
 function StandingsTeamName({ name }) {
   const displayName = translateTeamName(name)
   const href = buildTeamGoogleSearchUrl(displayName)
@@ -66,7 +72,11 @@ function ScorersTable({ rows }) {
         {rows.map((row) => (
           <tr key={`${row.rank}-${row.playerName}`}>
             <td>{row.rank}</td>
-            <td>{row.playerName}</td>
+            <td>
+              {buildPlayerGoogleUrl(row.playerName)
+                ? <a href={buildPlayerGoogleUrl(row.playerName)} className="ollin-standings-team-link" target="_blank" rel="noopener noreferrer">{row.playerName}</a>
+                : row.playerName}
+            </td>
             <td>{translateTeamName(row.teamName)}</td>
             <td>{row.goals ?? '—'}</td>
             <td>{row.assists ?? '—'}</td>
