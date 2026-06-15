@@ -40,6 +40,19 @@
 - **Bug conocido:** `ollin:polling:paused` en Redis persiste entre reinicios PM2 y bloquea polling (INFRA-5)
 - **Bug conocido:** cada restart PM2 vacía Redis — tabs vacías hasta ciclo IDLE de 3 min (INFRA-6)
 
+### REGLA CRÍTICA — Verificar créditos API-Sports
+
+NUNCA concluir que se agotaron créditos por el log de PM2 o el contador Redis.
+El contador `ollin:api:requests:today` en Redis se infla con reinicios de PM2 y NO refleja la realidad.
+
+Para verificar créditos reales, ejecutar en VPS:
+
+```bash
+curl -s -H 'x-apisports-key: '$(grep API_SPORTS_KEY /var/www/jeeljel-repo/ollin-backend/.env | cut -d= -f2)'' 'https://v3.football.api-sports.io/status' | grep -o '"requests":{[^}]*}'
+```
+
+Resultado real hoy 14/06: current=260, limit_day=7500.
+
 ### API-Sports
 - Plan PRO activo — fútbol únicamente, 7,500 req/día
 - **Reset diario: 00:00 UTC = 18:00 CDT** (hora Ciudad de México)
