@@ -23,6 +23,37 @@ const PARTIDO_TABS = [
   { id: 'h2h', label: 'H2H' },
 ]
 
+const BANNER_ITEMS = [
+  {
+    type: 'cta',
+    text: '🤖 ¿Quieres picks con IA para este partido?',
+    btnText: 'Probar Ikan Naat IA',
+    url: 'https://ikannaat.jeeljel.com',
+  },
+]
+
+function IkanNaatBanner() {
+  const [current, setCurrent] = useState(0)
+  useEffect(() => {
+    if (BANNER_ITEMS.length <= 1) return
+    const t = setInterval(() => setCurrent(i => (i + 1) % BANNER_ITEMS.length), 5000)
+    return () => clearInterval(t)
+  }, [])
+  const item = BANNER_ITEMS[current]
+  return (
+    <div className="ollin-banner-rotativo">
+      {item.type === 'cta' && (
+        <div className="ollin-banner-rotativo__cta">
+          <span>{item.text}</span>
+          <a href={item.url} target="_blank" rel="noopener noreferrer" className="ollin-banner-rotativo__btn">
+            {item.btnText}
+          </a>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function OllinPartido() {
   const { id } = useParams()
   const { loading, error, data } = usePartido(id)
@@ -62,82 +93,46 @@ export default function OllinPartido() {
             <>
               <PartidoHeader summary={summary} sport={sport} />
 
-              {/* Banner Ikan Naat IA */}
-              <div style={{
-                background: '#0d1b2a',
-                borderTop: '1px solid rgba(249,115,22,0.3)',
-                borderBottom: '1px solid rgba(249,115,22,0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                padding: '0 16px',
-                height: '48px',
-                flexShrink: 0,
-              }}>
-                <span style={{ color: '#fff', fontSize: '0.85rem' }}>
-                  🤖 <span className="ollin-banner-text-full">¿Quieres picks con IA para este partido?</span>
-                  <span className="ollin-banner-text-short">Picks con IA</span>
-                </span>
-                <a
-                  href="https://ikannaat.jeeljel.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    background: '#f97316',
-                    color: '#fff',
-                    fontWeight: 700,
-                    fontSize: '0.8rem',
-                    padding: '6px 14px',
-                    borderRadius: '6px',
-                    textDecoration: 'none',
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  <span className="ollin-banner-btn-full">Probar Ikan Naat IA</span>
-                  <span className="ollin-banner-btn-short">Ikan Naat IA</span>
-                </a>
-              </div>
+              <div className="ollin-partido-layout">
+                {/* COLUMNA IZQUIERDA */}
+                <div className="ollin-partido-main">
+                  <div className="ollin-partido-tabs" role="tablist" aria-label="Detalle del partido">
+                    {PARTIDO_TABS.map((tab) => (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        role="tab"
+                        aria-selected={activeTab === tab.id}
+                        className={`ollin-partido-tabs__btn${activeTab === tab.id ? ' is-active' : ''}`}
+                        onClick={() => setActiveTab(tab.id)}
+                      >
+                        {tab.label}
+                      </button>
+                    ))}
+                  </div>
 
-              <div className="ollin-partido-tabs" role="tablist" aria-label="Detalle del partido">
-                {PARTIDO_TABS.map((tab) => (
-                  <button
-                    key={tab.id}
-                    type="button"
-                    role="tab"
-                    aria-selected={activeTab === tab.id}
-                    className={`ollin-partido-tabs__btn${activeTab === tab.id ? ' is-active' : ''}`}
-                    onClick={() => setActiveTab(tab.id)}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
-              </div>
+                  <div className="ollin-partido-panel" role="tabpanel">
+                    {activeTab === 'live' && (sport === 'beisbol' ? (
+                      <BaseballDiamondLive summary={summary} />
+                    ) : (
+                      <FootballFieldLive summary={summary} events={data.events} />
+                    ))}
+                    {activeTab === 'stats' && <StatsTab statistics={data.statistics} sport={sport} summary={summary} />}
+                    {activeTab === 'players' && <PlayersTab players={data.players} sport={sport} summary={summary} />}
+                    {activeTab === 'lineups' && <LineupsTab lineups={data.lineups} sport={sport} summary={summary} />}
+                    {activeTab === 'h2h' && <H2HTab h2h={data.h2h} />}
+                  </div>
 
-              <div className="ollin-partido-panel" role="tabpanel">
-                {activeTab === 'live' &&
-                  (sport === 'beisbol' ? (
-                    <BaseballDiamondLive summary={summary} />
-                  ) : (
-                    <FootballFieldLive summary={summary} events={data.events} />
-                  ))}
-                {activeTab === 'stats' && (
-                  <StatsTab statistics={data.statistics} sport={sport} summary={summary} />
-                )}
-                {activeTab === 'players' && (
-                  <PlayersTab
-                    players={data.players}
-                    sport={sport}
-                    summary={summary}
-                  />
-                )}
-                {activeTab === 'lineups' && (
-                  <LineupsTab lineups={data.lineups} sport={sport} summary={summary} />
-                )}
-                {activeTab === 'h2h' && <H2HTab h2h={data.h2h} />}
+                  {/* BANNER ROTATIVO IKAN NAAT */}
+                  <div className="ollin-partido-banner">
+                    <IkanNaatBanner />
+                  </div>
+                </div>
 
-                {activeTab === 'live' && summary?.status?.short === 'LIVE' && (
+                {/* COLUMNA DERECHA — CHAT */}
+                <div className="ollin-partido-sidebar">
                   <ChatPartido partidoId={id} summary={summary} />
-                )}
+                </div>
               </div>
             </>
           )}
