@@ -28,34 +28,67 @@ function miniStatLine(summary, sport) {
 export default function PartidoHeader({ summary, sport }) {
   if (!summary) return null
 
-  const showScore = summary.homeScore != null && summary.awayScore != null
-  const score = showScore ? `${summary.homeScore} - ${summary.awayScore}` : 'vs'
+  const isLive = ['1H','2H','ET','BT','P','LIVE'].includes(summary?.statusShort || '')
+  const elapsed = summary?.elapsed ?? null
+  const statusShort = summary?.statusShort || ''
+
+  const matchTime = (() => {
+    if (['FT','AET','PEN'].includes(statusShort)) return 'FT'
+    if (statusShort === 'HT') return 'HT'
+    if (isLive && elapsed != null) return `${elapsed}'`
+    return statusShort || '–'
+  })()
 
   return (
-    <header className="ollin-partido-header">
-      <Link to="/ollin-deportes" className="ollin-partido-back">
-        ← Volver
-      </Link>
+    <div className="ollin-ph">
+      {/* FILA PRINCIPAL: equipo local · marcador+tiempo · equipo visitante */}
+      <div className="ollin-ph__row">
 
-      <p className="ollin-partido-league">{summary.leagueName}</p>
-
-      <div className="ollin-partido-matchup">
-        <div className="ollin-partido-team">
-          <TeamDisplay team={summary.homeTeam} size={40} />
-          <span className="ollin-partido-team__name">{summary.homeTeam.name}</span>
+        {/* LOCAL */}
+        <div className="ollin-ph__team ollin-ph__team--home">
+          <div className="ollin-ph__badge">
+            {summary?.homeTeam?.initials || 'LOC'}
+          </div>
+          <span className="ollin-ph__team-name">{summary?.homeTeam?.name || 'Local'}</span>
         </div>
 
-        <div className="ollin-partido-scorebox">
-          <span className="ollin-partido-scorebox__score">{score}</span>
-          <span className="ollin-partido-scorebox__status">{formatStatus(summary)}</span>
-          <span className="ollin-partido-scorebox__mini">{miniStatLine(summary, sport)}</span>
+        {/* MARCADOR */}
+        <div className="ollin-ph__score-block">
+          <div className="ollin-ph__score">
+            <span>{summary?.homeScore ?? 0}</span>
+            <span className="ollin-ph__score-sep">–</span>
+            <span>{summary?.awayScore ?? 0}</span>
+          </div>
+          <div className={`ollin-ph__time${isLive ? ' ollin-ph__time--live' : ''}`}>
+            {isLive && <span className="ollin-ph__live-dot" />}
+            {matchTime}
+          </div>
         </div>
 
-        <div className="ollin-partido-team ollin-partido-team--away">
-          <TeamDisplay team={summary.awayTeam} size={40} />
-          <span className="ollin-partido-team__name">{summary.awayTeam.name}</span>
+        {/* VISITANTE */}
+        <div className="ollin-ph__team ollin-ph__team--away">
+          <div className="ollin-ph__badge ollin-ph__badge--away">
+            {summary?.awayTeam?.initials || 'VIS'}
+          </div>
+          <span className="ollin-ph__team-name">{summary?.awayTeam?.name || 'Visitante'}</span>
         </div>
+
       </div>
-    </header>
+
+      {/* POSESIÓN si está disponible */}
+      {summary?.miniStats?.possessionHome != null && (
+        <div className="ollin-ph__poss-bar-wrap">
+          <span className="ollin-ph__poss-num" style={{color:'#f97316'}}>
+            {summary.miniStats.possessionHome}%
+          </span>
+          <div className="ollin-ph__poss-track">
+            <div className="ollin-ph__poss-fill" style={{width:`${summary.miniStats.possessionHome}%`}} />
+          </div>
+          <span className="ollin-ph__poss-num" style={{color:'#38bdf8'}}>
+            {100 - parseInt(summary.miniStats.possessionHome)}%
+          </span>
+        </div>
+      )}
+    </div>
   )
 }
