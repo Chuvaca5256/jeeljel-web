@@ -91,12 +91,29 @@ function parseFootballEvents(apiRows) {
 }
 
 function formatEventLabel(ev) {
-  const detail = ev.detail || ev.type || ''
-  if (/goal/i.test(detail) || ev.type === 'Goal') return 'GOL ⚽'
-  if (/red/i.test(detail)) return 'TARJETA ROJA 🟥'
-  if (/yellow/i.test(detail)) return 'FALTA 🟨'
-  if (/foul/i.test(detail)) return 'FALTA 🟨'
-  return sanitizeText(detail || ev.type || 'Evento')
+  const detail = (ev.detail || '').toLowerCase()
+  const type   = (ev.type   || '').toLowerCase()
+
+  if (type === 'goal' || detail.includes('goal'))          return 'GOL ⚽'
+  if (detail.includes('own goal'))                         return 'GOL EN PROPIA ⚽'
+  if (detail.includes('penalty') && type === 'goal')       return 'GOL DE PENAL ⚽'
+  if (detail.includes('red card') || detail.includes('red')) return 'TARJETA ROJA 🟥'
+  if (detail.includes('yellow card') || detail.includes('yellow')) return 'TARJETA AMARILLA 🟨'
+  if (type === 'subst')                                    return 'CAMBIO 🔄'
+  if (detail.includes('corner'))                           return 'CORNER 🚩'
+  if (detail.includes('penalty'))                          return 'PENAL 🎯'
+  if (detail.includes('shot on target'))                   return 'TIRO A PUERTA 🥅'
+  if (type === 'foul' || detail.includes('foul'))          return 'FALTA 🟨'
+  if (detail.includes('free kick'))                        return 'TIRO LIBRE 🎯'
+  if (detail.includes('throw in'))                         return 'SAQUE DE BANDA 🤚'
+  if (detail.includes('injury'))                           return 'LESIÓN 🚑'
+  if (detail.includes('var'))                              return 'VAR 📺'
+  if (detail.includes('drink') || detail.includes('hydration')) return 'PAUSA HIDRATACIÓN 💧'
+  if (detail.includes('delay') || detail.includes('interruption') ||
+      detail.includes('lightning') || detail.includes('rain') ||
+      detail.includes('pitch invasion') || detail.includes('suspended')) return 'PARTIDO DETENIDO ⚠️'
+  if (detail.includes('extra time') || detail.includes('added time')) return 'TIEMPO AGREGADO ⏱️'
+  return sanitizeText(ev.detail || ev.type || 'Evento')
 }
 
 function parseFootballLineups(apiRows, fixture) {

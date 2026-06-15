@@ -15,14 +15,25 @@ function getEventKind(ev) {
   const label  = (ev.label  || '').toLowerCase()
   const type   = (ev.type   || '').toLowerCase()
   const detail = (ev.detail || '').toLowerCase()
-  if (label.includes('gol') || type === 'goal' || detail.includes('goal'))               return 'goal'
-  if (label.includes('roja') || detail.includes('red card'))                              return 'red'
-  if (label.includes('amarilla') || detail.includes('yellow card'))                       return 'yellow'
+
+  if (label.includes('gol') || type === 'goal' || detail.includes('goal'))                return 'goal'
+  if (label.includes('propia') || detail.includes('own goal'))                            return 'goal'
+  if (detail.includes('red card') || label.includes('roja'))                              return 'red'
+  if (detail.includes('yellow card') || label.includes('amarilla'))                       return 'yellow'
   if (type === 'subst' || label.includes('cambio') || label.includes('sustituc'))        return 'subst'
   if (detail.includes('corner') || label.includes('corner') || label.includes('esquina')) return 'corner'
   if (detail.includes('penalty') || label.includes('penal'))                              return 'penalty'
-  if (detail.includes('var'))                                                             return 'var'
-  if (label.includes('falta') || type === 'foul' || detail.includes('foul'))             return 'foul'
+  if (detail.includes('shot on target') || label.includes('tiro a puerta'))              return 'shot'
+  if (detail.includes('free kick') || label.includes('tiro libre'))                      return 'freekick'
+  if (detail.includes('throw in') || label.includes('saque de banda'))                   return 'throwin'
+  if (type === 'foul' || detail.includes('foul') || label.includes('falta'))             return 'foul'
+  if (detail.includes('injury') || label.includes('lesión') || label.includes('lesion')) return 'injury'
+  if (detail.includes('var') || label.includes('var'))                                    return 'var'
+  if (detail.includes('drink') || detail.includes('hydration') || label.includes('hidrat')) return 'hydration'
+  if (detail.includes('delay') || detail.includes('suspended') ||
+      detail.includes('lightning') || detail.includes('rain') ||
+      detail.includes('pitch invasion') || label.includes('detenido'))                   return 'stoppage'
+  if (detail.includes('added time') || label.includes('tiempo agregado'))                return 'addedtime'
   return 'other'
 }
 
