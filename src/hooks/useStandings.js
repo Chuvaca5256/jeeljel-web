@@ -71,7 +71,8 @@ export default function useStandings(leagueId, enabled) {
     if (enabled && leagueId != null) {
       load()
     }
-  }, [leagueId, enabled]) // eslint-disable-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [leagueId, enabled ? 1 : 0])
 
   return { loading, data, scorers, usingMock, refresh: load }
 }
