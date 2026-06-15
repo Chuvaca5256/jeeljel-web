@@ -392,20 +392,17 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 
 ## Pendientes activos — orden pre-lanzamiento
 
-1. **SMTP-1** 🔴 — Resend SMTP (sin esto no hay registro en volumen)
-2. **SSO-6** 🔴 — RLS `public.users` (sin esto datos personales sin candado)
-3. **CHAT-WS-1** 🔴 — Nginx WebSocket + carga histórica (sin esto chat invisible)
-4. **SSO-7** 🟡 — `origenParam` en signUp (funnel torneo)
-5. **CHAT-UI-2** / **CHAT-UI-3** 🟢 — pulido UX modal y mensaje spam duplicado
-6. **SEC-2** 🟡 — optimización políticas RLS (post-lanzamiento)
+1. **CHAT-WS-1** 🔴 — Nginx WebSocket + carga histórica (sin esto chat invisible)
+2. **SSO-7** 🟡 — `origenParam` en signUp (funnel torneo)
+3. **CHAT-UI-2** / **CHAT-UI-3** 🟢 — pulido UX modal y mensaje spam duplicado
+4. **SEC-2** 🟡 — optimización políticas RLS (post-lanzamiento)
 
-- [ ] **SMTP-1** — Conectar Resend SMTP en Supabase Auth
-- [ ] **SSO-6** — Re-habilitar RLS en `public.users` (leer `pg_policies` primero)
-- [ ] **CHAT-WS-1** — Proxy WebSocket Nginx + GET mensajes históricos en ChatPartido
-- [ ] **SSO-7** — Pasar `origen_registro: origenParam` en signUp
-- [ ] **CHAT-UI-2** — `if (session) setShowModal(false)` en `onAuthStateChange` de ChatPartido
-- [ ] **CHAT-UI-3** — Mensaje específico para spam duplicado en `chatService.js`
-- [ ] **SEC-2** — Optimizar políticas RLS (*Auth RLS Initialization Plan*) post-lanzamiento
+- [x] **SMTP-1** (16/06/2026) — Resend SMTP activo; Site URL jeeljel.com; emailRedirectTo corregido commit 0643b08
+- [x] **SSO-6** (16/06/2026) — RLS public.users activado; 4 políticas verificadas
+- [ ] **CHAT-WS-1** 🔴 — Nginx WebSocket /socket.io/ + GET histórico ChatPartido
+- [ ] **SSO-7** 🟡 — origenParam en signUp
+- [ ] **CHAT-UI-2** / **CHAT-UI-3** 🟢 — pulido UX modal y spam duplicado
+- [ ] **SEC-2** 🟡 — Post-lanzamiento
 - [ ] Página Misión con contenido real
 - [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:` hola + proyectos)
 - [x] Footer global: `proyectos@jeeljel.com` + botón Contáctanos → mailto proyectos

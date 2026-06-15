@@ -1,5 +1,5 @@
 # SNAPSHOT — JeelJel Kaanab
-**Versión:** v25 — 15/06/2026 (LiveTicker + header partido)
+**Versión:** v25 — 16/06/2026
 **Autor:** Carlos García Anaya + Claude
 
 ## ESTADO ACTUAL DEL SISTEMA
@@ -142,6 +142,19 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 - **CHAT-UI-2** 🟢 — Modal no se cierra al detectar sesión en `onAuthStateChange`. Agregar `if (session) setShowModal(false)` como `OllinChat.jsx`.
 - **CHAT-UI-3** 🟢 — `userMessage` del caso `spam_duplicate` usa texto genérico de moderación en lugar de mensaje específico de duplicado. Corregir en `chatService.js`.
 - **SEC-2** 🟡 POST-LANZAMIENTO — Security Advisor: alertas *Auth RLS Initialization Plan* en `subscriptions`, `planificaciones`, `vc_credits`, `chat_history`.
+
+## SESIÓN 16/06/2026
+
+### Infraestructura y SSO
+- **SMTP-1** ✅ — Resend conectado como SMTP custom en Supabase Auth. Dominio jeeljel.com verificado en Resend. Site URL corregida a https://jeeljel.com. Redirect URLs: eliminadas las de varionix-ia.onrender.com, solo queda https://jeeljel.com/**. emailRedirectTo corregido a https://jeeljel.com/registro?confirmed=true (commit 0643b08). Correo de confirmación llega y redirige correctamente a jeeljel.com.
+- **SSO-6** ✅ — RLS activado en public.users. 4 políticas verificadas antes de activar: Allow insert on register (INSERT public), users_own (ALL auth.uid()=id), users_select_own (SELECT auth.uid()=id), users_update_own (UPDATE auth.uid()=id). Registro end-to-end confirmado con RLS activo.
+- **Pantalla éxito** 🟡 — Ajustes visuales solicitados: logo Ikan Naat con opacity:1 y brightness, botones uniformes, logos apps próximas. Pendiente verificar en producción.
+
+### Pendientes activos
+- **CHAT-WS-1** 🔴 — Siguiente prioridad. Mensajes no aparecen en UI. Dos causas: (1) Nginx sin proxy WebSocket /socket.io/ en jeeljel-landing, (2) falta GET histórico al montar ChatPartido.
+- **SSO-7** 🟡 — origenParam en signUp
+- **CHAT-UI-2** / **CHAT-UI-3** 🟢 — pulido UX
+- **SEC-2** 🟡 — Post-lanzamiento
 
 ## PENDIENTES (prioridad pre-lanzamiento)
 1. **SMTP-1** 🔴 — Resend SMTP — sin esto no hay registro en volumen

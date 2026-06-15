@@ -726,9 +726,9 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **SSO-3** | 🟡 | Migrar auth Ikan Naat a jeeljel_users (post-torneo) | Ikan Naat | ⏳ Pendiente |
 | **SSO-4** | — | Tabla `users` en Supabase con `origen_registro` y `consentimiento_comunicaciones` | jeeljel.com | ✅ Completado — proyecto `ikan-nat-prod` |
 | **SSO-5** | — | Registro end-to-end jeeljel.com/registro | jeeljel.com | ✅ Completado (15/06/2026) — insert manual eliminado, trigger `handle_new_user`, commit `e9223fc`; confirmado en producción |
-| **SSO-6** | 🔴 | Re-habilitar RLS en `public.users` — Security Advisor CRITICAL; leer `pg_policies` ANTES de activar | jeeljel.com | ⏳ BLOQUEANTE PRE-LANZAMIENTO |
+| **SSO-6** | — | Re-habilitar RLS en `public.users` | jeeljel.com | ✅ Completado (16/06/2026) — 4 políticas verificadas, RLS activo en producción |
 | **SSO-7** | 🟡 | Pasar `origen_registro: origenParam` en `options.data` del signUp — funnel torneo | jeeljel.com | 🟡 Parcial — `origenParam`/`returnTo` capturados (`96e4cab`); falta enviar al signUp |
-| **SMTP-1** | 🔴 | Resend SMTP en Supabase Auth — eliminar rate limit 4 correos/hora | Infra | ⏳ BLOQUEANTE PRE-LANZAMIENTO |
+| **SMTP-1** | — | Resend SMTP en Supabase Auth | Infra | ✅ Completado (16/06/2026) — Site URL jeeljel.com, emailRedirectTo corregido, commit 0643b08 |
 | **FIN-4** | 🔴 | Display moneda local automático por país | Todas | ⏳ Pendiente |
 | **FIN-5** | 🟡 | Argentina ARS dinámico vía dLocal | Todas | ⏳ Pendiente |
 | **FIN-6** | 🟡 | Verificar cross-app jeeljel_coins entre apps | Todas | ⏳ Pendiente |
@@ -781,21 +781,19 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **CHAT-UI-1** | — | Modal chat: X separada del enlace; botón «Iniciar sesión» | Ollin Deportes | ✅ Completado (15/06/2026) — commit `20c000f` |
 | **SESION-1** | — | Persistencia sesión al recargar + `onAuthStateChange` + botón «Cerrar sesión» en navbar | jeeljel.com | ✅ Completado (15/06/2026) — commit `20c000f` |
 | **OLLIN-CHAT-BACKEND** | — | Tablas `ollin_chat`/`ollin_chat_moderacion` Supabase + fix `ws` transport Node 20 | Ollin Deportes | ✅ Completado (15/06/2026) — commit `152c4a9` |
-| **CHAT-WS-1** | 🔴 | Mensajes en Supabase OK pero UI vacía — Nginx WebSocket `/socket.io/` + GET histórico al montar chat | Ollin Deportes | ⏳ BLOQUEANTE PRE-LANZAMIENTO |
+| **CHAT-WS-1** | 🔴 | Nginx WebSocket /socket.io/ + GET histórico ChatPartido | Ollin Deportes | ⏳ SIGUIENTE PRIORIDAD |
 | **CHAT-UI-2** | 🟢 | Modal chat no se cierra al detectar sesión — `if (session) setShowModal(false)` en `onAuthStateChange` | Ollin Deportes | ⏳ Pendiente — baja prioridad |
 | **CHAT-UI-3** | 🟢 | `userMessage` spam duplicado usa texto genérico — corregir en `chatService.js` | Ollin Deportes | ⏳ Pendiente — baja prioridad |
 | **SEC-2** | 🟡 | Optimizar políticas RLS — alertas *Auth RLS Initialization Plan* en `subscriptions`, `planificaciones`, `vc_credits`, `chat_history` | Infra | ⏳ Post-lanzamiento |
 | **SEC-3** | 🟡 | Checklist seguridad pre-lanzamiento: rate limit registro, validación inputs, RLS tablas sensibles | Infra | ⏳ Post-lanzamiento |
 | **SEC** | 🔴 | Re-habilitar RLS en `public.users` — ver SSO-6 | Infra | ⏳ BLOQUEANTE PRE-LANZAMIENTO |
 
-### Orden de prioridad pre-lanzamiento (15/06/2026 — cierre final)
+### Orden de prioridad pre-lanzamiento (16/06/2026)
 
-1. **SMTP-1** — Resend SMTP (sin esto no hay registro en volumen)
-2. **SSO-6** — RLS `public.users` (sin esto datos personales sin candado)
-3. **CHAT-WS-1** — Nginx WebSocket + carga histórica (sin esto chat invisible)
-4. **SSO-7** — `origenParam` en signUp (funnel del torneo)
-5. **CHAT-UI-2** / **CHAT-UI-3** — pulido UX
-6. **SEC-2** — Post-lanzamiento
+1. **CHAT-WS-1** — Nginx WebSocket + carga histórica (sin esto chat invisible)
+2. **SSO-7** — `origenParam` en signUp (funnel del torneo)
+3. **CHAT-UI-2** / **CHAT-UI-3** — pulido UX
+4. **SEC-2** — Post-lanzamiento
 
 ## REGLA DE TRABAJO — NO ADIVINAR
 
@@ -805,8 +803,8 @@ Antes de ejecutar cualquier comando en el VPS o proponer un fix, Claude debe pri
 
 ---
 
-*Documento generado: 10/06/2026 | Versión: **v2.4** (15/06/2026 cierre final — OLLIN-CHAT-BACKEND ✅, CHAT-WS-1 🔴, commits `152c4a9`/`20c000f`) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
+*Documento generado: 10/06/2026 | Versión: **v2.5** — 16/06/2026 | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
 *Unifica: JeelJel_Coins_Ecosistema_Master_v13.md + CURSOR_OllinDeportes_v1.md + alias Coins Master*
 
-*Documentos hermanos: SNAPSHOT.md (estado actual — v24 cierre final 15/06) · MASTER_BLUEPRINT.md (hoja de ruta)*
+*Documentos hermanos: SNAPSHOT.md (estado actual — v25 16/06) · MASTER_BLUEPRINT.md (hoja de ruta)*
 *Próxima revisión: 01/07/2026 (TC mensual + post-torneo)*
