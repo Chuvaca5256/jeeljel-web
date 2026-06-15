@@ -1,5 +1,5 @@
 # SNAPSHOT — JeelJel Kaanab
-**Versión:** v22 — 15/06/2026
+**Versión:** v23 — 15/06/2026
 **Autor:** Carlos García Anaya + Claude
 
 ## ESTADO ACTUAL DEL SISTEMA
@@ -118,13 +118,14 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 - **SSO-7** 🟡 PARCIAL — `origenParam` y `returnTo` capturados desde `useSearchParams` en `Registro.jsx` (commit `96e4cab`). Falta pasar `origenParam` en `options.data` del signUp — sigue pendiente como SSO-7.
 - **CHAT-MODAL** ✅ — `ChatPartido.jsx`: enlace del modal incluye contexto completo `/registro?origen=ollin_deportes&return=/ollin-deportes/partido/${partidoId}` (commit `96e4cab`).
 - **PANTALLA-ÉXITO** ✅ — Nueva UI de bienvenida con rejilla del ecosistema: botón Ikan Naat (fénix difuminado de fondo), botón Ollin Deportes, tres apps próximas (Izydra OS, Virtyou, Inkógnito), y botón condicional «Volver al partido» que regresa al chat exacto donde el usuario intentó registrarse (commit `96e4cab`).
+- **CHAT-UI-1** ✅ — Modal `ChatPartido.jsx` rediseñado: X separada del enlace, botón «Crear cuenta gratis» y «Iniciar sesión» con `return` al partido (commit `20c000f`).
+- **SESION-1** ✅ — `onAuthStateChange` en `ChatPartido.jsx`; botón «Cerrar sesión» / «Iniciar sesión» en `Navbar.jsx` con `supabase.auth.signOut()` (commit `20c000f`).
 
 ### SSO y seguridad (pendientes identificados)
 - **SMTP-1** 🔴 BLOQUEANTE PRE-LANZAMIENTO — Conectar Resend como SMTP personalizado en Supabase para eliminar rate limit de 4 correos/hora del plan Free. Cuenta Resend activa. Config: Supabase → Project Settings → Auth → SMTP Settings. Host `smtp.resend.com`, Port `465`, Username `resend`, Password = API Key Resend, Sender `noreply@jeeljel.com`. Verificar dominio `jeeljel.com` en Resend antes de conectar.
 - **SSO-6** 🔴 BLOQUEANTE PRE-LANZAMIENTO — RLS desactivado en `public.users` (Security Advisor: *RLS Disabled in Public* + *Policy Exists RLS Disabled*). Leer políticas existentes con `SELECT policyname, cmd, roles, qual, with_check FROM pg_policies WHERE tablename = 'users' AND schemaname = 'public';` ANTES de activar RLS.
 - **SSO-7** 🟡 — `origenParam` declarado pero no se pasa en `options.data` del signUp; todos los registros caen al default `jeeljel_com` en el trigger. Fix: `origen_registro: origenParam` en `supabase.auth.signUp`.
-- **CHAT-UI-1** 🟡 — Modal `ChatPartido.jsx`: X de cerrar pegada al enlace; falta botón «Iniciar sesión» para usuarios con cuenta existente.
-- **SESION-1** 🟡 — Verificar persistencia de sesión al recargar; confirmar `onAuthStateChange` o equivalente; agregar botón «Cerrar sesión» en UI (no existe `supabase.auth.signOut()` en el proyecto).
+- **CHAT-UI-2** 🟢 — Modal `ChatPartido.jsx` no se cierra automáticamente cuando `onAuthStateChange` detecta sesión activa. Agregar `if (session) setShowModal(false)` en el callback, igual que `OllinChat.jsx` L27.
 - **SEC-2** 🟡 POST-LANZAMIENTO — Alertas *Auth RLS Initialization Plan* en `subscriptions`, `planificaciones`, `vc_credits`, `chat_history`.
 - **SEC-3** 🟡 POST-LANZAMIENTO — Checklist seguridad pre-lanzamiento: rate limiting registro, validación inputs, revisión RLS tablas sensibles.
 
@@ -132,10 +133,9 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 1. **SMTP-1** 🔴 — Resend SMTP en Supabase — sin esto no hay registro en volumen durante el torneo
 2. **SSO-6** 🔴 — RLS en `public.users` — sin esto datos personales sin candado
 3. **SSO-7** 🟡 — Pasar `origenParam` en `options.data` del signUp — funnel del torneo
-4. **CHAT-UI-1** 🟡 — Fixes modal chat (separación X, botón login)
-5. **SESION-1** 🟡 — Persistencia sesión + botón cerrar sesión
-6. **SEC-2** 🟡 — Optimizar políticas RLS (post-lanzamiento)
-7. **SEC-3** 🟡 — Checklist seguridad pre-lanzamiento (post-lanzamiento)
+4. **SEC-2** 🟡 — Optimizar políticas RLS (post-lanzamiento)
+5. **SEC-3** 🟡 — Checklist seguridad pre-lanzamiento (post-lanzamiento)
+6. **CHAT-UI-2** 🟢 — Cerrar modal chat automáticamente al detectar sesión (`setShowModal(false)`)
 
 ### Completados sesión 15/06/2026
 - **INFRA-4** ✅ Completado (15/06/2026) — VPS sincronizado con main, MD5 verificado, archivos basura eliminados
@@ -145,6 +145,8 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 - **SSO-5** ✅ Completado (15/06/2026) — registro end-to-end en producción; insert manual eliminado, commit `e9223fc`
 - **CHAT-MODAL** ✅ Completado (15/06/2026) — enlace modal con contexto partido, commit `96e4cab`
 - **PANTALLA-ÉXITO** ✅ Completado (15/06/2026) — rejilla ecosistema + volver al partido, commit `96e4cab`
+- **CHAT-UI-1** ✅ Completado (15/06/2026) — modal chat rediseñado (X separada, login + registro), commit `20c000f`
+- **SESION-1** ✅ Completado (15/06/2026) — `onAuthStateChange` ChatPartido + cerrar sesión navbar, commit `20c000f`
 - **OLLIN-20** ✅ Completado (15/06/2026) — navbar active link corregido
 
 ### Completados sesión vespertina (referencia)

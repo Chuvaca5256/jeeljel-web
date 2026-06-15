@@ -202,8 +202,9 @@
 | **SEC-13** | 🟡 | **SEC-2 (Supabase)** — Alertas rendimiento *Auth RLS Initialization Plan* en `subscriptions`, `planificaciones`, `vc_credits`, `chat_history`. Optimizar evaluación políticas RLS | ⏳ Post-lanzamiento |
 | **SEC-14** | 🟡 | **SEC-3 (Supabase)** — Checklist seguridad pre-lanzamiento: rate limiting registro, validación inputs, RLS tablas sensibles | ⏳ Post-lanzamiento |
 | **SMTP-1** | 🔴 | Conectar Resend SMTP en Supabase Auth — eliminar rate limit 4 correos/hora plan Free. Host `smtp.resend.com:465`, sender `noreply@jeeljel.com`; verificar dominio en Resend | ⏳ Pendiente — crítico |
-| **CHAT-UI-1** | 🟡 | Modal `ChatPartido.jsx`: separar X del enlace; agregar botón «Iniciar sesión» | ⏳ Pendiente |
-| **SESION-1** | 🟡 | Persistencia sesión al recargar + `onAuthStateChange` global + botón «Cerrar sesión» en UI | ⏳ Pendiente |
+| **CHAT-UI-1** | — | Modal `ChatPartido.jsx`: X separada del enlace; botón «Iniciar sesión» | ✅ Completado (15/06/2026) — commit `20c000f` |
+| **SESION-1** | — | Persistencia sesión + `onAuthStateChange` + botón «Cerrar sesión» en navbar | ✅ Completado (15/06/2026) — commit `20c000f` |
+| **CHAT-UI-2** | 🟢 | Modal chat no se cierra al detectar sesión — agregar `setShowModal(false)` en `onAuthStateChange` | ⏳ Pendiente — baja prioridad |
 | **INFRA-3** | 🔴 | VPS ↔ GitHub desincronizados — `pasadosService.js` solo en VPS; usar siempre `git pull --rebase`; verificar código real antes de cambios | ⏳ Pendiente |
 | **INFRA-4** | — | GitHub Actions deploy frontend | Infra | ❌ Desactivado — reemplazado por webhook (`webhook-deploy`, puerto 9000) |
 
@@ -377,24 +378,24 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - [x] **SSO-5** (15/06/2026) — registro end-to-end en producción; insert manual eliminado, commit `e9223fc`
 - [x] **CHAT-MODAL** (15/06/2026) — enlace modal con contexto partido, commit `96e4cab`
 - [x] **PANTALLA-ÉXITO** (15/06/2026) — rejilla ecosistema + volver al partido, commit `96e4cab`
+- [x] **CHAT-UI-1** (15/06/2026) — modal chat rediseñado (X separada, login + registro), commit `20c000f`
+- [x] **SESION-1** (15/06/2026) — `onAuthStateChange` ChatPartido + cerrar sesión navbar, commit `20c000f`
 
 ## Pendientes activos — orden pre-lanzamiento
 
 1. **SMTP-1** 🔴 — Resend SMTP en Supabase (sin esto no hay registro en volumen)
 2. **SSO-6** 🔴 — RLS en `public.users` (sin esto datos personales sin candado)
 3. **SSO-7** 🟡 — `origenParam` en `options.data` del signUp (funnel torneo)
-4. **CHAT-UI-1** 🟡 — Fixes modal chat (X separada, botón login)
-5. **SESION-1** 🟡 — Persistencia sesión + cerrar sesión en UI
-6. **SEC-2** 🟡 — Optimizar políticas RLS (post-lanzamiento)
-7. **SEC-3** 🟡 — Checklist seguridad (post-lanzamiento)
+4. **SEC-2** 🟡 — Optimizar políticas RLS (post-lanzamiento)
+5. **SEC-3** 🟡 — Checklist seguridad (post-lanzamiento)
+6. **CHAT-UI-2** 🟢 — Cerrar modal chat al detectar sesión activa
 
 - [ ] **SMTP-1** — Conectar Resend SMTP en Supabase Auth
 - [ ] **SSO-6** — Re-habilitar RLS en `public.users` (leer `pg_policies` primero)
 - [ ] **SSO-7** — Pasar `origen_registro: origenParam` en signUp
-- [ ] **CHAT-UI-1** — Separar X del enlace + botón «Iniciar sesión» en modal chat
-- [ ] **SESION-1** — `onAuthStateChange` + botón `signOut` en navbar
 - [ ] **SEC-2** — Optimizar políticas RLS (*Auth RLS Initialization Plan*) post-lanzamiento
 - [ ] **SEC-3** — Checklist seguridad pre-lanzamiento con CEO post-lanzamiento
+- [ ] **CHAT-UI-2** — `if (session) setShowModal(false)` en `onAuthStateChange` de ChatPartido
 - [ ] Página Misión con contenido real
 - [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:` hola + proyectos)
 - [x] Footer global: `proyectos@jeeljel.com` + botón Contáctanos → mailto proyectos

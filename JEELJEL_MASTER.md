@@ -778,8 +778,9 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **CHAT-1** | — | `ChatPartido.jsx` conectado a backend real — socket, batch, modal SSO, pick pinned | Ollin Deportes | ✅ Completado (15/06/2026) |
 | **CHAT-MODAL** | — | Enlace modal con contexto `origen=ollin_deportes&return=/ollin-deportes/partido/${id}` | Ollin Deportes | ✅ Completado (15/06/2026) — commit `96e4cab` |
 | **PANTALLA-ÉXITO** | — | UI bienvenida post-registro: rejilla ecosistema + «Volver al partido» condicional | jeeljel.com | ✅ Completado (15/06/2026) — commit `96e4cab` |
-| **CHAT-UI-1** | 🟡 | Modal chat: separar X del enlace; agregar botón «Iniciar sesión» | Ollin Deportes | ⏳ Pendiente |
-| **SESION-1** | 🟡 | Persistencia sesión al recargar + `onAuthStateChange` + botón «Cerrar sesión» en UI | jeeljel.com | ⏳ Pendiente |
+| **CHAT-UI-1** | — | Modal chat: X separada del enlace; botón «Iniciar sesión» | Ollin Deportes | ✅ Completado (15/06/2026) — commit `20c000f` |
+| **SESION-1** | — | Persistencia sesión al recargar + `onAuthStateChange` + botón «Cerrar sesión» en navbar | jeeljel.com | ✅ Completado (15/06/2026) — commit `20c000f` |
+| **CHAT-UI-2** | 🟢 | Modal chat no se cierra al detectar sesión — `if (session) setShowModal(false)` en `onAuthStateChange` (como `OllinChat.jsx` L27) | Ollin Deportes | ⏳ Pendiente — baja prioridad |
 | **SEC-2** | 🟡 | Optimizar políticas RLS — alertas *Auth RLS Initialization Plan* en `subscriptions`, `planificaciones`, `vc_credits`, `chat_history` | Infra | ⏳ Post-lanzamiento |
 | **SEC-3** | 🟡 | Checklist seguridad pre-lanzamiento: rate limit registro, validación inputs, RLS tablas sensibles | Infra | ⏳ Post-lanzamiento |
 | **SEC** | 🔴 | Re-habilitar RLS en `public.users` — ver SSO-6 | Infra | ⏳ BLOQUEANTE PRE-LANZAMIENTO |
@@ -789,9 +790,8 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 1. **SMTP-1** — Resend SMTP (sin esto no hay registro en volumen)
 2. **SSO-6** — RLS `public.users` (sin esto datos personales sin candado)
 3. **SSO-7** — `origenParam` en signUp (funnel del torneo)
-4. **CHAT-UI-1** — Fixes modal chat
-5. **SESION-1** — Persistencia y cierre de sesión
-6. **SEC-2** / **SEC-3** — Post-lanzamiento
+4. **SEC-2** / **SEC-3** — Post-lanzamiento
+5. **CHAT-UI-2** — Cerrar modal chat al autenticarse (baja prioridad)
 
 ## REGLA DE TRABAJO — NO ADIVINAR
 
@@ -801,8 +801,8 @@ Antes de ejecutar cualquier comando en el VPS o proponer un fix, Claude debe pri
 
 ---
 
-*Documento generado: 10/06/2026 | Versión: **v2.2** (15/06/2026 cierre sesión — SSO-5 ✅, CHAT-MODAL, PANTALLA-ÉXITO, pendientes pre-lanzamiento) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
+*Documento generado: 10/06/2026 | Versión: **v2.3** (15/06/2026 cierre sesión v2 — CHAT-UI-1 ✅, SESION-1 ✅, commit `20c000f`) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
 *Unifica: JeelJel_Coins_Ecosistema_Master_v13.md + CURSOR_OllinDeportes_v1.md + alias Coins Master*
 
-*Documentos hermanos: SNAPSHOT.md (estado actual — v22 sesión 15/06) · MASTER_BLUEPRINT.md (hoja de ruta)*
+*Documentos hermanos: SNAPSHOT.md (estado actual — v23 sesión 15/06) · MASTER_BLUEPRINT.md (hoja de ruta)*
 *Próxima revisión: 01/07/2026 (TC mensual + post-torneo)*
