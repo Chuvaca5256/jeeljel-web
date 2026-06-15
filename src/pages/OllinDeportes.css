@@ -827,11 +827,14 @@
   overflow-x: auto;
   margin-bottom: 16px;
   padding-bottom: 4px;
+  width: 100%;
 }
 
 .ollin-partido-tabs__btn {
-  flex-shrink: 0;
-  padding: 8px 12px;
+  flex: 1 1 0;
+  min-width: 0;
+  text-align: center;
+  padding: 8px 10px;
   border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: transparent;
@@ -1830,5 +1833,172 @@
     min-height: 400px;
     border-left: none;
     border-top: 1px solid rgba(249,115,22,0.3);
+  }
+}
+
+/* ── ALINEACIONES (LineupsTab) ── */
+.ollin-lineups-tab {
+  width: 100%;
+  padding-bottom: 24px;
+}
+
+.ollin-lineups-tab__selector {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  margin-bottom: 14px;
+}
+
+.ollin-lineups-tab__selector-btn {
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: none;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  font-family: 'DM Sans', sans-serif;
+  transition: all 0.15s;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ollin-lineups-tab__selector-btn.is-home.is-active {
+  background: #4ecdc4;
+  color: #0a0a1a;
+}
+
+.ollin-lineups-tab__selector-btn.is-home:not(.is-active) {
+  background: rgba(255, 255, 255, 0.08);
+  color: #aaa;
+}
+
+.ollin-lineups-tab__selector-btn.is-away.is-active {
+  background: #f0c030;
+  color: #0a0a1a;
+}
+
+.ollin-lineups-tab__selector-btn.is-away:not(.is-active) {
+  background: rgba(255, 255, 255, 0.08);
+  color: #aaa;
+}
+
+.ollin-lineups-tab__formation {
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.88rem;
+  letter-spacing: 0.05em;
+  margin: 0 0 12px;
+  text-transform: uppercase;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.ollin-lineups-tab__formation.is-home {
+  color: #4ecdc4;
+}
+
+.ollin-lineups-tab__formation.is-away {
+  color: #f0c030;
+}
+
+.ollin-lineups-tab__body {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  width: 100%;
+}
+
+.ollin-lineups-tab__starters {
+  flex: 1.15 1 0;
+  min-width: 0;
+}
+
+.ollin-lineups-tab__pitch svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  aspect-ratio: 300 / 420;
+  max-height: 520px;
+}
+
+.ollin-lineups-tab__bench {
+  flex: 1 1 0;
+  min-width: 220px;
+  padding: 4px 0 4px 18px;
+  border-left: 1px solid rgba(255, 255, 255, 0.1);
+  align-self: stretch;
+}
+
+.ollin-lineups-tab__bench-title {
+  color: #888;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 0 0 10px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.ollin-lineups-tab__bench-list {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.ollin-lineups-tab__bench-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #b0b0b0;
+  line-height: 1.35;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.ollin-lineups-tab__bench-num {
+  color: #f0c030;
+  font-weight: 700;
+  min-width: 24px;
+  flex-shrink: 0;
+}
+
+.ollin-lineups-tab__bench-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.ollin-lineups-tab__bench-pos {
+  color: #666;
+  font-size: 0.72rem;
+  flex-shrink: 0;
+}
+
+.ollin-lineups-tab__fallback-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+  font-family: 'DM Sans', sans-serif;
+}
+
+@media (max-width: 640px) {
+  .ollin-lineups-tab__body {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .ollin-lineups-tab__bench {
+    min-width: 0;
+    padding: 12px 0 0;
+    border-left: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+
+  .ollin-partido-tabs__btn {
+    flex: 1 1 auto;
+    min-width: 72px;
+    font-size: 9px;
+    padding: 8px 6px;
   }
 }
