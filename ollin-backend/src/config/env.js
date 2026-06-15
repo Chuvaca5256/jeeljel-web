@@ -13,7 +13,7 @@ const config = {
   redisUrl: process.env.REDIS_URL || 'redis://localhost:6379',
   pollingIntervalMs: Number.isFinite(POLLING_INTERVAL_MS) ? POLLING_INTERVAL_MS : 600000,
   port: Number.isFinite(rawPort) ? rawPort : 10001,
-  cacheTtlMs: (Number.isFinite(POLLING_INTERVAL_MS) ? POLLING_INTERVAL_MS : 600000) * 2,
+  cacheTtlMs: parseInt(process.env.CACHE_TTL_MS || '3600000', 10),
   apiDailyLimit: 7500,
   apiDailyPauseAt: 7400,
   footballBaseUrl: 'https://v3.football.api-sports.io',
