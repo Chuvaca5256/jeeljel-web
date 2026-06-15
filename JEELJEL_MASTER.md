@@ -769,7 +769,7 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **USE-STANDINGS** | — | Fix doble fetch al activar tab POSICIONES | Ollin Deportes | ✅ Completado (14/06/2026) |
 | **LINEUPS-PARCIAL** | — | SVG campo por `grid`; tabla fallback sin grid | Ollin Deportes | 🟡 Parcial (14/06/2026) |
 | **OLLIN-21** | 🟡 | ALINEACIONES — rediseño campo horizontal estilo Sofascore: ambos equipos + suplentes + iconos gol/sustitución | Ollin Deportes | ⏳ Pendiente |
-| **INFRA-4** | 🔴 | `pasadosService.js` en repo pero no llega al VPS con `git pull` — investigar con Cursor, NO adivinar en terminal | Infra | ⏳ Pendiente |
+| **INFRA-4** | — | `pasadosService.js` en repo pero no llega al VPS con `git pull` — investigar con Cursor, NO adivinar en terminal | Infra | ✅ Completado (15/06/2026) — VPS sincronizado con main, MD5 verificado |
 | **INFRA-6** | 🟡 | Cada restart PM2 vacía Redis — warm-up al arrancar sin depender de ciclo IDLE 3 min | Infra | ⏳ Pendiente |
 | **OLLIN-19** | — | `formatEventLabel` + `getEventKind` + `KIND_META` expandidos — eventos completos campo y backend | Ollin Deportes | ✅ Completado (15/06/2026) |
 | **OLLIN-20** | — | Navbar active link — `NavLink` con `style` función `isActive` | Ollin Deportes | ✅ Completado (15/06/2026) |
@@ -787,5 +787,5 @@ Antes de ejecutar cualquier comando en el VPS o proponer un fix, Claude debe pri
 *Documento generado: 10/06/2026 | Versión: **v2.1** (14/06 sesión completa — INFRA-5, BACKEND-1, POSICIONES dedup, JUGADORES, layout partido, CHAT placeholder) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
 *Unifica: JeelJel_Coins_Ecosistema_Master_v13.md + CURSOR_OllinDeportes_v1.md + alias Coins Master*
 
-*Documentos hermanos: SNAPSHOT.md (estado actual — v18 sesión 15/06) · MASTER_BLUEPRINT.md (hoja de ruta)*
+*Documentos hermanos: SNAPSHOT.md (estado actual — v19 sesión 15/06) · MASTER_BLUEPRINT.md (hoja de ruta)*
 *Próxima revisión: 01/07/2026 (TC mensual + post-torneo)*

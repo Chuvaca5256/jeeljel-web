@@ -1,5 +1,5 @@
 # SNAPSHOT — JeelJel Kaanab
-**Versión:** v18 — 15/06/2026
+**Versión:** v19 — 15/06/2026
 **Autor:** Carlos García Anaya + Claude
 
 ## ESTADO ACTUAL DEL SISTEMA
@@ -36,7 +36,7 @@
 - `ollin-backend/src/services/polling.js` — warm-up `pollFootballProximos` + `pollFootballPasados` al arrancar (BACKEND-1 ✅); live→idle refresh pasados (OLLIN-18 ✅)
 - `ollin-backend/src/services/partidoService.js` — OLLIN-19 ✅ `formatEventLabel` expandido: gol, propia, penal, tarjetas, corner, tiro, falta, tiro libre, banda, lesión, VAR, hidratación, detenido, tiempo extra; `parseFootballPlayers` con rating, pases, duelos, faltas, tarjetas
 - `ollin-backend/src/services/standingsService.js` — deduplica filas por `team.id` dentro de cada grupo
-- `ollin-backend/src/services/pasadosService.js` — `pollFootballPasados(redisIn)` recibe redis; ✅ en GitHub; ⚠️ no llega al VPS con `git pull` (INFRA-4)
+- `ollin-backend/src/services/pasadosService.js` — `pollFootballPasados(redisIn)` recibe redis; ✅ sincronizado VPS con `origin/main` (INFRA-4 ✅)
 
 ### Backend
 - Entry point: `src/server.js` (NO `src/index.js`)
@@ -106,13 +106,18 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 - **OLLIN-19b** ✅ — `KIND_META` con iconos para shot, freekick, throwin, injury, hydration, stoppage, addedtime
 - **OLLIN-20** ✅ — Navbar active link corregido (`NavLink` con `style={({ isActive }) => ...}`)
 
+## SESIÓN 15/06/2026 — Vespertina
+
+### Infraestructura
+- **INFRA-4** ✅ RESUELTO — Diagnóstico vía SSH confirmó que `pasadosService.js` en el VPS coincide con `origin/main` (MD5 `1a6f2974cd17043211b8e81cae893979`) y la rama está `up to date`. La desincronización reportada en SNAPSHOT v11 ya no aplica. Se eliminaron dos archivos vacíos basura (`0` y `1`, 0 bytes) de la raíz del repo en el VPS; `git status` quedó `working tree clean`.
+
 ## PENDIENTES (prioridad)
-1. **INFRA-4** 🔴 — `pasadosService.js` existe en el repo pero no llega al VPS con `git pull` — investigar con Cursor por qué, NO adivinar en terminal
-2. **INFRA-6** 🟡 — Cada restart de PM2 vacía Redis (PASADOS, HOY, PRÓXIMOS) — necesita estrategia de warm-up al arrancar sin depender de ciclo de 3 minutos
-3. **SEC** 🟡 — Re-habilitar RLS en tabla `users` post-torneo
-4. **SSO-5** 🔴 — Confirmar registro end-to-end jeeljel.com/registro
+1. **INFRA-6** 🟡 — Cada restart de PM2 vacía Redis (PASADOS, HOY, PRÓXIMOS) — necesita estrategia de warm-up al arrancar sin depender de ciclo de 3 minutos
+2. **SEC** 🟡 — Re-habilitar RLS en tabla `users` post-torneo
+3. **SSO-5** 🔴 — Confirmar registro end-to-end jeeljel.com/registro
 
 ### Completados sesión 15/06/2026
+- **INFRA-4** ✅ Completado (15/06/2026) — VPS sincronizado con main, MD5 verificado, archivos basura eliminados
 - **CHAT-1** ✅ Completado (15/06/2026) — ChatPartido conectado a backend real
 - **OLLIN-19** ✅ Completado (15/06/2026) — eventos completos en campo y backend
 - **OLLIN-20** ✅ Completado (15/06/2026) — navbar active link corregido
