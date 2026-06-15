@@ -134,6 +134,8 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 - **SMTP-1** 🔴 BLOQUEANTE PRE-LANZAMIENTO — Conectar Resend como SMTP personalizado en Supabase (rate limit 4 correos/hora plan Free). Cuenta Resend activa. Supabase → Auth → SMTP: `smtp.resend.com:465`, user `resend`, password API Key Resend, sender `noreply@jeeljel.com`. Verificar dominio `jeeljel.com` en Resend.
 - **SSO-6** 🔴 BLOQUEANTE PRE-LANZAMIENTO — RLS desactivado en `public.users`. Dos alertas CRITICAL en Security Advisor. Políticas ya escritas — leer `pg_policies` ANTES de activar. Protege datos personales de todo el ecosistema.
 - **CHAT-WS-1** 🔴 — Mensajes se guardan en Supabase pero NO aparecen en la UI. (1) Socket.io WebSocket no conecta — `wss://jeeljel.com/socket.io/` falla; Nginx sin proxy WebSocket en `jeeljel-landing`. (2) Falta GET de mensajes históricos al montar `ChatPartido`. Chat invisible para el usuario aunque backend opere.
+- **Eventos en tiempo real** 🔴 — El ticker sintético NO está confirmado funcionando. Causa probable: `pollLiveFixtureEvents` llama a `/fixtures/statistics` por partido pero no se ve log de emisión `ollin:ticker` en PM2. Antes de dar por bueno, verificar con `pm2 logs ollin-deportes` durante partido en vivo que aparezca línea de ticker emitido. Si no aparece, revisar que el bloque de detección de diffs en `polling.js` líneas ~95-110 esté dentro del loop correcto de `pollLiveFixtureEvents` y no fuera de él.
+- **Eventos discretos API-Sports** ⚠️ — API-Sports NO reporta tiros, corners ni faltas como eventos discretos en `/fixtures/events`. Solo reporta goles, tarjetas y sustituciones. Los eventos sintéticos del ticker dependen de diffs de `/fixtures/statistics` entre ciclos consecutivos.
 - **SSO-7** 🟡 — `origenParam` declarado en `Registro.jsx` pero no se pasa en `options.data` del signUp; todos caen a default `jeeljel_com` en el trigger. Afecta funnel del torneo.
 - **CHAT-UI-2** 🟢 — Modal no se cierra al detectar sesión en `onAuthStateChange`. Agregar `if (session) setShowModal(false)` como `OllinChat.jsx`.
 - **CHAT-UI-3** 🟢 — `userMessage` del caso `spam_duplicate` usa texto genérico de moderación en lugar de mensaje específico de duplicado. Corregir en `chatService.js`.
@@ -143,9 +145,11 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 1. **SMTP-1** 🔴 — Resend SMTP — sin esto no hay registro en volumen
 2. **SSO-6** 🔴 — RLS `public.users` — sin esto datos personales sin candado
 3. **CHAT-WS-1** 🔴 — Socket.io Nginx + carga histórica — sin esto el chat es invisible
-4. **SSO-7** 🟡 — `origenParam` en signUp — funnel del torneo
-5. **CHAT-UI-2** / **CHAT-UI-3** 🟢 — pulido UX modal y mensaje spam duplicado
-6. **SEC-2** 🟡 — optimización políticas RLS (post-lanzamiento)
+4. **Eventos en tiempo real** 🔴 — Ticker sintético sin confirmar; verificar `pm2 logs ollin-deportes` + bloque diffs en `polling.js` ~95-110
+5. **Eventos discretos API-Sports** ⚠️ — `/fixtures/events` solo goles/tarjetas/sustituciones; ticker depende de diffs en `/fixtures/statistics`
+6. **SSO-7** 🟡 — `origenParam` en signUp — funnel del torneo
+7. **CHAT-UI-2** / **CHAT-UI-3** 🟢 — pulido UX modal y mensaje spam duplicado
+8. **SEC-2** 🟡 — optimización políticas RLS (post-lanzamiento)
 
 ### Completados sesión 15/06/2026
 - **INFRA-4** ✅ Completado (15/06/2026) — VPS sincronizado con main, MD5 verificado, archivos basura eliminados
