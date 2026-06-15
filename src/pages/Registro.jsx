@@ -2,8 +2,44 @@ import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import mosaico from '../assets/mosaicos/Tlaloc.png'
 import logoIkanNaat from '../assets/Logo_Ika_Naat_sin_fondo_sin_letras.png'
+import logoOllin from '../assets/Logo_JeelJel_Kanaabcon_balon_sin_fondo.png'
+import logoIzydra from '../assets/Logo_Izydra_OS_Sin_fondo.png'
+import logoVirtyou from '../assets/Logo_virtyou_sin_fondo.png'
+import logoInkognito from '../assets/Logo_inkognito_sin_fondo.png'
 import { supabase } from '../lib/supabaseClient'
 import './AuthPage.css'
+
+const SUCCESS_APP_BTN_STYLE = {
+  width: '200px',
+  height: '48px',
+  fontSize: '14px',
+  padding: '12px',
+}
+
+const SUCCESS_APP_LOGO_STYLE = {
+  position: 'absolute',
+  right: '-8px',
+  top: '50%',
+  transform: 'translateY(-50%)',
+  width: '70px',
+  height: '70px',
+  backgroundSize: 'contain',
+  backgroundRepeat: 'no-repeat',
+  backgroundPosition: 'center',
+  opacity: 1,
+  filter: 'brightness(1.2)',
+}
+
+const SUCCESS_APP_LABEL_STYLE = {
+  position: 'relative',
+  zIndex: 1,
+}
+
+const PROXIMAS_APPS = [
+  { name: 'Izydra OS', logo: logoIzydra },
+  { name: 'Virtyou', logo: logoVirtyou },
+  { name: 'Inkógnito', logo: logoInkognito },
+]
 
 function formatAuthError(message) {
   if (!message) return 'No pudimos crear tu cuenta. Intenta de nuevo.'
@@ -115,31 +151,56 @@ export default function Registro() {
               <a
                 href="https://ikannaat.jeeljel.com"
                 className="registro-success__app-btn registro-success__app-btn--primary"
+                style={SUCCESS_APP_BTN_STYLE}
                 target="_blank"
                 rel="noopener noreferrer"
               >
                 <div
                   className="registro-success__app-btn-logo"
-                  style={{ backgroundImage: `url(${logoIkanNaat})` }}
+                  style={{
+                    ...SUCCESS_APP_LOGO_STYLE,
+                    backgroundImage: `url(${logoIkanNaat})`,
+                  }}
                 />
-                <span>Explorar Ikan Naat IA (Beta)</span>
+                <span style={SUCCESS_APP_LABEL_STYLE}>Explorar Ikan Naat IA (Beta)</span>
               </a>
 
               {/* Ollin Deportes — activa */}
               <a
                 href="/ollin-deportes"
                 className="registro-success__app-btn registro-success__app-btn--secondary"
+                style={SUCCESS_APP_BTN_STYLE}
               >
-                <span>Ollin Deportes</span>
+                <div
+                  className="registro-success__app-btn-logo"
+                  style={{
+                    ...SUCCESS_APP_LOGO_STYLE,
+                    backgroundImage: `url(${logoOllin})`,
+                  }}
+                />
+                <span style={SUCCESS_APP_LABEL_STYLE}>Ollin Deportes</span>
               </a>
 
               {/* Próximamente */}
               <div className="registro-success__apps-proximos">
                 <span className="registro-success__proximos-label">Próximamente</span>
                 <div className="registro-success__proximos-grid">
-                  <div className="registro-success__app-btn registro-success__app-btn--disabled">Izydra OS</div>
-                  <div className="registro-success__app-btn registro-success__app-btn--disabled">Virtyou</div>
-                  <div className="registro-success__app-btn registro-success__app-btn--disabled">Inkógnito</div>
+                  {PROXIMAS_APPS.map(({ name, logo }) => (
+                    <div
+                      key={name}
+                      className="registro-success__app-btn registro-success__app-btn--disabled"
+                      style={SUCCESS_APP_BTN_STYLE}
+                    >
+                      <div
+                        className="registro-success__app-btn-logo"
+                        style={{
+                          ...SUCCESS_APP_LOGO_STYLE,
+                          backgroundImage: `url(${logo})`,
+                        }}
+                      />
+                      <span style={SUCCESS_APP_LABEL_STYLE}>{name}</span>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
