@@ -18,65 +18,31 @@ export default function ChatPartido({ partidoId, summary }) {
   }
 
   return (
-    <div style={{
-      marginTop: '24px',
-      border: '1px solid rgba(255,255,255,0.1)',
-      borderRadius: '8px',
-      padding: '16px',
-      background: 'rgba(0,0,0,0.3)',
-    }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
-        <span style={{ color: '#4ecdc4', fontFamily: 'Cinzel, serif', fontSize: '0.9rem', letterSpacing: '0.05em' }}>
-          Chat en vivo
-        </span>
-        <span style={{ color: '#888', fontSize: '0.8rem' }}>{home} vs {away}</span>
+    <div className="ollin-chat-partido">
+      <div className="ollin-chat-partido__header">
+        <span className="ollin-chat-partido__title">Chat en vivo</span>
+        <span className="ollin-chat-partido__match">{home} vs {away}</span>
       </div>
-      <div style={{
-        minHeight: '120px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        color: '#666',
-        fontSize: '0.85rem',
-      }}>
+
+      <div className="ollin-chat-partido__body">
         Chat próximamente — conectando backend...
       </div>
-      <form onSubmit={handleSend} style={{ marginTop: '12px', display: 'flex', gap: '8px' }}>
+
+      <form className="ollin-chat-partido__form" onSubmit={handleSend}>
         <input
           type="text"
+          className="ollin-chat-partido__input"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
           placeholder="Escribe un mensaje..."
-          style={{
-            flex: 1,
-            background: 'rgba(255,255,255,0.06)',
-            border: '1px solid rgba(255,255,255,0.12)',
-            borderRadius: '6px',
-            padding: '8px 10px',
-            color: '#fff',
-            fontSize: '0.85rem',
-          }}
         />
-        <button
-          type="submit"
-          style={{
-            background: '#f97316',
-            color: '#fff',
-            border: 'none',
-            borderRadius: '6px',
-            padding: '8px 14px',
-            fontWeight: 700,
-            fontSize: '0.8rem',
-            cursor: 'pointer',
-          }}
-        >
+        <button type="submit" className="ollin-chat-partido__send">
           Enviar
         </button>
       </form>
-      <div style={{ marginTop: '12px', textAlign: 'right' }}>
-        <a href="/registro" style={{ color: '#f97316', fontSize: '0.8rem', textDecoration: 'none' }}>
-          Regístrate para participar →
-        </a>
+
+      <div className="ollin-chat-partido__register">
+        <a href="/registro">Regístrate para participar →</a>
       </div>
     </div>
   )
