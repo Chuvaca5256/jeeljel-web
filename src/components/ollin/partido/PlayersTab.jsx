@@ -43,7 +43,7 @@ function sortRows(rows, key, dir) {
 
 function mapPlayer(p) {
   const s = p?.statistics?.[0] ?? {}
-  const didPlay = s?.games?.minutes > 0
+  const didPlay = (s?.games?.minutes ?? 0) > 0
   return {
     id: p?.player?.id,
     name: p?.player?.name ?? '—',
@@ -82,9 +82,16 @@ function PlayersTable({ title, rawPlayers, columns }) {
     )
   }
 
+  const playedRows = sorted.filter(r => r.didPlay)
+  const notPlayedRows = sorted.filter(r => !r.didPlay)
+  const allRows = [...playedRows, ...notPlayedRows]
+
   return (
     <div className="ollin-players-block" style={{ marginBottom: '24px' }}>
       <h3 style={{ color: '#f0c030', marginBottom: '8px', fontSize: '0.95rem', letterSpacing: '0.05em' }}>{title}</h3>
+      {playedRows.length === 0 && (
+        <p style={{ color: '#aaa', fontSize: '0.8rem', marginBottom: '8px' }}>Estadísticas completas disponibles al finalizar el partido</p>
+      )}
       <div className="ollin-players-scroll" style={{ overflowX: 'auto' }}>
         <table className="ollin-players-table" style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
           <thead>
@@ -101,7 +108,7 @@ function PlayersTable({ title, rawPlayers, columns }) {
             </tr>
           </thead>
           <tbody>
-            {sorted.map((row, i) => (
+            {allRows.map((row, i) => (
               <tr key={row.id ?? i}
                 style={{
                   background: i % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'transparent',

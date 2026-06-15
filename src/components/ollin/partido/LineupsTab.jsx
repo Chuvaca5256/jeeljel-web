@@ -40,9 +40,12 @@ function FormationPitch({ lineup, side }) {
         const flipX = side === 'away' ? 100 - pos.x : pos.x
         return (
           <g key={p.id || p.number} transform={`translate(${flipX}, ${pos.y})`}>
-            <circle r="4" fill={side === 'home' ? '#4ecdc4' : '#f0c030'} />
-            <text y="8" textAnchor="middle" fontSize="3" fill="#fff">
+            <circle r="5" fill={side === 'home' ? '#4ecdc4' : '#f0c030'} />
+            <text y="-7" textAnchor="middle" fontSize="3.5" fill="#fff" fontWeight="700">
               {p.number}
+            </text>
+            <text y="10" textAnchor="middle" fontSize="2.8" fill="#fff">
+              {p.name ? p.name.split(' ').pop().slice(0, 10) : ''}
             </text>
           </g>
         )

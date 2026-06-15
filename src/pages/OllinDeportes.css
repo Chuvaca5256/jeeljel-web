@@ -1739,3 +1739,17 @@
     height: 400px;
   }
 }
+
+.ollin-partido-layout--full .ollin-partido-main {
+  flex: 0 0 100%;
+  width: 100%;
+  border-right: none;
+}
+.ollin-partido-sidebar {
+  flex: 0 0 35%;
+  width: 35%;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid rgba(255,255,255,0.07);
+}

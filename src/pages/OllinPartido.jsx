@@ -93,7 +93,7 @@ export default function OllinPartido() {
             <>
               <PartidoHeader summary={summary} sport={sport} />
 
-              <div className="ollin-partido-layout">
+              <div className={`ollin-partido-layout${activeTab !== 'live' ? ' ollin-partido-layout--full' : ''}`}>
                 {/* COLUMNA IZQUIERDA */}
                 <div className="ollin-partido-main">
                   <div className="ollin-partido-tabs" role="tablist" aria-label="Detalle del partido">
@@ -129,10 +129,11 @@ export default function OllinPartido() {
                   </div>
                 </div>
 
-                {/* COLUMNA DERECHA — CHAT */}
-                <div className="ollin-partido-sidebar">
-                  <ChatPartido partidoId={id} summary={summary} />
-                </div>
+                {activeTab === 'live' && (
+                  <div className="ollin-partido-sidebar">
+                    <ChatPartido partidoId={id} summary={summary} />
+                  </div>
+                )}
               </div>
             </>
           )}
