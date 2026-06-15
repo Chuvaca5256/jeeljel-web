@@ -134,6 +134,7 @@ export default function FootballFieldLive({
   events     = [],
   lineups    = null,
   statistics = null,
+  players    = null,
   partidoId  = null,
 }) {
   const homeTeam    = summary?.homeTeam?.name || 'Local'
