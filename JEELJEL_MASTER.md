@@ -243,9 +243,9 @@ Ollin Deportes está **funcional en backend (VPS)** con EN VIVO operativo (Austr
 | Marcadores básicos (post-torneo) | 0 JC | Gratis | ✅ Tier libre permanente |
 | Estadísticas completas + live detallado + ligas premium (post-torneo) | 0 JC* | Incluido en Pro | *Requiere suscripción Pro activa en cualquier app JeelJel — no se cobra JC extra |
 | Listado fútbol + béisbol MLB | 0 JC | Gratis | ✅ Layout 3 zonas + tabs EN VIVO / HOY / PRÓXIMOS / PASADOS / POSICIONES |
-| Chat en vivo | 0 JC | Gratis | Requiere cuenta JeelJel (SSO ✅) — backend moderado activo; UI pendiente (conectar frontend a backend) |
-| Tab POSICIONES (standings + grupos) | 0 JC | Gratis | ✅ Grupos A–L + Mejores terceros ES · links Google por selección · goleadores endpoint activo (sin datos pre-torneo) |
-| Vista partido individual | 0 JC | Gratis | ✅ **En producción** — `/ollin-deportes/partido/:id` · SVG + tabs EN VIVO/ESTADÍSTICAS/JUGADORES/ALINEACIONES/H2H |
+| Chat en vivo | 0 JC | Gratis | Requiere cuenta JeelJel (SSO ✅) — backend moderado activo; UI placeholder en sidebar partido (CHAT-1 pendiente) |
+| Tab POSICIONES (standings + grupos) | 0 JC | Gratis | ✅ Grupos A–L + Mejores terceros ES · dedup `team.id` · links Google · goleadores endpoint activo |
+| Vista partido individual | 0 JC | Gratis | ✅ **En producción** — layout 65/35 · chat sidebar tab EN VIVO · banner Ikan Naat · SVG + 5 tabs |
 | Rediseño UI Sofascore/Bet365 | — | — | ✅ En producción (sidebar ligas, tabs, buscador, móvil TABLA) |
 | Ollin Deportes Premium (futuro JC) | TBD | TBD | Funciones IA/analista post-torneo |
 
@@ -434,7 +434,7 @@ Ollin Deportes es el hub deportivo en tiempo real de JeelJel Kaanab. Vive en `je
 - **Caché:** Redis — todos los datos de la API se cachean en Redis; los usuarios nunca golpean la API directamente
 - **Proceso:** PM2 (`ollin-deportes`) con auto-arranque systemd
 - **Tiempo real:** Socket.io — el backend emite evento `ollin:update` a los clientes conectados
-- **Chat en vivo:** Supabase (tablas `ollin_chat` y `ollin_chat_moderacion`) — backend moderado activo; SSO ✅; UI frontend pendiente (conectar a `POST /chat/messages` + `GET /chat/status`)
+- **Chat en vivo:** Supabase (tablas `ollin_chat` y `ollin_chat_moderacion`) — backend moderado activo; SSO ✅; UI placeholder `ChatPartido.jsx` en sidebar partido (input/enviar, 50 palabras); conectar backend pendiente CHAT-1
 - **API de datos:** API-Football / API-Baseball (API-Sports) — `API_SPORTS_KEY` del VPS
 
 ### Flujo de datos
@@ -757,16 +757,23 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **WEB-6** | — | Enlace jeeljel.com/registro en `login.html` y `register.html` de Ikan Naat | Ikan Naat | ✅ Completado |
 | **INFRA-1** | — | Llave SSH regenerada en VPS + secret `VPS_SSH_KEY` actualizado en GitHub | Infra | ✅ Completado |
 | **INFRA-2** | — | Deploy frontend via webhook + Telegram — PM2 `webhook-deploy` puerto 9000; bot `@Jeeljel_deploy_bot` | Infra | ✅ Completado (14/06/2026) |
-| **BACKEND-1** | 🔴 | `pollFootballProximos` no se llama al arrancar ni en modo LIVE — Redis queda vacío si proceso arranca en LIVE | Ollin Deportes | ⏳ Pendiente |
+| **BACKEND-1** | — | Warm-up `pollFootballProximos` + `pollFootballPasados` al arrancar en `startPolling` | Ollin Deportes | ✅ Completado (14/06/2026) |
 | **CANCHA-3D** | — | `FootballFieldLive.jsx` SVG top-down v3 — sin PixiJS, eventos por equipo, posesión prominente | Ollin Deportes | ✅ Completado (14/06/2026) |
 | **OLLIN-17** | — | Export `sanitizeFootballFixture` + `sanitizeBaseballGame` en `sanitize.js` | Ollin Deportes | ✅ Completado (14/06/2026) |
-| **OLLIN-18** | — | `pollFootballPasados()` en transición live→idle en `polling.js` | Ollin Deportes | ✅ Completado (14/06/2026) |
+| **OLLIN-18** | — | `pollFootballPasados(redis)` en transición live→idle + warm-up al arrancar | Ollin Deportes | ✅ Completado (14/06/2026) |
+| **INFRA-5** | — | `server.js` borra `ollin:polling:paused` + `requestsKey()` al arrancar | Infra | ✅ Completado (14/06/2026) |
+| **POSICIONES-DEDUP** | — | `standingsService.js` deduplica filas por `team.id` dentro de cada grupo | Ollin Deportes | ✅ Completado (14/06/2026) |
+| **JUGADORES-TAB** | — | Formato backend plano; selector Local/Visitante; Goles/Asistencias; stats completas | Ollin Deportes | ✅ Completado (14/06/2026) |
+| **LAYOUT-PARTIDO** | — | 2 columnas 65/35; banner Ikan Naat rotativo; chat sidebar solo tab EN VIVO | Ollin Deportes | ✅ Completado (14/06/2026) |
+| **CHAT-UI** | — | `ChatPartido.jsx` placeholder input/enviar + límite 50 palabras | Ollin Deportes | ✅ Placeholder (14/06/2026) |
+| **USE-STANDINGS** | — | Fix doble fetch al activar tab POSICIONES | Ollin Deportes | ✅ Completado (14/06/2026) |
+| **LINEUPS-PARCIAL** | — | SVG campo por `grid`; tabla fallback sin grid | Ollin Deportes | 🟡 Parcial (14/06/2026) |
+| **OLLIN-21** | 🟡 | ALINEACIONES — rediseño campo horizontal estilo Sofascore: ambos equipos + suplentes + iconos gol/sustitución | Ollin Deportes | ⏳ Pendiente |
 | **INFRA-4** | 🔴 | `pasadosService.js` en repo pero no llega al VPS con `git pull` — investigar con Cursor, NO adivinar en terminal | Infra | ⏳ Pendiente |
-| **INFRA-5** | 🔴 | Redis `ollin:polling:paused` persiste entre reinicios PM2 y bloquea polling — auto-limpiar al arrancar | Infra | ⏳ Pendiente |
 | **INFRA-6** | 🟡 | Cada restart PM2 vacía Redis — warm-up al arrancar sin depender de ciclo IDLE 3 min | Infra | ⏳ Pendiente |
 | **OLLIN-19** | 🟡 | Goles no en campo — `formatEventLabel` no detecta `Normal Goal`, `Own Goal`, `Penalty` en `detail` API-Sports | Ollin Deportes | ⏳ Pendiente |
 | **OLLIN-20** | 🟡 | Navbar active link bug — todos los links amarillos al navegar | Ollin Deportes | ⏳ Pendiente |
-| **CHAT-1** | 🟡 | Chat UI frontend — conectar `ChatPartido.jsx` a `POST /chat/messages` + `GET /chat/status` | Ollin Deportes | ⏳ Pendiente |
+| **CHAT-1** | 🔴🔴 | Conectar `ChatPartido.jsx` a `POST /chat/messages` + `GET /chat/status` — MEGA URGENTE | Ollin Deportes | ⏳ Pendiente |
 | **SEC** | 🟡 | Re-habilitar RLS en tabla `users` post-torneo | Infra | ⏳ Post-torneo |
 
 ## REGLA DE TRABAJO — NO ADIVINAR
@@ -777,8 +784,8 @@ Antes de ejecutar cualquier comando en el VPS o proponer un fix, Claude debe pri
 
 ---
 
-*Documento generado: 10/06/2026 | Versión: **v2.0** (14/06 — CANCHA v3, OLLIN-17/18, INFRA-4/5/6) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
+*Documento generado: 10/06/2026 | Versión: **v2.1** (14/06 sesión completa — INFRA-5, BACKEND-1, POSICIONES dedup, JUGADORES, layout partido, CHAT placeholder) | Autor: JeelJel Kaanab — Carlos García Anaya + Claude*
 *Unifica: JeelJel_Coins_Ecosistema_Master_v13.md + CURSOR_OllinDeportes_v1.md + alias Coins Master*
 
-*Documentos hermanos: SNAPSHOT.md (estado actual — v15 fin sesión 14/06) · MASTER_BLUEPRINT.md (hoja de ruta)*
+*Documentos hermanos: SNAPSHOT.md (estado actual — v16 sesión 14/06) · MASTER_BLUEPRINT.md (hoja de ruta)*
 *Próxima revisión: 01/07/2026 (TC mensual + post-torneo)*

@@ -105,12 +105,12 @@
 | Deploy frontend | ✅ **Automático via webhook** en cada push a `main` — `https://jeeljel.com/deploy-hook` → PM2 `webhook-deploy` (puerto 9000) |
 | Tab PRÓXIMOS | 🟡 Código OK en repo (`3134998`) · producción aún muestra mensaje FREE — frontend no desplegado |
 | Límites API (`env.js`) | ✅ **`apiDailyLimit` 7500** · **`apiDailyPauseAt` 7400** · fallback **180000 ms** |
-| Tab POSICIONES (grupos + goleadores) | ✅ **Grupos A–L + Mejores terceros en ES** · goleadores endpoint activo · links Google · **columna DG (`row.goalsDiff`)** · sin duplicados (`data.groups ?? data.standings`) |
-| Página `/ollin-deportes/partido/:id` | ✅ **En producción** — SVG + 5 tabs + API partido |
+| Tab POSICIONES (grupos + goleadores) | ✅ **Grupos A–L + Mejores terceros en ES** · goleadores endpoint activo · links Google · **columna DG** · deduplicación por `team.id` · fix doble fetch `useStandings.js` |
+| Página `/ollin-deportes/partido/:id` | ✅ **En producción** — layout 2 columnas 65/35 · chat sidebar solo tab EN VIVO · banner Ikan Naat rotativo · SVG + 5 tabs |
 | SSO jeeljel.com/registro | ✅ **Completado** — tabla `users` + trigger `on_auth_user_created` (SNAPSHOT v9) |
 | Modal registro en chat | ✅ **Completado** — input bloqueado + modal CTA (SNAPSHOT v9) |
 | CTA tarjeta Ollin en `/apps` | ✅ **Completado** — enlace «¡Ingresa aquí!» activo (SNAPSHOT v9) |
-| Chat en vivo UI (frontend) | ⏳ Pendiente — conectar frontend a backend (`POST /chat/messages`, `GET /chat/status`) |
+| Chat en vivo UI (frontend) | 🟡 **Placeholder listo** — `ChatPartido.jsx` input/enviar + 50 palabras; conectar backend pendiente CHAT-1 |
 | Bot Telaraña × Ollin | ⏳ Pendiente — worker picks min ~20/~45/~70; campo `tipo` en `ollin_chat`; API_SPORTS_KEY + ODDS_API_KEY disponibles |
 | Workflow auto-deploy backend | ⏳ Pendiente — GitHub Actions `git pull` + `pm2 restart ollin-deportes` (SSH bloqueado Hostinger) |
 | RLS tabla `users` | ⏳ Re-habilitar post-torneo con políticas correctas |
@@ -334,18 +334,26 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - [x] **Deploy webhook + Telegram** — PM2 `webhook-deploy` puerto 9000; bot `@Jeeljel_deploy_bot` ✅
 - [x] **Tabs Ollin normalizados** — TabHoy, TabProximos, TabPasados usan `normalizeFootballFixture`
 - [x] **TabEnVivo — minuto elapsed** — `EnVivoMatchCard` + `EnVivoMatchGroupList` en `TabEnVivo.jsx`
-- [x] **PlayersTab reescrito** — stats completas, rating badge, ordenamiento por columna
-- [x] **ChatPartido placeholder** — aparece solo en tab EN VIVO con partido LIVE
-- [x] **Banner Ikan Naat IA** — en página partido individual, responsive móvil/desktop
+- [x] **PlayersTab reescrito** — stats completas backend, rating badge, selector Local/Visitante, Goles y Asistencias
+- [x] **ChatPartido placeholder** — sidebar solo tab EN VIVO; input/enviar; límite 50 palabras
+- [x] **Banner Ikan Naat IA** — rotativo en página partido
+- [x] **Layout partido 2 columnas** — 65/35 cancha + chat
 - [x] **CANCHA-3D** — `FootballFieldLive.jsx` SVG top-down v3 (sin PixiJS, eventos por equipo, posesión prominente)
 - [x] **OLLIN-17** — export `sanitizeFootballFixture` + `sanitizeBaseballGame` en `sanitize.js`
 - [x] **OLLIN-18** — `pollFootballPasados()` en transición live→idle en `polling.js`
+- [x] **INFRA-5** — `server.js` borra `ollin:polling:paused` + `requestsKey()` al arrancar
+- [x] **BACKEND-1** — warm-up `pollFootballProximos` + `pollFootballPasados` al arrancar en `startPolling`
+- [x] **POSICIONES dedup** — `standingsService.js` deduplica filas por `team.id` dentro de cada grupo
+- [x] **JUGADORES tab** — formato backend plano; selector Local/Visitante; columnas Goles y Asistencias; stats completas backend
+- [x] **Layout partido** — 2 columnas 65/35; banner rotativo Ikan Naat; chat sidebar altura completa solo tab EN VIVO
+- [x] **ChatPartido placeholder** — input/enviar + validación 50 palabras
+- [x] **useStandings fix** — evitar doble fetch al activar tab POSICIONES
+- [x] **LineupsTab parcial** — SVG campo por `grid`; tabla fallback sin grid
+- [ ] **ALINEACIONES rediseño** — campo horizontal estilo Sofascore con ambos equipos + suplentes + iconos gol/sustitución
 - [ ] **INFRA-4** — `pasadosService.js` en repo pero no llega al VPS con `git pull` — investigar con Cursor, NO adivinar
-- [ ] **INFRA-5** — Redis `ollin:polling:paused` persiste entre reinicios PM2 — auto-limpiar al arrancar
 - [ ] **INFRA-6** — Warm-up Redis al arrancar PM2 (PASADOS, HOY, PRÓXIMOS) sin esperar ciclo IDLE 3 min
-- [ ] **BACKEND-1** — `pollFootballProximos` llamar al arrancar en `polling.js` (igual que `pollFootballHoy`)
 - [ ] **OLLIN-19** — Goles en campo: `formatEventLabel` no detecta `Normal Goal`, `Own Goal`, `Penalty` en `detail`
-- [ ] **CHAT-1** — Conectar `ChatPartido.jsx` a backend chat real
+- [ ] **CHAT-1** 🔴🔴 — Conectar `ChatPartido.jsx` a backend chat real
 - [ ] **OLLIN-20** — Navbar active link bug
 - [ ] Página Misión con contenido real
 - [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:` hola + proyectos)
