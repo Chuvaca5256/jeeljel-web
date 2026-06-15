@@ -135,23 +135,9 @@ export default function FootballFieldLive({
 }) {
   const homeTeam    = summary?.homeTeam?.name || 'Local'
   const awayTeam    = summary?.awayTeam?.name || 'Visitante'
+  const elapsed     = summary?.elapsed ?? null
   const statusShort = summary?.statusShort || ''
   const isLive      = ['1H','2H','HT','ET','BT','P'].includes(statusShort)
-  const [elapsed, setElapsed] = useState(summary?.elapsed ?? null)
-
-  // Sincronizar cuando llega nuevo elapsed del backend
-  useEffect(() => {
-    setElapsed(summary?.elapsed ?? null)
-  }, [summary?.elapsed])
-
-  // Timer local: incrementa el minuto cada 60s mientras el partido está activo
-  useEffect(() => {
-    if (!isLive) return
-    const t = setInterval(() => {
-      setElapsed(prev => (prev != null ? prev + 1 : prev))
-    }, 60000)
-    return () => clearInterval(t)
-  }, [isLive])
 
   /* Posesión */
   const rawPossH = parseInt(summary?.miniStats?.possessionHome) ||
