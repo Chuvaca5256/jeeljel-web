@@ -331,6 +331,16 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - [x] Página `/apps` — tarjetas 04 Izydra OS y 05 Inkógnito completadas
 - [x] Página Ollin Deportes principal (`/ollin-deportes`) — en producción
 - [x] Backend Ollin — `/var/www/jeeljel-repo/ollin-backend` · PM2 **`ollin-deportes`** · puerto 10001
+- [x] **Deploy webhook + Telegram** — PM2 `webhook-deploy` puerto 9000; bot `@Jeeljel_deploy_bot` ✅
+- [x] **Tabs Ollin normalizados** — TabHoy, TabProximos, TabPasados usan `normalizeFootballFixture`
+- [x] **TabEnVivo — minuto elapsed** — `EnVivoMatchCard` + `EnVivoMatchGroupList` en `TabEnVivo.jsx`
+- [x] **PlayersTab reescrito** — stats completas, rating badge, ordenamiento por columna
+- [x] **ChatPartido placeholder** — aparece solo en tab EN VIVO con partido LIVE
+- [x] **Banner Ikan Naat IA** — en página partido individual, responsive móvil/desktop
+- [ ] **BACKEND-1** — `pollFootballProximos` llamar al arrancar en `polling.js` (igual que `pollFootballHoy`)
+- [ ] **OLLIN-17** — `sanitizeFootballFixture is not a function` en página partido individual
+- [ ] **CHAT-1** — Conectar `ChatPartido.jsx` a backend chat real
+- [ ] **OLLIN-20** — Navbar active link bug
 - [ ] Página Misión con contenido real
 - [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:` hola + proyectos)
 - [x] Footer global: `proyectos@jeeljel.com` + botón Contáctanos → mailto proyectos
