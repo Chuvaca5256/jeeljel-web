@@ -86,24 +86,6 @@ export default function Registro() {
         return
       }
 
-      const { error: insertError } = await supabase.from('users').insert({
-        id: user.id,
-        nombre: nombre.trim(),
-        email: email.trim(),
-        phone: phone.trim() || null,
-        origen_registro: origenRegistro,
-        consentimiento_comunicaciones: acceptTerms,
-        created_at: new Date().toISOString(),
-      })
-
-      if (insertError) {
-        console.error('[registro] Error insert users:', insertError.message)
-        setError(
-          'Tu cuenta se creó, pero hubo un problema al guardar tu perfil. Contacta a hola@jeeljel.com si persiste.'
-        )
-        return
-      }
-
       setSuccess(true)
     } catch (err) {
       setError(formatAuthError(err?.message))
