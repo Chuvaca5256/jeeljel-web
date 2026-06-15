@@ -42,21 +42,20 @@ function sortRows(rows, key, dir) {
 }
 
 function mapPlayer(p) {
-  const s = p?.statistics?.[0] ?? {}
-  const didPlay = (s?.games?.minutes ?? 0) > 0
+  const didPlay = (p?.minutes ?? 0) > 0
   return {
-    id: p?.player?.id,
-    name: p?.player?.name ?? '—',
-    minutes: s?.games?.minutes ?? 0,
-    rating: s?.games?.rating ?? null,
-    shotsTotal: s?.shots?.total ?? 0,
-    shotsOn: s?.shots?.on ?? 0,
-    passes: s?.passes?.total ?? 0,
-    keyPasses: s?.passes?.key ?? 0,
-    duelsWon: s?.duels?.won ?? 0,
-    fouls: s?.fouls?.committed ?? 0,
-    yellow: s?.cards?.yellow ?? 0,
-    red: s?.cards?.red ?? 0,
+    id: p?.id,
+    name: p?.name ?? '—',
+    minutes: p?.minutes ?? 0,
+    rating: p?.rating ?? null,
+    shotsTotal: p?.shots ?? 0,
+    shotsOn: p?.shotsOn ?? 0,
+    passes: p?.passes ?? 0,
+    keyPasses: p?.keyPasses ?? 0,
+    duelsWon: p?.duelsWon ?? 0,
+    fouls: p?.fouls ?? 0,
+    yellow: p?.yellow ?? 0,
+    red: p?.red ?? 0,
     didPlay,
   }
 }
@@ -136,6 +135,7 @@ function PlayersTable({ title, rawPlayers, columns }) {
 }
 
 export default function PlayersTab({ players, sport, summary }) {
+  const [selectedTeam, setSelectedTeam] = useState('home')
   if (sport === 'beisbol') {
     return (
       <div className="ollin-players-tab">
@@ -143,20 +143,49 @@ export default function PlayersTab({ players, sport, summary }) {
       </div>
     )
   }
-
   const homePlayers = players?.home ?? []
   const awayPlayers = players?.away ?? []
-
+  const homeName = summary?.homeTeam?.name ?? 'Local'
+  const awayName = summary?.awayTeam?.name ?? 'Visitante'
+  const currentPlayers = selectedTeam === 'home' ? homePlayers : awayPlayers
+  const currentTitle = selectedTeam === 'home' ? homeName : awayName
   return (
     <div className="ollin-players-tab" style={{ padding: '12px 0' }}>
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '16px', padding: '0 8px' }}>
+        <button
+          type="button"
+          onClick={() => setSelectedTeam('home')}
+          style={{
+            flex: 1,
+            padding: '8px',
+            background: selectedTeam === 'home' ? '#f97316' : 'rgba(255,255,255,0.08)',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '6px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            fontSize: '0.85rem',
+          }}
+        >{homeName}</button>
+        <button
+          type="button"
+          onClick={() => setSelectedTeam('away')}
+          style={{
+            flex: 1,
+            padding: '8px',
+            background: selectedTeam === 'away' ? '#f97316' : 'rgba(255,255,255,0.08)',
+            color: '#fff',
+            border: 'none',
+            borderRadius: '6px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            fontSize: '0.85rem',
+          }}
+        >{awayName}</button>
+      </div>
       <PlayersTable
-        title={summary?.homeTeam?.name ?? 'Local'}
-        rawPlayers={homePlayers}
-        columns={FOOTBALL_COLS}
-      />
-      <PlayersTable
-        title={summary?.awayTeam?.name ?? 'Visitante'}
-        rawPlayers={awayPlayers}
+        title={currentTitle}
+        rawPlayers={currentPlayers}
         columns={FOOTBALL_COLS}
       />
     </div>
