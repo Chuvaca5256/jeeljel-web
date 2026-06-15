@@ -104,6 +104,7 @@ export default function Registro() {
         email: email.trim(),
         password,
         options: {
+          emailRedirectTo: 'https://jeeljel.com/registro?confirmed=true',
           data: {
             nombre: nombre.trim(),
             phone: phone.trim() || null,
