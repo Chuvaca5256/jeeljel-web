@@ -263,6 +263,12 @@ function startPolling(redis) {
     })
     .catch((err) => console.warn('[ollin][polling] pollFootballHoy inicial falló:', err.message))
 
+  pollFootballProximos(redis)
+    .then((proximos) => {
+      if (proximos !== null && proximos.proximos !== null) return setJson(KEYS.futbolProximos, proximos.proximos, ttl)
+    })
+    .catch((err) => console.warn('[ollin][polling] pollFootballProximos inicial falló:', err.message))
+
   // Pasados: llamada inmediata al arrancar + cada 6 horas
   pollFootballPasados(redis).catch((err) => {
     console.warn('[ollin][polling] pollFootballPasados inicial falló:', err.message)
