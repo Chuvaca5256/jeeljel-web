@@ -1,86 +1,113 @@
 /**
- * FootballFieldLive.jsx — CANCHA-3D v2
- * Vista cenital (top-down) estilo Sofascore/WhoScored.
- * SVG puro, sin dependencias externas.
- *
- * Props:
- *   summary    — datos del partido
- *   events     — [{minute, label, type, detail, teamId, player}]
- *   lineups    — { home: { startXI, formation }, away: { startXI, formation } }
- *   statistics — { items: [{label, home, away}] }
+ * FootballFieldLive.jsx — CANCHA v3
+ * SVG top-down, sin dependencias externas.
+ * - Sin media luna
+ * - Eventos con color por equipo (naranja=local, azul=visitante)
+ * - Label: equipo + jugador + tipo en campo
+ * - Posesión más prominente
+ * - Todos los tipos de evento visibles
  */
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-/* ─── HELPERS DE TIPO DE EVENTO ─────────────────────────── */
+/* ─── TIPO DE EVENTO ─────────────────────────────────────── */
 function getEventKind(ev) {
   const label  = (ev.label  || '').toLowerCase()
   const type   = (ev.type   || '').toLowerCase()
   const detail = (ev.detail || '').toLowerCase()
-  if (label.includes('gol') || type === 'goal' || detail.includes('goal'))          return 'goal'
-  if (label.includes('roja') || detail.includes('red'))                              return 'red'
-  if (label.includes('amarilla') || label.includes('falta') || detail.includes('yellow')) return 'yellow'
-  if (type === 'subst' || label.includes('cambio') || label.includes('sustituc'))   return 'subst'
-  if (detail.includes('var'))                                                        return 'var'
+  if (label.includes('gol') || type === 'goal' || detail.includes('goal'))               return 'goal'
+  if (label.includes('roja') || detail.includes('red card'))                              return 'red'
+  if (label.includes('amarilla') || detail.includes('yellow card'))                       return 'yellow'
+  if (type === 'subst' || label.includes('cambio') || label.includes('sustituc'))        return 'subst'
+  if (detail.includes('corner') || label.includes('corner') || label.includes('esquina')) return 'corner'
+  if (detail.includes('penalty') || label.includes('penal'))                              return 'penalty'
+  if (detail.includes('var'))                                                             return 'var'
+  if (label.includes('falta') || type === 'foul' || detail.includes('foul'))             return 'foul'
   return 'other'
 }
 
 const KIND_META = {
-  goal:   { icon: '⚽', color: '#f97316', bg: 'rgba(249,115,22,0.15)', label: 'GOL'       },
-  red:    { icon: '🟥', color: '#ef4444', bg: 'rgba(239,68,68,0.15)',  label: 'TARJETA'   },
-  yellow: { icon: '🟨', color: '#facc15', bg: 'rgba(250,204,21,0.12)', label: 'AMARILLA'  },
-  subst:  { icon: '🔄', color: '#38bdf8', bg: 'rgba(56,189,248,0.12)', label: 'CAMBIO'    },
-  var:    { icon: '📺', color: '#a78bfa', bg: 'rgba(167,139,250,0.12)', label: 'VAR'      },
-  other:  { icon: '📌', color: '#94a3b8', bg: 'rgba(148,163,184,0.10)', label: 'EVENTO'   },
+  goal:    { icon: '⚽', label: 'GOL'     },
+  red:     { icon: '🟥', label: 'ROJA'    },
+  yellow:  { icon: '🟨', label: 'AMARILLA'},
+  subst:   { icon: '🔄', label: 'CAMBIO'  },
+  corner:  { icon: '🚩', label: 'CORNER'  },
+  penalty: { icon: '🎯', label: 'PENAL'   },
+  var:     { icon: '📺', label: 'VAR'     },
+  foul:    { icon: '⚠️', label: 'FALTA'   },
+  other:   { icon: '📌', label: 'EVENTO'  },
 }
 
-/* ─── ZONA DEL CAMPO POR TIPO (vista desde local = izquierda) ── */
-// Devuelve [cx%, cy%] dentro del SVG 0-100
+/* Colores por equipo */
+const HOME_COLOR  = '#f97316'  // naranja
+const HOME_BG     = 'rgba(249,115,22,0.18)'
+const AWAY_COLOR  = '#38bdf8'  // azul
+const AWAY_BG     = 'rgba(56,189,248,0.18)'
+
+/* ─── ZONA EN EL CAMPO ──────────────────────────────────── */
+// cx/cy en porcentaje del área interior del SVG
+// Local ataca hacia la derecha, visitante hacia la izquierda
 function eventZone(ev, isHome) {
   const kind = getEventKind(ev)
-  const rand = (min, max) => min + ((ev.minute || 50) % 7) / 6 * (max - min)
+  // Semilla determinista basada en minuto para no moverse en re-renders
+  const seed = (ev.minute || 0) * 7 + (ev.player || '').length * 3
+  const jx   = (seed % 9) / 9        // 0-1 jitter horizontal
+  const jy   = ((seed * 3) % 11) / 11 // 0-1 jitter vertical
+
+  // Franjas verticales del campo (% de ancho):
+  // 0-16: área propia local / 84-100: área propia visitante
+  // 16-50: campo propio local / 50-84: campo propio visitante
 
   if (kind === 'goal') {
-    // Goles en el área contraria
     return isHome
-      ? [rand(82, 92), rand(35, 65)]   // local ataca derecha
-      : [rand(8,  18), rand(35, 65)]   // visitante ataca izquierda
+      ? [85 + jx * 8,  32 + jy * 36]   // gol local → área derecha
+      : [7  + jx * 8,  32 + jy * 36]   // gol visitante → área izquierda
   }
-  if (kind === 'yellow' || kind === 'red') {
+  if (kind === 'penalty') {
     return isHome
-      ? [rand(30, 70), rand(20, 80)]
-      : [rand(30, 70), rand(20, 80)]
+      ? [89, 46 + jy * 8]
+      : [11, 46 + jy * 8]
+  }
+  if (kind === 'corner') {
+    // Esquinas reales del campo
+    const corners = [[2,5],[2,95],[98,5],[98,95]]
+    const c = corners[(seed) % 4]
+    return [c[0], c[1]]
+  }
+  if (kind === 'yellow' || kind === 'red' || kind === 'foul') {
+    return isHome
+      ? [20 + jx * 35, 15 + jy * 70]
+      : [45 + jx * 35, 15 + jy * 70]
   }
   if (kind === 'subst') {
     return isHome
-      ? [rand(15, 40), rand(15, 85)]
-      : [rand(60, 85), rand(15, 85)]
+      ? [15 + jx * 15, 10 + jy * 80]
+      : [70 + jx * 15, 10 + jy * 80]
   }
-  return [rand(25, 75), rand(25, 75)]
+  return [25 + jx * 50, 15 + jy * 70]
 }
 
-/* ─── DETERMINISMO: qué lado es home para los eventos ──────── */
+/* ─── LADO DEL EVENTO ───────────────────────────────────── */
 function isHomeEvent(ev, summary) {
-  // Si el evento tiene teamId, lo comparamos con el homeTeam
   if (ev.teamId && summary?.homeTeamId) {
     return String(ev.teamId) === String(summary.homeTeamId)
   }
-  // Fallback: buscar nombre del equipo en el label/player
-  const home = (summary?.homeTeam?.name || '').toLowerCase()
-  const text  = `${ev.label || ''} ${ev.player || ''}`.toLowerCase()
-  if (home && text.includes(home.split(' ')[0])) return true
-  // Goles locales se marcan con el primer equipo por defecto
-  return true
+  // Fallback: busca nombre del equipo local en el texto del evento
+  const homeName = (summary?.homeTeam?.name || '').toLowerCase().split(' ')[0]
+  const text = `${ev.label || ''} ${ev.player || ''} ${ev.detail || ''}`.toLowerCase()
+  if (homeName && homeName.length > 2 && text.includes(homeName)) return true
+  // Si no hay info → asumimos local para goles del primer equipo
+  return (ev.minute || 0) % 2 === 0
 }
 
-/* ─── FORMATEO DE NOMBRES ───────────────────────────────────── */
 function shortName(name = '') {
+  if (!name) return ''
   const parts = name.trim().split(' ')
-  return parts[parts.length - 1] || name
+  return parts[parts.length - 1].slice(0, 11)
 }
 
 /* ══════════════════════════════════════════════════════════
-   COMPONENTE PRINCIPAL
+   COMPONENTE
 ══════════════════════════════════════════════════════════ */
 export default function FootballFieldLive({
   summary    = null,
@@ -88,58 +115,56 @@ export default function FootballFieldLive({
   lineups    = null,
   statistics = null,
 }) {
-  /* ─── Datos derivados ─── */
-  const homeTeam  = summary?.homeTeam?.name  || 'Local'
-  const awayTeam  = summary?.awayTeam?.name  || 'Visitante'
-  const elapsed   = summary?.elapsed ?? null
+  const homeTeam    = summary?.homeTeam?.name || 'Local'
+  const awayTeam    = summary?.awayTeam?.name || 'Visitante'
+  const elapsed     = summary?.elapsed ?? null
   const statusShort = summary?.statusShort || ''
-  const isLive    = ['1H','2H','HT','ET','BT','P'].includes(statusShort)
+  const isLive      = ['1H','2H','HT','ET','BT','P'].includes(statusShort)
 
-  const rawPossH  = parseInt(summary?.miniStats?.possessionHome) ||
-                    parseInt((statistics?.items || []).find(i => /posesión|possession/i.test(i.label))?.home) ||
-                    50
-  const possHome  = Math.min(Math.max(rawPossH, 0), 100)
-  const possAway  = 100 - possHome
+  /* Posesión */
+  const rawPossH = parseInt(summary?.miniStats?.possessionHome) ||
+    parseInt((statistics?.items || []).find(i => /posesión|possession/i.test(i.label))?.home) || 50
+  const possHome = Math.min(Math.max(rawPossH, 0), 100)
+  const possAway = 100 - possHome
 
   const formation = {
     home: lineups?.home?.formation || null,
     away: lineups?.away?.formation || null,
   }
 
-  /* ─── Eventos procesados ─── */
-  const processedEvents = events.map(ev => ({
-    ...ev,
-    kind:    getEventKind(ev),
-    isHome:  isHomeEvent(ev, summary),
-    zone:    eventZone(ev, isHomeEvent(ev, summary)),
-  }))
+  /* Procesar eventos */
+  const processed = events.map(ev => {
+    const home = isHomeEvent(ev, summary)
+    return {
+      ...ev,
+      kind:   getEventKind(ev),
+      isHome: home,
+      zone:   eventZone(ev, home),
+      color:  home ? HOME_COLOR : AWAY_COLOR,
+      bg:     home ? HOME_BG    : AWAY_BG,
+      team:   home ? homeTeam   : awayTeam,
+    }
+  })
 
-  /* Últimos 10 para timeline, todos para el campo */
-  const timelineEvs = [...processedEvents].slice(-10)
-  const fieldEvs    = processedEvents.filter(ev => ev.kind !== 'subst') // cambios no van al campo
+  const timelineEvs = [...processed].slice(-10)
+  // En campo: todos los eventos excepto cambios (no tienen ubicación táctica relevante)
+  const fieldEvs = processed.filter(ev => ev.kind !== 'subst')
 
-  /* ─── Animación de puntos de campo ─── */
+  /* Evento activo ciclado — muestra apellido + equipo del jugador activo */
   const [activeDot, setActiveDot] = useState(null)
   useEffect(() => {
-    if (!fieldEvs.length) return
-    let i = 0
-    const cycle = () => {
-      setActiveDot(i % fieldEvs.length)
-      i++
-    }
-    cycle()
-    const interval = setInterval(cycle, 2800)
+    if (!fieldEvs.length) { setActiveDot(null); return }
+    let i = fieldEvs.length - 1  // empieza por el más reciente
+    setActiveDot(i)
+    const interval = setInterval(() => {
+      i = (i + 1) % fieldEvs.length
+      setActiveDot(i)
+    }, 2800)
     return () => clearInterval(interval)
   }, [events.length]) // eslint-disable-line
 
-  /* ══════════════════════════════════════════════════════════
-     SVG CANCHA — vista cenital (top-down)
-  ══════════════════════════════════════════════════════════ */
-  // Cancha: 105 × 68 metros, escalada a SVG viewBox 420 × 272
-  const VW = 420, VH = 272
-
-  const px = (pct) => (pct / 100) * VW   // porcentaje → SVG x
-  const py = (pct) => (pct / 100) * VH   // porcentaje → SVG y
+  /* ── SVG viewBox ── */
+  const VW = 420, VH = 260
 
   return (
     <div className="ollin-field2">
@@ -156,15 +181,15 @@ export default function FootballFieldLive({
                 <div
                   key={i}
                   className="ollin-field2__tl-chip"
-                  style={{ borderColor: meta.color, background: meta.bg }}
+                  style={{ borderColor: ev.color, background: ev.bg }}
                 >
                   <span className="ollin-field2__tl-icon">{meta.icon}</span>
                   <div className="ollin-field2__tl-info">
-                    <span className="ollin-field2__tl-min" style={{ color: meta.color }}>
+                    <span className="ollin-field2__tl-min" style={{ color: ev.color }}>
                       {ev.minute != null ? `${ev.minute}'` : '—'}
                     </span>
                     <span className="ollin-field2__tl-player">
-                      {shortName(ev.player || '')}
+                      {shortName(ev.player)}
                     </span>
                   </div>
                 </div>
@@ -172,8 +197,6 @@ export default function FootballFieldLive({
             })
           )}
         </div>
-
-        {/* Minuto actual */}
         {isLive && elapsed != null && (
           <div className="ollin-field2__elapsed">
             <span className="ollin-field2__elapsed-dot" />
@@ -188,230 +211,193 @@ export default function FootballFieldLive({
           viewBox={`0 0 ${VW} ${VH}`}
           className="ollin-field2__svg"
           role="img"
-          aria-label="Campo de fútbol — vista en vivo"
+          aria-label="Campo de fútbol en vivo"
           xmlns="http://www.w3.org/2000/svg"
         >
           <defs>
-            {/* Franjas de césped */}
-            <pattern id="ollin-stripes" x="0" y="0" width="35" height={VH} patternUnits="userSpaceOnUse">
-              <rect x="0"  y="0" width="17.5" height={VH} fill="#1e6b43" />
-              <rect x="17.5" y="0" width="17.5" height={VH} fill="#1a5c3a" />
+            <pattern id="f2-stripes" x="0" y="0" width="30" height={VH} patternUnits="userSpaceOnUse">
+              <rect x="0"    y="0" width="15" height={VH} fill="#1e6b43" />
+              <rect x="15"   y="0" width="15" height={VH} fill="#1a5c3a" />
             </pattern>
-
-            {/* Glow naranja para eventos locales */}
-            <filter id="glow-home" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            <filter id="f2-glow-home" x="-80%" y="-80%" width="260%" height="260%">
+              <feGaussianBlur stdDeviation="4" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
-            <filter id="glow-away" x="-50%" y="-50%" width="200%" height="200%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            <filter id="f2-glow-away" x="-80%" y="-80%" width="260%" height="260%">
+              <feGaussianBlur stdDeviation="4" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
-            <filter id="glow-goal" x="-100%" y="-100%" width="300%" height="300%">
-              <feGaussianBlur stdDeviation="6" result="blur" />
-              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            <filter id="f2-glow-goal" x="-120%" y="-120%" width="340%" height="340%">
+              <feGaussianBlur stdDeviation="7" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
             </filter>
           </defs>
 
-          {/* Fondo exterior */}
+          {/* Fondo */}
           <rect x="0" y="0" width={VW} height={VH} fill="#0d1b2a" />
 
-          {/* Franjas césped */}
-          <rect x="14" y="10" width={VW-28} height={VH-20} rx="3" fill="url(#ollin-stripes)" />
+          {/* ── ZONA DE POSESIÓN (sombreado proporcional) ── */}
+          {/* Mitad local */}
+          <rect x="14" y="8" width={(VW - 28) * (possHome / 100)} height={VH - 16}
+            fill="rgba(249,115,22,0.07)" rx="3" />
+          {/* Mitad visitante — rellena el resto */}
+          <rect x={14 + (VW - 28) * (possHome / 100)} y="8"
+            width={(VW - 28) * (possAway / 100)} height={VH - 16}
+            fill="rgba(56,189,248,0.07)" rx="3" />
 
-          {/* Borde del campo */}
-          <rect x="14" y="10" width={VW-28} height={VH-20} rx="3"
-            fill="none" stroke="rgba(255,255,255,0.7)" strokeWidth="1.5" />
+          {/* Césped */}
+          <rect x="14" y="8" width={VW - 28} height={VH - 16} rx="3" fill="url(#f2-stripes)" />
 
-          {/* Línea de medio campo */}
-          <line x1={VW/2} y1="10" x2={VW/2} y2={VH-10}
+          {/* Borde */}
+          <rect x="14" y="8" width={VW - 28} height={VH - 16} rx="3"
+            fill="none" stroke="rgba(255,255,255,0.72)" strokeWidth="1.5" />
+
+          {/* Línea de medio */}
+          <line x1={VW/2} y1="8" x2={VW/2} y2={VH-8}
             stroke="rgba(255,255,255,0.6)" strokeWidth="1.2" />
 
           {/* Círculo central */}
-          <circle cx={VW/2} cy={VH/2} r="36"
+          <circle cx={VW/2} cy={VH/2} r="34"
             fill="none" stroke="rgba(255,255,255,0.6)" strokeWidth="1.2" />
-          <circle cx={VW/2} cy={VH/2} r="2.5"
-            fill="rgba(255,255,255,0.8)" />
+          <circle cx={VW/2} cy={VH/2} r="2.5" fill="rgba(255,255,255,0.8)" />
 
-          {/* ── ÁREA GRANDE LOCAL (izquierda) ── */}
-          <rect x="14" y={py(19.1)} width={px(16.6)} height={py(61.8)}
+          {/* ── ÁREA LOCAL (izquierda) ── */}
+          {/* Área grande */}
+          <rect x="14" y={VH * 0.19} width={VW * 0.157} height={VH * 0.62}
             fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="1.1" />
-          {/* Área chica local */}
-          <rect x="14" y={py(36.8)} width={px(5.5)} height={py(26.5)}
+          {/* Área chica */}
+          <rect x="14" y={VH * 0.365} width={VW * 0.054} height={VH * 0.27}
             fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="0.9" />
-          {/* Punto penal local */}
-          <circle cx={px(11)} cy={VH/2} r="2" fill="rgba(255,255,255,0.7)" />
-          {/* Arco de área local */}
-          <path
-            d={`M ${px(16.6)} ${VH/2 - 20} A 36 36 0 0 1 ${px(16.6)} ${VH/2 + 20}`}
-            fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1"
-          />
+          {/* Punto penal */}
+          <circle cx={VW * 0.109} cy={VH/2} r="2" fill="rgba(255,255,255,0.7)" />
+          {/* SIN media luna */}
 
-          {/* ── ÁREA GRANDE VISITANTE (derecha) ── */}
-          <rect x={VW - 14 - px(16.6)} y={py(19.1)} width={px(16.6)} height={py(61.8)}
+          {/* ── ÁREA VISITANTE (derecha) ── */}
+          <rect x={VW - 14 - VW * 0.157} y={VH * 0.19} width={VW * 0.157} height={VH * 0.62}
             fill="none" stroke="rgba(255,255,255,0.55)" strokeWidth="1.1" />
-          {/* Área chica visitante */}
-          <rect x={VW - 14 - px(5.5)} y={py(36.8)} width={px(5.5)} height={py(26.5)}
+          <rect x={VW - 14 - VW * 0.054} y={VH * 0.365} width={VW * 0.054} height={VH * 0.27}
             fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="0.9" />
-          {/* Punto penal visitante */}
-          <circle cx={px(89)} cy={VH/2} r="2" fill="rgba(255,255,255,0.7)" />
-          {/* Arco de área visitante */}
-          <path
-            d={`M ${VW - 14 - px(16.6)} ${VH/2 - 20} A 36 36 0 0 0 ${VW - 14 - px(16.6)} ${VH/2 + 20}`}
-            fill="none" stroke="rgba(255,255,255,0.4)" strokeWidth="1"
-          />
+          <circle cx={VW * 0.891} cy={VH/2} r="2" fill="rgba(255,255,255,0.7)" />
 
           {/* ── PORTERÍAS ── */}
-          {/* Local */}
-          <rect x="6" y={VH/2 - 16} width="8" height="32"
-            fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="1.8" />
-          {/* Visitante */}
-          <rect x={VW-14} y={VH/2 - 16} width="8" height="32"
-            fill="none" stroke="rgba(255,255,255,0.85)" strokeWidth="1.8" />
-
-          {/* ── ZONA DE POSESIÓN ── */}
-          {possHome !== 50 && (
-            <rect
-              x="14" y="10"
-              width={(VW - 28) * (possHome / 100)}
-              height={VH - 20}
-              fill={possHome >= 50 ? 'rgba(249,115,22,0.06)' : 'rgba(56,189,248,0.06)'}
-              rx="3"
-            />
-          )}
+          <rect x="5" y={VH/2 - 15} width="9" height="30"
+            fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="1.8" />
+          <rect x={VW - 14} y={VH/2 - 15} width="9" height="30"
+            fill="none" stroke="rgba(255,255,255,0.9)" strokeWidth="1.8" />
 
           {/* ── EVENTOS EN CAMPO ── */}
           {fieldEvs.map((ev, i) => {
-            const meta   = KIND_META[ev.kind]
-            const [cx, cy] = ev.zone
-            const svgX   = 14 + (cx / 100) * (VW - 28)
-            const svgY   = 10 + (cy / 100) * (VH - 20)
+            const meta     = KIND_META[ev.kind]
+            const [cpx, cpy] = ev.zone
+            // Convertir % de zona interior a coordenadas SVG
+            const svgX = 14 + (cpx / 100) * (VW - 28)
+            const svgY = 8  + (cpy / 100) * (VH - 16)
             const isActive = activeDot === i
             const isGoal   = ev.kind === 'goal'
+            const r        = isGoal ? 12 : 9
 
             return (
-              <g key={i} transform={`translate(${svgX}, ${svgY})`}>
-                {/* Halo pulsante para el activo o goles */}
+              <g key={i} transform={`translate(${svgX},${svgY})`}>
+                {/* Pulso animado */}
                 {(isActive || isGoal) && (
-                  <circle r={isGoal ? 18 : 14} fill={meta.color} opacity="0.12">
-                    <animate
-                      attributeName="r"
-                      values={isGoal ? "12;22;12" : "10;18;10"}
-                      dur="1.6s"
-                      repeatCount="indefinite"
-                    />
-                    <animate
-                      attributeName="opacity"
-                      values="0.15;0.04;0.15"
-                      dur="1.6s"
-                      repeatCount="indefinite"
-                    />
+                  <circle r={r + 6} fill={ev.color} opacity="0.13">
+                    <animate attributeName="r"
+                      values={`${r+2};${r+10};${r+2}`} dur="1.8s" repeatCount="indefinite" />
+                    <animate attributeName="opacity"
+                      values="0.18;0.04;0.18" dur="1.8s" repeatCount="indefinite" />
                   </circle>
                 )}
 
-                {/* Círculo base */}
-                <circle
-                  r={isGoal ? 11 : 9}
-                  fill={meta.bg}
-                  stroke={meta.color}
-                  strokeWidth={isGoal ? 2 : 1.5}
-                  filter={isGoal ? 'url(#glow-goal)' : undefined}
+                {/* Círculo del evento */}
+                <circle r={r} fill={ev.bg} stroke={ev.color}
+                  strokeWidth={isGoal ? 2.2 : 1.6}
+                  filter={isGoal ? 'url(#f2-glow-goal)' : ev.isHome ? 'url(#f2-glow-home)' : 'url(#f2-glow-away)'}
                 />
 
-                {/* Ícono del evento */}
-                <text
-                  textAnchor="middle"
-                  dominantBaseline="central"
+                {/* Ícono */}
+                <text textAnchor="middle" dominantBaseline="central"
                   fontSize={isGoal ? 10 : 8}
-                  style={{ userSelect: 'none', pointerEvents: 'none' }}
-                >
+                  style={{ userSelect: 'none', pointerEvents: 'none' }}>
                   {meta.icon}
                 </text>
 
                 {/* Minuto */}
-                <text
-                  y={isGoal ? 18 : 16}
-                  textAnchor="middle"
-                  fill={meta.color}
-                  fontSize="7"
-                  fontWeight="700"
+                <text y={r + 8} textAnchor="middle"
+                  fill={ev.color} fontSize="7" fontWeight="700"
                   fontFamily="Inter, Arial, sans-serif"
-                  style={{ userSelect: 'none' }}
-                >
+                  style={{ userSelect: 'none' }}>
                   {ev.minute != null ? `${ev.minute}'` : ''}
                 </text>
 
-                {/* Apellido del jugador (solo activo) */}
-                {isActive && ev.player && (
-                  <text
-                    y={isGoal ? 28 : 26}
-                    textAnchor="middle"
-                    fill="rgba(255,255,255,0.75)"
-                    fontSize="6.5"
+                {/* Equipo (siempre visible en goles, en activo para el resto) */}
+                {(isGoal || isActive) && (
+                  <text y={r + 17} textAnchor="middle"
+                    fill={ev.color} fontSize="6.5" fontWeight="600"
                     fontFamily="Inter, Arial, sans-serif"
-                    style={{ userSelect: 'none' }}
-                  >
-                    {shortName(ev.player).slice(0, 10)}
+                    style={{ userSelect: 'none' }}>
+                    {ev.team.slice(0, 12)}
+                  </text>
+                )}
+
+                {/* Jugador (solo activo o goles) */}
+                {(isGoal || isActive) && ev.player && (
+                  <text y={r + 26} textAnchor="middle"
+                    fill="rgba(255,255,255,0.78)" fontSize="6.5"
+                    fontFamily="Inter, Arial, sans-serif"
+                    style={{ userSelect: 'none' }}>
+                    {shortName(ev.player)}
                   </text>
                 )}
               </g>
             )
           })}
 
-          {/* ── FORMACIONES (texto esquinas) ── */}
+          {/* ── FORMACIONES ── */}
           {formation.home && (
-            <text x="22" y="22" fill="rgba(249,115,22,0.7)" fontSize="8"
+            <text x="20" y="20" fill="rgba(249,115,22,0.65)" fontSize="8"
               fontWeight="600" fontFamily="Inter, Arial, sans-serif">
               {formation.home}
             </text>
           )}
           {formation.away && (
-            <text x={VW - 22} y="22" textAnchor="end"
-              fill="rgba(56,189,248,0.7)" fontSize="8"
+            <text x={VW - 20} y="20" textAnchor="end"
+              fill="rgba(56,189,248,0.65)" fontSize="8"
               fontWeight="600" fontFamily="Inter, Arial, sans-serif">
               {formation.away}
             </text>
           )}
 
-          {/* ── ETIQUETAS DE EQUIPO ── */}
-          <text x="22" y={VH - 14} fill="rgba(249,115,22,0.55)" fontSize="7.5"
+          {/* ── NOMBRES DE EQUIPO ── */}
+          <text x="20" y={VH - 10} fill="rgba(249,115,22,0.6)" fontSize="8"
             fontFamily="Inter, Arial, sans-serif" fontWeight="500">
             {homeTeam.slice(0, 14)}
           </text>
-          <text x={VW - 22} y={VH - 14} textAnchor="end"
-            fill="rgba(56,189,248,0.55)" fontSize="7.5"
+          <text x={VW - 20} y={VH - 10} textAnchor="end"
+            fill="rgba(56,189,248,0.6)" fontSize="8"
             fontFamily="Inter, Arial, sans-serif" fontWeight="500">
             {awayTeam.slice(0, 14)}
           </text>
         </svg>
       </div>
 
-      {/* ══ POSESIÓN ══════════════════════════════════════════ */}
+      {/* ══ BARRA DE POSESIÓN ═══════════════════════════════ */}
       <div className="ollin-field2__possession">
-        <span className="ollin-field2__poss-name ollin-field2__poss-name--home">
-          {homeTeam}
-        </span>
-
-        <div className="ollin-field2__poss-track">
-          <div
-            className="ollin-field2__poss-bar ollin-field2__poss-bar--home"
-            style={{ width: `${possHome}%` }}
-          />
-          <div
-            className="ollin-field2__poss-bar ollin-field2__poss-bar--away"
-            style={{ width: `${possAway}%` }}
-          />
-          <span className="ollin-field2__poss-pct ollin-field2__poss-pct--home">
-            {possHome}%
-          </span>
-          <span className="ollin-field2__poss-pct ollin-field2__poss-pct--away">
-            {possAway}%
-          </span>
+        <div className="ollin-field2__poss-left">
+          <span className="ollin-field2__poss-name ollin-field2__poss-name--home">{homeTeam}</span>
+          <span className="ollin-field2__poss-pct--inline" style={{ color: HOME_COLOR }}>{possHome}%</span>
         </div>
 
-        <span className="ollin-field2__poss-name ollin-field2__poss-name--away">
-          {awayTeam}
-        </span>
+        <div className="ollin-field2__poss-track">
+          <div className="ollin-field2__poss-bar ollin-field2__poss-bar--home"
+            style={{ width: `${possHome}%` }} />
+          <div className="ollin-field2__poss-bar ollin-field2__poss-bar--away"
+            style={{ width: `${possAway}%` }} />
+        </div>
+
+        <div className="ollin-field2__poss-right">
+          <span className="ollin-field2__poss-pct--inline" style={{ color: AWAY_COLOR }}>{possAway}%</span>
+          <span className="ollin-field2__poss-name ollin-field2__poss-name--away">{awayTeam}</span>
+        </div>
       </div>
 
     </div>

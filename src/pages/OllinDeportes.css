@@ -1593,3 +1593,64 @@
   .ollin-field2__possession { padding: 6px 10px; }
   .ollin-field2__poss-name  { font-size: 9.5px; max-width: 60px; }
 }
+
+/* ── POSESIÓN v3 — más prominente ── */
+.ollin-field2__possession {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: #0a1220;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.ollin-field2__poss-left,
+.ollin-field2__poss-right {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.ollin-field2__poss-name {
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.ollin-field2__poss-name--home { color: #f97316; }
+.ollin-field2__poss-name--away { color: #38bdf8; }
+
+.ollin-field2__poss-pct--inline {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+  line-height: 1;
+}
+
+.ollin-field2__poss-track {
+  flex: 1;
+  height: 14px;
+  border-radius: 7px;
+  overflow: hidden;
+  display: flex;
+  background: rgba(255,255,255,0.05);
+}
+
+.ollin-field2__poss-bar {
+  height: 100%;
+  transition: width 1.4s cubic-bezier(0.25, 1, 0.5, 1);
+}
+.ollin-field2__poss-bar--home { background: linear-gradient(90deg, #c2410c, #f97316); }
+.ollin-field2__poss-bar--away { background: linear-gradient(90deg, #0ea5e9, #38bdf8); }
+
+/* Quitar reglas anteriores que puedan sobreponerse */
+.ollin-field2__poss-pct { display: none !important; }
+
+@media (max-width: 600px) {
+  .ollin-field2__poss-name { font-size: 9.5px; max-width: 55px; }
+  .ollin-field2__poss-pct--inline { font-size: 11px; }
+  .ollin-field2__poss-track { height: 12px; }
+}
