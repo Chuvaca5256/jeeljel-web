@@ -1,8 +1,3 @@
-# Review dump — partidoService
-
-## `ollin-backend/src/services/partidoService.js` (completo)
-
-```javascript
 const { BASEBALL_LEAGUES } = require('../config/leagues')
 const { KEYS, getJson, setJson } = require('../lib/redis')
 const { sanitizeText } = require('../lib/compliance')
@@ -461,4 +456,3 @@ module.exports = {
   partidoKey,
   PARTIDO_TTL_MS,
 }
-```
