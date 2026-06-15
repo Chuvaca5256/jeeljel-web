@@ -9,12 +9,6 @@ const NAV_LINKS = [
   { label: 'ORGANIZACIONES', to: '/organizaciones' },
 ]
 
-const linkStyle = {
-  color: '#ffffff',
-  letterSpacing: '0.15em',
-  transition: 'color 0.2s ease',
-}
-
 export default function Navbar() {
   return (
     <nav
@@ -46,14 +40,11 @@ export default function Navbar() {
             key={to}
             to={to}
             className="font-dm text-xs md:text-sm tracking-widest no-underline"
-            style={linkStyle}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.color = '#c9a84c'
-            }}
-            onMouseLeave={(e) => {
-              const isActive = e.currentTarget.getAttribute('aria-current') === 'page'
-              e.currentTarget.style.color = isActive ? '#c9a84c' : '#ffffff'
-            }}
+            style={({ isActive }) => ({
+              color: isActive ? '#c9a84c' : '#ffffff',
+              letterSpacing: '0.15em',
+              transition: 'color 0.2s ease',
+            })}
           >
             {label}
           </NavLink>
