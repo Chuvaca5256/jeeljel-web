@@ -147,14 +147,24 @@ function parseFootballPlayers(apiRows) {
       const shots = st.shots || {}
       const goals = st.goals || {}
       const passes = st.passes || {}
+      const duels = st.duels || {}
+      const fouls = st.fouls || {}
+      const cards = st.cards || {}
       return {
         id: p.player?.id,
         name: sanitizePlayerName(p.player?.name),
+        minutes: games.minutes ?? 0,
+        rating: games.rating ?? null,
+        shots: shots.total ?? 0,
+        shotsOn: shots.on ?? 0,
+        passes: passes.total ?? 0,
+        keyPasses: passes.key ?? 0,
+        duelsWon: duels?.won ?? 0,
+        fouls: fouls?.committed ?? 0,
+        yellow: cards?.yellow ?? 0,
+        red: cards?.red ?? 0,
         goals: goals.total ?? 0,
         assists: goals.assists ?? 0,
-        shots: shots.total ?? 0,
-        keyPasses: passes.key ?? 0,
-        minutes: games.minutes ?? 0,
         position: games.position || p.player?.pos || '—',
       }
     })
