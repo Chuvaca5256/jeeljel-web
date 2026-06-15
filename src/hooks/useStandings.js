@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { MOCK_STANDINGS, MOCK_SCORERS } from '../ollin/mockData'
 
 async function fetchJson(url) {
@@ -13,7 +13,14 @@ export default function useStandings(leagueId, enabled) {
   const [scorers, setScorers] = useState(null)
   const [usingMock, setUsingMock] = useState(false)
 
+  const leagueIdRef = useRef(leagueId)
+  const enabledRef = useRef(enabled)
+  leagueIdRef.current = leagueId
+  enabledRef.current = enabled
+
   const load = useCallback(async () => {
+    const leagueId = leagueIdRef.current
+    const enabled = enabledRef.current
     if (!enabled || leagueId == null) {
       setData(null)
       setScorers(null)
