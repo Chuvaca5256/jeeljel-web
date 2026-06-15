@@ -224,7 +224,7 @@ async function runPollingCycle(redis) {
       await setJson(KEYS.futbolHoy, hoy.hoy, ttl)
       await emitUpdate('futbol', 'hoy', hoy.hoy)
     }
-    pollFootballPasados().catch((err) =>
+    pollFootballPasados(redis).catch((err) =>
       console.warn('[ollin][polling] pollFootballPasados post-live falló:', err.message)
     )
   }
@@ -264,11 +264,11 @@ function startPolling(redis) {
     .catch((err) => console.warn('[ollin][polling] pollFootballHoy inicial falló:', err.message))
 
   // Pasados: llamada inmediata al arrancar + cada 6 horas
-  pollFootballPasados().catch((err) => {
+  pollFootballPasados(redis).catch((err) => {
     console.warn('[ollin][polling] pollFootballPasados inicial falló:', err.message)
   })
   pasadosTimer = setInterval(() => {
-    pollFootballPasados().catch((err) => {
+    pollFootballPasados(redis).catch((err) => {
       console.warn('[ollin][polling] pollFootballPasados falló:', err.message)
     })
   }, 6 * 60 * 60 * 1000)

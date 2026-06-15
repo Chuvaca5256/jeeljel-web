@@ -30,8 +30,8 @@ async function fetchFixturesByDate(date, redis) {
   return fixtures
 }
 
-async function pollFootballPasados() {
-  const redis = getClient()
+async function pollFootballPasados(redisIn) {
+  const redis = redisIn || getClient()
   if (!redis) {
     console.warn('[ollin][pasados] Redis no disponible — omitiendo')
     return
