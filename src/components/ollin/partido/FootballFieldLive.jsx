@@ -8,7 +8,7 @@
  * - Todos los tipos de evento visibles
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import useTickerEvents from '../../../hooks/useTickerEvents'
 import LiveTicker from './LiveTicker'
 
@@ -157,7 +157,54 @@ export default function FootballFieldLive({
   /* Procesar eventos */
   const [activeDot, setActiveDot] = useState(null)
 
-  const processed = events.map(ev => {
+  const prevStats = useRef({})
+  const [statEvents, setStatEvents] = useState([])
+  useEffect(() => {
+    if (!statistics || !summary?.elapsed) return
+    const elapsed = summary.elapsed
+    const homeStats = statistics.home || {}
+    const awayStats = statistics.away || {}
+    const newEvents = []
+    const check = (key, label, teamSide) => {
+      const val = teamSide === 'home' ? (homeStats[key] ?? 0) : (awayStats[key] ?? 0)
+      const prevKey = `${teamSide}_${key}`
+      const prev = prevStats.current[prevKey] ?? 0
+      if (Number(val) > Number(prev)) {
+        newEvents.push({
+          minute: elapsed,
+          type: key,
+          detail: key,
+          label,
+          player: null,
+          assist: null,
+          teamId: teamSide === 'home' ? summary?.homeTeam?.id : summary?.awayTeam?.id,
+          _synthetic: true,
+          _side: teamSide,
+        })
+      }
+      prevStats.current[prevKey] = val
+    }
+    check('Shots on Goal',  'TIRO A PUERTA 🥅', 'home')
+    check('Shots on Goal',  'TIRO A PUERTA 🥅', 'away')
+    check('Corner Kicks',   'CORNER 🚩',         'home')
+    check('Corner Kicks',   'CORNER 🚩',         'away')
+    check('Total Shots',    'TIRO TOTAL 👟',      'home')
+    check('Total Shots',    'TIRO TOTAL 👟',      'away')
+    check('Fouls',          'FALTA 🟨',           'home')
+    check('Fouls',          'FALTA 🟨',           'away')
+    check('Yellow Cards',   'TARJETA AMARILLA 🟨','home')
+    check('Yellow Cards',   'TARJETA AMARILLA 🟨','away')
+    check('Red Cards',      'TARJETA ROJA 🟥',    'home')
+    check('Red Cards',      'TARJETA ROJA 🟥',    'away')
+    if (newEvents.length > 0) {
+      setStatEvents(newEvents)
+      const t = setTimeout(() => setStatEvents([]), 30000)
+      return () => clearTimeout(t)
+    }
+  }, [statistics, summary?.elapsed]) // eslint-disable-line
+
+  const allEvents = [...events, ...statEvents]
+  const processed = allEvents.map(ev => {
     const home = isHomeEvent(ev, summary)
     return {
       ...ev,
