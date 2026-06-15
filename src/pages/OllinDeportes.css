@@ -1440,10 +1440,24 @@
   align-items: center;
   flex: 1;
   overflow-x: auto;
-  padding-bottom: 2px;
-  scrollbar-width: none;
+  padding-bottom: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.25) transparent;
+  cursor: grab;
 }
-.ollin-field2__tl-scroll::-webkit-scrollbar { display: none; }
+.ollin-field2__tl-scroll:active {
+  cursor: grabbing;
+}
+.ollin-field2__tl-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+.ollin-field2__tl-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+.ollin-field2__tl-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.25);
+  border-radius: 2px;
+}
 
 .ollin-field2__tl-empty {
   font-size: 11px;

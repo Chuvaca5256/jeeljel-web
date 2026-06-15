@@ -146,7 +146,7 @@ export default function FootballFieldLive({
     }
   })
 
-  const timelineEvs = [...processed].slice(-10)
+  const timelineEvs = [...processed]
   // En campo: todos los eventos excepto cambios (no tienen ubicación táctica relevante)
   const fieldEvs = processed.filter(ev => ev.kind !== 'subst')
 
