@@ -99,14 +99,7 @@ export default function OllinDeportes() {
                     className={`ollin-tabs__btn${activeTab === tab.id ? ' is-active' : ''}`}
                     onClick={() => setActiveTab(tab.id)}
                   >
-                    {tab.id === 'posiciones' ? (
-                      <>
-                        <span className="ollin-tabs__label ollin-tabs__label--desktop">POSICIONES</span>
-                        <span className="ollin-tabs__label ollin-tabs__label--mobile">TABLA</span>
-                      </>
-                    ) : (
-                      tab.label
-                    )}
+                    {tab.id === 'posiciones' ? 'TABLA' : tab.label}
                   </button>
                 ))}
               </div>
