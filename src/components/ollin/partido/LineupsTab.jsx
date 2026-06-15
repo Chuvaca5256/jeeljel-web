@@ -1,16 +1,14 @@
-// ─── LineupsTab.jsx ────────────────────────────────────────────────────────
-// Diseño: campo vertical por equipo + iconos de evento sobre cada jugador + banca
+import { useState } from 'react'
 
 function normalizeForMatch(name = '') {
   return name.toLowerCase().replace(/[^a-z0-9]/g, '')
 }
 
 function buildPlayerEventMap(events = [], teamId) {
-  if (teamId == null) return {}
-  const teamIdStr = String(teamId)
   const map = {}
+  if (!teamId) return map
   events
-    .filter((ev) => String(ev.teamId) === teamIdStr)
+    .filter((ev) => String(ev.teamId) === String(teamId))
     .forEach((ev) => {
       const key = normalizeForMatch(ev.player || '')
       if (!key) return
@@ -21,6 +19,13 @@ function buildPlayerEventMap(events = [], teamId) {
         if (d.includes('own')) map[key].push({ icon: '⚽', label: 'Autogol', minute: ev.minute })
         else if (d.includes('penalty')) map[key].push({ icon: '⚽', label: 'Pen', minute: ev.minute })
         else map[key].push({ icon: '⚽', label: 'Gol', minute: ev.minute })
+        if (ev.assist) {
+          const aKey = normalizeForMatch(ev.assist)
+          if (aKey) {
+            if (!map[aKey]) map[aKey] = []
+            map[aKey].push({ icon: '🅰️', label: 'Asistencia', minute: ev.minute })
+          }
+        }
       } else if (t === 'card') {
         if (d.includes('red')) map[key].push({ icon: '🟥', label: 'Roja', minute: ev.minute })
         else map[key].push({ icon: '🟨', label: 'Amarilla', minute: ev.minute })
@@ -32,13 +37,6 @@ function buildPlayerEventMap(events = [], teamId) {
           map[inKey].push({ icon: '🟢', label: 'Entra', minute: ev.minute })
         }
       }
-      if (t === 'goal' && ev.assist) {
-        const aKey = normalizeForMatch(ev.assist)
-        if (aKey) {
-          if (!map[aKey]) map[aKey] = []
-          map[aKey].push({ icon: '🅰️', label: 'Asistencia', minute: ev.minute })
-        }
-      }
     })
   return map
 }
@@ -46,17 +44,11 @@ function buildPlayerEventMap(events = [], teamId) {
 function EventBadges({ badges }) {
   if (!badges || badges.length === 0) return null
   return (
-    <span style={{ display: 'inline-flex', gap: '2px', marginLeft: '4px', flexWrap: 'wrap' }}>
+    <span style={{ display: 'inline-flex', gap: '2px', marginLeft: '4px', flexWrap: 'wrap', alignItems: 'center' }}>
       {badges.map((b, i) => (
-        <span
-          key={i}
-          title={`${b.label}${b.minute != null ? ` ${b.minute}'` : ''}`}
-          style={{ fontSize: '10px', lineHeight: 1, cursor: 'default' }}
-        >
+        <span key={i} title={`${b.label}${b.minute != null ? ' ' + b.minute + "'" : ''}`} style={{ fontSize: '10px', lineHeight: 1, cursor: 'default' }}>
           {b.icon}
-          {b.minute != null && (
-            <sup style={{ fontSize: '8px', color: '#aaa' }}>{b.minute}'</sup>
-          )}
+          {b.minute != null && <sup style={{ fontSize: '8px', color: '#f0c030' }}>{b.minute}'</sup>}
         </span>
       ))}
     </span>
@@ -66,7 +58,6 @@ function EventBadges({ badges }) {
 function FormationPitch({ lineup, side, eventMap }) {
   const players = lineup?.startXI || []
   const subs = lineup?.substitutes || []
-  const formation = lineup?.formation || ''
 
   if (players.length === 0) {
     return <p className="ollin-partido-empty">Sin alineación disponible</p>
@@ -74,10 +65,11 @@ function FormationPitch({ lineup, side, eventMap }) {
 
   const hasGrid = players.some((p) => p.grid)
 
+  // ── Tabla fallback (sin grid) ──────────────────────────────────────────
   if (!hasGrid) {
     return (
       <div style={{ padding: '0 8px' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', marginBottom: '12px' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', marginBottom: '8px' }}>
           <thead>
             <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
               <th style={{ textAlign: 'left', padding: '6px 8px', color: '#aaa', fontWeight: 600, width: '36px' }}>#</th>
@@ -91,40 +83,19 @@ function FormationPitch({ lineup, side, eventMap }) {
               return (
                 <tr key={p.id || p.number} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', background: i % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'transparent' }}>
                   <td style={{ padding: '7px 8px', color: '#f0c030', fontWeight: 700 }}>{p.number ?? '—'}</td>
-                  <td style={{ padding: '7px 8px', color: '#fff' }}>
-                    {p.name}<EventBadges badges={badges} />
-                  </td>
+                  <td style={{ padding: '7px 8px', color: '#fff' }}>{p.name}<EventBadges badges={badges} /></td>
                   <td style={{ padding: '7px 8px', color: '#aaa', textAlign: 'right' }}>{p.pos}</td>
                 </tr>
               )
             })}
           </tbody>
         </table>
-        {subs.length > 0 && (
-          <>
-            <p style={{ color: '#aaa', fontSize: '0.78rem', fontWeight: 600, padding: '4px 8px 2px', borderTop: '1px solid rgba(255,255,255,0.08)', marginTop: '4px' }}>BANCA</p>
-            <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
-              <tbody>
-                {subs.map((p) => {
-                  const badges = eventMap[normalizeForMatch(p.name)] || []
-                  return (
-                    <tr key={p.id || p.number} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)', background: 'rgba(255,255,255,0.015)' }}>
-                      <td style={{ padding: '5px 8px', color: '#f0c030', fontWeight: 700, width: '36px' }}>{p.number ?? '—'}</td>
-                      <td style={{ padding: '5px 8px', color: '#c0c0c0' }}>
-                        {p.name}<EventBadges badges={badges} />
-                      </td>
-                      <td style={{ padding: '5px 8px', color: '#666', textAlign: 'right', width: '36px' }}>{p.pos}</td>
-                    </tr>
-                  )
-                })}
-              </tbody>
-            </table>
-          </>
-        )}
+        <BancaTable subs={subs} eventMap={eventMap} />
       </div>
     )
   }
 
+  // ── SVG con grid ──────────────────────────────────────────────────────
   const VW = 300
   const VH = 420
   const PAD = 16
@@ -137,17 +108,21 @@ function FormationPitch({ lineup, side, eventMap }) {
     if (!byRow[row]) byRow[row] = []
     byRow[row].push({ ...p, _row: row, _col: col })
   })
+
+  // Filas ordenadas ascendente: fila 1 = portero
   const rows = Object.keys(byRow).map(Number).sort((a, b) => a - b)
   const totalRows = rows.length
+
   const positioned = []
   rows.forEach((row, rowIdx) => {
     const playersInRow = byRow[row].sort((a, b) => a._col - b._col)
     const count = playersInRow.length
     playersInRow.forEach((p, colIdx) => {
-      const rawY = rowIdx / (totalRows - 1)
+      // rowIdx 0 = portero → debe ir ABAJO para home, ARRIBA para away
+      const rawY = rowIdx / Math.max(totalRows - 1, 1)
       const y = isHome
-        ? PAD + 20 + rawY * (VH - PAD * 2 - 40)
-        : VH - PAD - 20 - rawY * (VH - PAD * 2 - 40)
+        ? VH - PAD - 20 - rawY * (VH - PAD * 2 - 40)   // portero abajo, delanteros arriba
+        : PAD + 20 + rawY * (VH - PAD * 2 - 40)          // portero arriba, delanteros abajo
       const x = PAD + 20 + (colIdx / Math.max(count - 1, 1)) * (VW - PAD * 2 - 40)
       const xCentered = count === 1 ? VW / 2 : x
       positioned.push({ ...p, cx: xCentered, cy: y })
@@ -175,13 +150,11 @@ function FormationPitch({ lineup, side, eventMap }) {
               {shown.map((b, bi) => {
                 const offsetX = shown.length === 1 ? 0 : (bi - (shown.length - 1) / 2) * 13
                 return (
-                  <text key={bi} x={offsetX} y="-20" textAnchor="middle" fontSize="11">
-                    {b.icon}
-                  </text>
+                  <text key={bi} x={offsetX} y="-20" textAnchor="middle" fontSize="11">{b.icon}</text>
                 )
               })}
               {shown.length > 0 && shown[0].minute != null && (
-                <text x={0} y="-9" textAnchor="middle" fontSize="7" fill="#f0c030" fontWeight="700">
+                <text x="0" y="-9" textAnchor="middle" fontSize="7" fill="#f0c030" fontWeight="700">
                   {shown[0].minute}'
                 </text>
               )}
@@ -196,35 +169,46 @@ function FormationPitch({ lineup, side, eventMap }) {
           )
         })}
       </svg>
+      <BancaTable subs={subs} eventMap={eventMap} />
+    </div>
+  )
+}
 
-      {subs.length > 0 && (
-        <div style={{ marginTop: '10px', padding: '0 8px' }}>
-          <p style={{ color: '#aaa', fontSize: '0.78rem', fontWeight: 600, marginBottom: '4px', borderTop: '1px solid rgba(255,255,255,0.1)', paddingTop: '8px' }}>
-            BANCA
-          </p>
-          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.82rem' }}>
-            <tbody>
-              {subs.map((p) => {
-                const badges = eventMap[normalizeForMatch(p.name)] || []
-                return (
-                  <tr key={p.id || p.number} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
-                    <td style={{ padding: '4px 6px', color: '#f0c030', fontWeight: 700, width: '32px' }}>{p.number ?? '—'}</td>
-                    <td style={{ padding: '4px 6px', color: '#c0c0c0' }}>
-                      {p.name}<EventBadges badges={badges} />
-                    </td>
-                    <td style={{ padding: '4px 6px', color: '#666', textAlign: 'right', width: '32px' }}>{p.pos}</td>
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
-        </div>
-      )}
+function BancaTable({ subs, eventMap }) {
+  if (!subs || subs.length === 0) return null
+  return (
+    <div style={{ marginTop: '10px', padding: '0 8px' }}>
+      <p style={{
+        color: '#888',
+        fontSize: '0.72rem',
+        fontWeight: 700,
+        letterSpacing: '0.08em',
+        textTransform: 'uppercase',
+        borderTop: '1px solid rgba(255,255,255,0.08)',
+        paddingTop: '8px',
+        marginBottom: '4px'
+      }}>
+        Banca
+      </p>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 12px' }}>
+        {subs.map((p) => {
+          const badges = eventMap[normalizeForMatch(p.name)] || []
+          return (
+            <div key={p.id || p.number} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.78rem', color: '#b0b0b0', minWidth: '120px' }}>
+              <span style={{ color: '#f0c030', fontWeight: 700, minWidth: '22px' }}>{p.number}</span>
+              <span>{p.name}</span>
+              <EventBadges badges={badges} />
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }
 
 export default function LineupsTab({ lineups, sport, summary, events = [] }) {
+  const [selectedSide, setSelectedSide] = useState('home')
+
   if (sport !== 'futbol') {
     return <p className="ollin-partido-empty">Alineaciones no disponibles para este deporte</p>
   }
@@ -236,35 +220,68 @@ export default function LineupsTab({ lineups, sport, summary, events = [] }) {
     return <p className="ollin-partido-empty">Alineaciones no disponibles aún</p>
   }
 
-  const homeTeamId = summary?.homeTeam?.id ?? home?.team?.id ?? null
-  const awayTeamId = summary?.awayTeam?.id ?? away?.team?.id ?? null
+  const homeTeamId = summary?.homeTeam?.id ?? null
+  const awayTeamId = summary?.awayTeam?.id ?? null
+  const homeName = summary?.homeTeam?.name || 'Local'
+  const awayName = summary?.awayTeam?.name || 'Visitante'
 
   const homeEventMap = buildPlayerEventMap(events, homeTeamId)
   const awayEventMap = buildPlayerEventMap(events, awayTeamId)
 
-  const homeName = summary?.homeTeam?.name || home?.team?.name || 'Local'
-  const awayName = summary?.awayTeam?.name || away?.team?.name || 'Visitante'
-  const homeFormation = home?.formation || ''
-  const awayFormation = away?.formation || ''
+  const activeLineup = selectedSide === 'home' ? home : away
+  const activeEventMap = selectedSide === 'home' ? homeEventMap : awayEventMap
+  const activeFormation = activeLineup?.formation || ''
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', paddingBottom: '24px' }}>
-      {home && (
-        <div>
-          <p style={{ textAlign: 'center', color: '#4ecdc4', fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.05em', marginBottom: '8px', textTransform: 'uppercase' }}>
-            {homeName}{homeFormation ? ` — ${homeFormation}` : ''}
-          </p>
-          <FormationPitch lineup={home} side="home" eventMap={homeEventMap} />
-        </div>
+    <div style={{ paddingBottom: '24px' }}>
+      {/* Selector */}
+      <div style={{ display: 'flex', gap: '8px', justifyContent: 'center', marginBottom: '16px' }}>
+        <button
+          onClick={() => setSelectedSide('home')}
+          style={{
+            padding: '6px 18px',
+            borderRadius: '20px',
+            border: 'none',
+            cursor: 'pointer',
+            fontWeight: 700,
+            fontSize: '0.82rem',
+            background: selectedSide === 'home' ? '#4ecdc4' : 'rgba(255,255,255,0.08)',
+            color: selectedSide === 'home' ? '#0a0a1a' : '#aaa',
+            transition: 'all 0.15s',
+          }}
+        >
+          {homeName}
+        </button>
+        <button
+          onClick={() => setSelectedSide('away')}
+          style={{
+            padding: '6px 18px',
+            borderRadius: '20px',
+            border: 'none',
+            cursor: 'pointer',
+            fontWeight: 700,
+            fontSize: '0.82rem',
+            background: selectedSide === 'away' ? '#f0c030' : 'rgba(255,255,255,0.08)',
+            color: selectedSide === 'away' ? '#0a0a1a' : '#aaa',
+            transition: 'all 0.15s',
+          }}
+        >
+          {awayName}
+        </button>
+      </div>
+
+      {/* Formación */}
+      {activeFormation && (
+        <p style={{ textAlign: 'center', color: selectedSide === 'home' ? '#4ecdc4' : '#f0c030', fontWeight: 700, fontSize: '0.82rem', letterSpacing: '0.05em', marginBottom: '10px', textTransform: 'uppercase' }}>
+          {activeFormation}
+        </p>
       )}
-      {away && (
-        <div>
-          <p style={{ textAlign: 'center', color: '#f0c030', fontWeight: 700, fontSize: '0.85rem', letterSpacing: '0.05em', marginBottom: '8px', textTransform: 'uppercase' }}>
-            {awayName}{awayFormation ? ` — ${awayFormation}` : ''}
-          </p>
-          <FormationPitch lineup={away} side="away" eventMap={awayEventMap} />
-        </div>
-      )}
+
+      {/* Campo + banca */}
+      {activeLineup
+        ? <FormationPitch lineup={activeLineup} side={selectedSide} eventMap={activeEventMap} />
+        : <p className="ollin-partido-empty">Sin datos para este equipo</p>
+      }
     </div>
   )
 }
