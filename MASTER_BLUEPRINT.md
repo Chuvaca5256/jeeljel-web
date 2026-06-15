@@ -341,6 +341,7 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - [ ] **OLLIN-17** — `sanitizeFootballFixture is not a function` en página partido individual
 - [ ] **CHAT-1** — Conectar `ChatPartido.jsx` a backend chat real
 - [ ] **OLLIN-20** — Navbar active link bug
+- [ ] **CANCHA-3D** — Reemplazar `FootballFieldLive.jsx` con cancha 3D PixiJS estilo Playdoit (perspectiva isométrica, gradas, balón animado, jugadores con nombre/número, eventos flotantes, timeline, posesión animada)
 - [ ] Página Misión con contenido real
 - [ ] Página Contacto con formulario a hola@jeeljel.com (footer ya tiene `mailto:` hola + proyectos)
 - [x] Footer global: `proyectos@jeeljel.com` + botón Contáctanos → mailto proyectos

@@ -52,3 +52,4 @@
 5. **OLLIN-20** 🟡 — Navbar active link bug
 6. **CHAT-1** 🟡 — Conectar `ChatPartido.jsx` a `POST /chat/messages` + `GET /chat/status`
 7. **SEC** 🟡 — Re-habilitar RLS en tabla `users` post-torneo
+8. **CANCHA-3D** 🔴 — Reemplazar `FootballFieldLive.jsx` con cancha 3D estilo Playdoit usando PixiJS: perspectiva isométrica, gradas, balón animado, jugadores posicionados con nombre y número, eventos flotantes (⚽ gol, 🟨 tarjeta, 🔄 sustitución), timeline superior con minuto y eventos, indicador de posesión animado. NO tocar ningún otro componente de partido.

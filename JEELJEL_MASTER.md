@@ -764,6 +764,7 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **OLLIN-20** | 🟡 | Navbar active link bug — todos los links amarillos al navegar | Ollin Deportes | ⏳ Pendiente |
 | **CHAT-1** | 🟡 | Chat UI frontend — conectar `ChatPartido.jsx` a `POST /chat/messages` + `GET /chat/status` | Ollin Deportes | ⏳ Pendiente |
 | **SEC** | 🟡 | Re-habilitar RLS en tabla `users` post-torneo | Infra | ⏳ Post-torneo |
+| **CANCHA-3D** | 🔴 | Reemplazar `FootballFieldLive.jsx` con cancha 3D PixiJS — perspectiva isométrica, gradas, balón animado, jugadores con nombre+número, eventos flotantes, timeline, posesión animada | Ollin Deportes | ⏳ Próxima sesión |
 
 ---
 
