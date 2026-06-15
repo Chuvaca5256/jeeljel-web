@@ -8,7 +8,7 @@
  * - Todos los tipos de evento visibles
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import useTickerEvents from '../../../hooks/useTickerEvents'
 import LiveTicker from './LiveTicker'
 
@@ -66,25 +66,76 @@ const TICKER_STAT_ICONS = {
   'Goalkeeper Saves':  '🧤',
   'Shots off Goal':    '💨',
   'Total Shots':       '💨',
+  'Blocked Shots':     '🛡️',
+  'Shots insidebox':   '⚡',
+  'Total passes':      '👟',
+  'Passes':            '👟',
 }
 
 const TICKER_TYPE_ICONS = {
-  corner:   '🚩',
-  shot:     '🎯',
-  shot_off: '💨',
-  foul:     '🛑',
+  corner:    '🚩',
+  shot:      '🎯',
+  shot_off:  '💨',
+  foul:      '🛑',
+  blocked:   '🛡️',
+  insidebox: '⚡',
+  pass:      '👟',
 }
+
+const OFFICIAL_EVENT_ICONS = {
+  goal:    '⚽',
+  yellow:  '🟨',
+  red:     '🟥',
+  subst:   '🚑',
+  injury:  '🚑',
+}
+
+const OFFICIAL_TYPE_ICONS = {
+  Goal:         '⚽',
+  'Yellow Card': '🟨',
+  'Red Card':    '🟥',
+  subst:         '🚑',
+  Card:          '🟨',
+}
+
+const BROADCAST_DURATION_MS = 8000
+const FREQUENT_TOAST_MS = 3000
 
 function tickerBroadcastIcon(ev) {
   if (!ev) return '📺'
+  if (ev.kind && OFFICIAL_EVENT_ICONS[ev.kind]) return OFFICIAL_EVENT_ICONS[ev.kind]
+  const rawType = ev.type || ''
+  if (OFFICIAL_TYPE_ICONS[rawType]) return OFFICIAL_TYPE_ICONS[rawType]
+  const typeLower = rawType.toLowerCase()
+  if (typeLower === 'goal') return OFFICIAL_EVENT_ICONS.goal
+  if (typeLower === 'subst') return OFFICIAL_EVENT_ICONS.subst
+  if (typeLower === 'card') {
+    const detail = (ev.detail || ev.label || '').toLowerCase()
+    if (detail.includes('red')) return OFFICIAL_EVENT_ICONS.red
+    return OFFICIAL_EVENT_ICONS.yellow
+  }
   if (TICKER_TYPE_ICONS[ev.type]) return TICKER_TYPE_ICONS[ev.type]
   const label = (ev.label || '').toLowerCase()
   if (label.includes('esquina') || label.includes('corner')) return TICKER_STAT_ICONS['Corner Kicks']
+  if (label.includes('bloquead') || label.includes('blocked')) return TICKER_STAT_ICONS['Blocked Shots']
+  if (label.includes('área') || label.includes('area') || label.includes('inside')) return TICKER_STAT_ICONS['Shots insidebox']
+  if (label.includes('pase') || label.includes('pass')) return TICKER_STAT_ICONS['Total passes']
   if (label.includes('puerta') || label.includes('on goal')) return TICKER_STAT_ICONS['Shots on Goal']
   if (label.includes('fuera') || label.includes('off goal')) return TICKER_STAT_ICONS['Shots off Goal']
   if (label.includes('falta') || label.includes('foul')) return TICKER_STAT_ICONS['Fouls']
   if (label.includes('parad') || label.includes('save')) return TICKER_STAT_ICONS['Goalkeeper Saves']
+  if (label.includes('gol') || label.includes('goal')) return OFFICIAL_EVENT_ICONS.goal
+  if (label.includes('roja') || label.includes('red card')) return OFFICIAL_EVENT_ICONS.red
+  if (label.includes('amarilla') || label.includes('yellow')) return OFFICIAL_EVENT_ICONS.yellow
+  if (label.includes('lesión') || label.includes('lesion') || label.includes('injury')) return OFFICIAL_EVENT_ICONS.injury
   return ev.icon || '📺'
+}
+
+function broadcastLabel(ev) {
+  if (!ev) return 'Evento'
+  if (ev.isOfficial && ev.kind === 'goal') return 'GOL'
+  if (ev.label) return ev.label.replace(/\s*[⚽🟨🟥🔄🚩🎯🥅🤚🚑📺💧⚠️⏱️⏸️⏳🛡️⚡👟🛑🧤💨]+\s*$/u, '').trim() || ev.label
+  return ev.type || 'Evento'
 }
 
 /* Colores por equipo */
@@ -172,6 +223,9 @@ export default function FootballFieldLive({
   const statusShort = summary?.statusShort || ''
   const isLive      = ['1H','2H','HT','ET','BT','P'].includes(statusShort)
   const tickerEvent = useTickerEvents(isLive ? partidoId : null)
+  const [officialBurst, setOfficialBurst] = useState(null)
+  const [frequentToast, setFrequentToast] = useState(null)
+  const prevEventsLenRef = useRef(events.length)
 
   /* Posesión */
   const rawPossH = parseInt(summary?.miniStats?.possessionHome) ||
@@ -224,6 +278,50 @@ export default function FootballFieldLive({
 
     setStatEvents(evs)
   }, [statistics, summary?.elapsed]) // eslint-disable-line
+
+  /* Toast sutil — pases y stats frecuentes del ticker */
+  useEffect(() => {
+    if (!tickerEvent?.isFrequent) {
+      setFrequentToast(null)
+      return undefined
+    }
+    setFrequentToast(tickerEvent)
+    const t = setTimeout(() => setFrequentToast(null), FREQUENT_TOAST_MS)
+    return () => clearTimeout(t)
+  }, [tickerEvent])
+
+  /* Overlay central — goles y tarjetas oficiales nuevos */
+  useEffect(() => {
+    if (events.length <= prevEventsLenRef.current) {
+      prevEventsLenRef.current = events.length
+      return undefined
+    }
+
+    const latest = events[events.length - 1]
+    prevEventsLenRef.current = events.length
+    if (!latest) return undefined
+
+    const kind = getEventKind(latest)
+    if (!['goal', 'yellow', 'red'].includes(kind)) return undefined
+
+    const home = isHomeEvent(latest, summary)
+    setOfficialBurst({
+      elapsed: latest.minute ?? elapsed,
+      label: broadcastLabel({ ...latest, kind }),
+      team: home ? homeTeam : awayTeam,
+      player: latest.player || null,
+      type: latest.type,
+      detail: latest.detail,
+      kind,
+      isOfficial: true,
+    })
+
+    const t = setTimeout(() => setOfficialBurst(null), BROADCAST_DURATION_MS)
+    return () => clearTimeout(t)
+  }, [events, events.length, summary, homeTeam, awayTeam, elapsed])
+
+  const centralBroadcast = officialBurst
+    || (tickerEvent && !tickerEvent.isFrequent ? tickerEvent : null)
 
   const allEvents = [...events, ...statEvents]
   const processed = allEvents.map(ev => {
@@ -474,30 +572,49 @@ export default function FootballFieldLive({
           </text>
         </svg>
 
-        {tickerEvent && (
+        {centralBroadcast && (
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-50">
             <div
               className="animate-pulse flex flex-col items-center gap-2 rounded-2xl border border-white/25 bg-black/55 px-10 py-7 text-center text-white shadow-[0_8px_32px_rgba(0,0,0,0.45)] backdrop-blur-md"
               role="status"
               aria-live="polite"
             >
-              {tickerEvent.elapsed != null && tickerEvent.elapsed !== '—' && (
+              {centralBroadcast.elapsed != null && centralBroadcast.elapsed !== '—' && (
                 <span className="text-xs font-semibold uppercase tracking-[0.2em] text-white/70">
-                  {tickerEvent.elapsed}&apos;
+                  {centralBroadcast.elapsed}&apos;
                 </span>
               )}
               <span className="animate-bounce text-5xl leading-none" aria-hidden="true">
-                {tickerBroadcastIcon(tickerEvent)}
+                {tickerBroadcastIcon(centralBroadcast)}
               </span>
               <span className="text-lg font-bold uppercase tracking-wide">
-                {tickerEvent.label || tickerEvent.type || 'Evento'}
+                {broadcastLabel(centralBroadcast)}
               </span>
-              {tickerEvent.team && (
+              {centralBroadcast.team && (
                 <span className="text-sm font-medium text-white/85">
-                  {tickerEvent.team}
+                  {centralBroadcast.team}
+                </span>
+              )}
+              {centralBroadcast.player && (
+                <span className="text-sm text-white/75">
+                  {shortName(centralBroadcast.player)}
                 </span>
               )}
             </div>
+          </div>
+        )}
+
+        {frequentToast && (
+          <div
+            className="absolute bottom-2 right-2 z-40 flex items-center gap-1.5 rounded bg-black/60 px-2 py-1 text-xs text-white animate-pulse pointer-events-none"
+            role="status"
+            aria-live="polite"
+          >
+            <span>{tickerBroadcastIcon(frequentToast)}</span>
+            <span>{frequentToast.label || 'Pase'}</span>
+            {frequentToast.team && (
+              <span className="text-white/70">· {frequentToast.team}</span>
+            )}
           </div>
         )}
       </div>
