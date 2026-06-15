@@ -64,8 +64,15 @@ function sanitizeStandingsResponse(apiRows, leagueId) {
   const entry = apiRows[0]
   const leagueName = leagueDisplayName(entry?.league || { id: leagueId })
   const standingsNested = entry?.league?.standings || []
-
-  const groups = standingsNested.map((groupRows, index) => {
+  // Deduplicar grupos por nombre
+  const seenGroups = new Set()
+  const uniqueGroups = standingsNested.filter((groupRows) => {
+    const rawLabel = groupRows[0]?.group || ''
+    if (seenGroups.has(rawLabel)) return false
+    seenGroups.add(rawLabel)
+    return true
+  })
+  const groups = uniqueGroups.map((groupRows, index) => {
     const rawLabel = groupRows[0]?.group || String.fromCharCode(65 + index)
     const groupLabel = translateGroupLabel(rawLabel)
     return {
