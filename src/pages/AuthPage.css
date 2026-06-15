@@ -217,3 +217,117 @@
 .auth-success__cta:hover {
   opacity: 0.9;
 }
+
+.registro-success {
+  text-align: center;
+  padding: 2rem 1rem;
+}
+
+.registro-success h2 {
+  color: #3dd9a8;
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.registro-success p {
+  color: rgba(255,255,255,0.6);
+  margin-bottom: 2rem;
+}
+
+.registro-success__apps {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1.5rem;
+}
+
+.registro-success__app-btn {
+  position: relative;
+  width: 320px;
+  height: 64px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.registro-success__app-btn--primary {
+  border: 1px solid rgba(61,217,168,0.4);
+  background: rgba(61,217,168,0.06);
+  color: #6ee7b7;
+}
+
+.registro-success__app-btn--primary .registro-success__app-btn-logo {
+  position: absolute;
+  right: -8px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 70px;
+  height: 70px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.15;
+  filter: blur(0.5px);
+}
+
+.registro-success__app-btn--primary span {
+  position: relative;
+  z-index: 1;
+}
+
+.registro-success__app-btn--secondary {
+  border: 1px solid rgba(255,255,255,0.2);
+  background: transparent;
+  color: rgba(255,255,255,0.8);
+}
+
+.registro-success__app-btn--disabled {
+  border: 1px solid rgba(255,255,255,0.1);
+  background: transparent;
+  color: rgba(255,255,255,0.3);
+  cursor: not-allowed;
+  font-size: 14px;
+  height: 48px;
+  width: 200px;
+}
+
+.registro-success__proximos-label {
+  display: block;
+  color: rgba(255,255,255,0.3);
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.registro-success__proximos-grid {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.registro-success__volver {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 1.5rem;
+  color: rgba(255,255,255,0.5);
+  font-size: 14px;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 10px;
+  padding: 10px 20px;
+}
+
+.registro-success__volver:hover {
+  color: rgba(255,255,255,0.8);
+  border-color: rgba(255,255,255,0.3);
+}

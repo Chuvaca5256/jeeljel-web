@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import mosaico from '../assets/mosaicos/Tlaloc.png'
+import logoIkanNaat from '../assets/Logo_Ika_Naat_sin_fondo_sin_letras.png'
 import { supabase } from '../lib/supabaseClient'
 import './AuthPage.css'
 
@@ -20,6 +21,8 @@ function formatAuthError(message) {
 
 export default function Registro() {
   const [searchParams] = useSearchParams()
+  const returnTo = searchParams.get('return') || null
+  const origenParam = searchParams.get('origen') || 'jeeljel_com'
   const [nombre, setNombre] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -32,8 +35,6 @@ export default function Registro() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
-
-  const origenRegistro = searchParams.get('origen')?.trim() || 'jeeljel_com'
 
   useEffect(() => {
     document.body.classList.add('page-auth')
@@ -104,19 +105,54 @@ export default function Registro() {
 
       <div className="auth-page__content">
         {success ? (
-          <div className="auth-success">
-            <h1 className="auth-success__title">¡Bienvenido a JeelJel Kaanab!</h1>
-            <p className="auth-success__text">
-              Tu cuenta ha sido creada. Ya puedes explorar el ecosistema.
-            </p>
-            <a
-              className="auth-success__cta"
-              href="https://ikannaat.jeeljel.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              ¡Explora Ikan Naat IA (Beta)!
-            </a>
+          <div className="registro-success">
+            <h2>¡Bienvenido a JeelJel Kaanab!</h2>
+            <p>Tu cuenta ha sido creada. Ya puedes explorar el ecosistema.</p>
+
+            <div className="registro-success__apps">
+
+              {/* Ikan Naat — activa */}
+              <a
+                href="https://ikannaat.jeeljel.com"
+                className="registro-success__app-btn registro-success__app-btn--primary"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <div
+                  className="registro-success__app-btn-logo"
+                  style={{ backgroundImage: `url(${logoIkanNaat})` }}
+                />
+                <span>Explorar Ikan Naat IA (Beta)</span>
+              </a>
+
+              {/* Ollin Deportes — activa */}
+              <a
+                href="/ollin-deportes"
+                className="registro-success__app-btn registro-success__app-btn--secondary"
+              >
+                <span>Ollin Deportes</span>
+              </a>
+
+              {/* Próximamente */}
+              <div className="registro-success__apps-proximos">
+                <span className="registro-success__proximos-label">Próximamente</span>
+                <div className="registro-success__proximos-grid">
+                  <div className="registro-success__app-btn registro-success__app-btn--disabled">Izydra OS</div>
+                  <div className="registro-success__app-btn registro-success__app-btn--disabled">Virtyou</div>
+                  <div className="registro-success__app-btn registro-success__app-btn--disabled">Inkógnito</div>
+                </div>
+              </div>
+            </div>
+
+            {/* Botón volver — solo si hay returnTo */}
+            {returnTo && (
+              <a
+                href={returnTo}
+                className="registro-success__volver"
+              >
+                ← Volver al partido (ya puedes escribir en el chat)
+              </a>
+            )}
           </div>
         ) : (
           <>

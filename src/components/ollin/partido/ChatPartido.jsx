@@ -194,7 +194,7 @@ export default function ChatPartido({ partidoId, summary }) {
         <div className="ollin-chat-partido__modal" onClick={() => setShowModal(false)}>
           <div onClick={(e) => e.stopPropagation()}>
             <p>Regístrate para participar en el chat en vivo</p>
-            <a href="/registro">Crear cuenta gratis →</a>
+            <a href={`/registro?origen=ollin_deportes&return=/ollin-deportes/partido/${partidoId}`}>Crear cuenta gratis →</a>
             <button type="button" onClick={() => setShowModal(false)}>✕</button>
           </div>
         </div>
