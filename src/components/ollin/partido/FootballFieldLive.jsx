@@ -38,15 +38,22 @@ function getEventKind(ev) {
 }
 
 const KIND_META = {
-  goal:    { icon: '⚽', label: 'GOL'     },
-  red:     { icon: '🟥', label: 'ROJA'    },
-  yellow:  { icon: '🟨', label: 'AMARILLA'},
-  subst:   { icon: '🔄', label: 'CAMBIO'  },
-  corner:  { icon: '🚩', label: 'CORNER'  },
-  penalty: { icon: '🎯', label: 'PENAL'   },
-  var:     { icon: '📺', label: 'VAR'     },
-  foul:    { icon: '⚠️', label: 'FALTA'   },
-  other:   { icon: '📌', label: 'EVENTO'  },
+  goal:      { icon: '⚽', label: 'GOL'         },
+  red:       { icon: '🟥', label: 'ROJA'        },
+  yellow:    { icon: '🟨', label: 'AMARILLA'    },
+  subst:     { icon: '🔄', label: 'CAMBIO'      },
+  corner:    { icon: '🚩', label: 'CORNER'      },
+  penalty:   { icon: '🎯', label: 'PENAL'       },
+  var:       { icon: '📺', label: 'VAR'         },
+  foul:      { icon: '⚠️', label: 'FALTA'       },
+  shot:      { icon: '🥅', label: 'TIRO'        },
+  freekick:  { icon: '🎯', label: 'TIRO LIBRE'  },
+  throwin:   { icon: '🤚', label: 'BANDA'       },
+  injury:    { icon: '🚑', label: 'LESIÓN'      },
+  hydration: { icon: '💧', label: 'HIDRATACIÓN' },
+  stoppage:  { icon: '⏸️', label: 'DETENIDO'    },
+  addedtime: { icon: '⏱️', label: 'T. EXTRA'    },
+  other:     { icon: '⏳', label: 'EVENTO'      },
 }
 
 /* Colores por equipo */
