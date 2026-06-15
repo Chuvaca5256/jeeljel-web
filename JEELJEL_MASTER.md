@@ -1,5 +1,5 @@
 # JEELJEL MASTER — Documento Maestro del Ecosistema
-## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.8 — fin sesión 13/06/2026
+## JeelJel Kaanab | DOC-JEL-2026-MASTER-001 | v1.9 — fin sesión 14/06/2026
 
 > **Este documento reemplaza y unifica:** `JeelJel_Coins_Ecosistema_Master_v13.md`, `JeelJel_Coins_Ecosistema_Master.md` (alias) y `CURSOR_OllinDeportes_v1.md`. Es la fuente de verdad única sobre economía (JC), identidad unificada (SSO), arquitectura de Ollin Deportes, decisiones permanentes del CEO y pendientes técnicos. Los documentos `SNAPSHOT.md` (estado actual) y `MASTER_BLUEPRINT.md` (hoja de ruta) se mantienen separados.
 
@@ -757,12 +757,13 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **WEB-6** | — | Enlace jeeljel.com/registro en `login.html` y `register.html` de Ikan Naat | Ikan Naat | ✅ Completado |
 | **INFRA-1** | — | Llave SSH regenerada en VPS + secret `VPS_SSH_KEY` actualizado en GitHub | Infra | ✅ Completado |
 | **INFRA-2** | — | Deploy frontend via webhook + Telegram — PM2 `webhook-deploy` puerto 9000; bot `@Jeeljel_deploy_bot` | Infra | ✅ Completado (14/06/2026) |
-| **INFRA-3** | 🔴 | VPS ↔ GitHub desincronizados — `pasadosService.js` solo en VPS (no GitHub); `git pull --rebase` obligatorio | Infra | ⏳ Pendiente |
-| **OLLIN-16** | 🟡 | PASADOS — backend ✅ VPS (**7 FT** en Redis); frontend ⏳ tab no consume `/pasados` | Ollin Deportes | 🟡 Backend VPS ✅ · Frontend ⏳ |
-| **OLLIN-17** | 🔴 | Página partido FT — `sanitizeFootballFixture is not a function`; minuto en vivo muestra «LIVE» en lugar de `elapsed` | Ollin Deportes | ⏳ Pendiente |
+| **BACKEND-1** | 🔴 | `pollFootballProximos` no se llama al arrancar ni en modo LIVE — Redis queda vacío si proceso arranca en LIVE | Ollin Deportes | ⏳ Pendiente |
+| **INFRA-3** | 🔴 | VPS ↔ GitHub desincronizados — `pasadosService.js` solo en VPS; `git pull --rebase` obligatorio | Infra | ⏳ Pendiente |
+| **OLLIN-17** | 🔴 | `sanitizeFootballFixture is not a function` en página partido individual | Ollin Deportes | ⏳ Pendiente |
 | **OLLIN-18** | 🟡 | Standings post-partido — trigger inmediato de `pollStandingsBatch` al detectar transición live→idle | Ollin Deportes | ⏳ Pendiente |
-| **OLLIN-19** | 🟡 | PRÓXIMOS — mensaje «limitación FREE» eliminado en repo (`3134998`); **pendiente deploy frontend** | Ollin Deportes | ⏳ Deploy manual |
-| **OLLIN-20** | 🟡 | Navbar active link bug — todos los links amarillos al navegar (SEC-11) | Ollin Deportes | ⏳ Pendiente |
+| **OLLIN-20** | 🟡 | Navbar active link bug — todos los links amarillos al navegar | Ollin Deportes | ⏳ Pendiente |
+| **CHAT-1** | 🟡 | Chat UI frontend — conectar `ChatPartido.jsx` a `POST /chat/messages` + `GET /chat/status` | Ollin Deportes | ⏳ Pendiente |
+| **SEC** | 🟡 | Re-habilitar RLS en tabla `users` post-torneo | Infra | ⏳ Post-torneo |
 
 ---
 
