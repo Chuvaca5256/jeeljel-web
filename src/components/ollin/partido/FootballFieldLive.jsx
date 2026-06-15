@@ -143,6 +143,16 @@ export default function FootballFieldLive({
   const statusShort = summary?.statusShort || ''
   const isLive      = ['1H','2H','HT','ET','BT','P'].includes(statusShort)
   const tickerEvent = useTickerEvents(isLive ? partidoId : null)
+  const tickerFieldEvs = tickerEvent ? [{
+    minute: tickerEvent.elapsed,
+    type: tickerEvent.type,
+    detail: tickerEvent.type,
+    label: `${tickerEvent.label} ${tickerEvent.icon}`,
+    player: null,
+    assist: null,
+    teamId: tickerEvent.side === 'home' ? summary?.homeTeam?.id : summary?.awayTeam?.id,
+    _synthetic: true,
+  }] : []
 
   /* Posesión */
   const rawPossH = parseInt(summary?.miniStats?.possessionHome) ||
@@ -196,7 +206,7 @@ export default function FootballFieldLive({
     setStatEvents(evs)
   }, [statistics, summary?.elapsed]) // eslint-disable-line
 
-  const allEvents = [...events, ...statEvents]
+  const allEvents = [...events, ...statEvents, ...tickerFieldEvs]
   const processed = allEvents.map(ev => {
     const home = isHomeEvent(ev, summary)
     return {
