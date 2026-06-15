@@ -159,10 +159,11 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 - **SESION-1** ✅ Completado (15/06/2026) — `onAuthStateChange` ChatPartido + cerrar sesión navbar, commit `20c000f`
 - **OLLIN-CHAT-BACKEND** ✅ Completado (15/06/2026) — tablas Supabase + fix `ws` Node 20, commit `152c4a9`
 - **OLLIN-20** ✅ Completado (15/06/2026) — navbar active link corregido
-- **LiveTicker sintético** ✅ Completado (15/06/2026) — `statsDiffService` + `ollin:ticker:{id}` backend; `useTickerEvents` + `LiveTicker` frontend; CSS `.ollin-ticker` (commits `9cfedca`–`39eb4db`)
-- **Header partido compacto** ✅ Completado (15/06/2026) — `PartidoHeader` layout `ollin-ph` + CSS (commits `65df7f3`, `c61e602`)
-- **Reloj partido visibilitychange** ✅ Completado (15/06/2026) — sync elapsed al volver a pestaña (commit `9a1f6e9`)
-- **usePartido socket events** ✅ Completado (15/06/2026) — eventos en vivo sin re-fetch HTTP (commit `a112753`)
+- **LiveTicker sintético** 🟡 — Código desplegado en frontend y backend (`statsDiffService.js`, `useTickerEvents.js`, `LiveTicker.jsx`, `polling.js` con detector de diffs). **Pendiente verificar en partido en vivo** — el partido de prueba terminó antes de confirmar que `ollin:ticker:{id}` emite correctamente al frontend.
+- **Header partido compacto** ✅ — `ollin-ph` layout horizontal operativo (15/06/2026)
+- **Reloj partido** 🟡 — Timer local + `visibilitychange` implementados. **Pendiente verificar** que no hay reloj duplicado entre header y campo (`FootballFieldLive` muestra `elapsed` separado del header).
+- **Reloj duplicado campo** 🔴 — El minuto aparece dos veces: en header y en `FootballFieldLive`. Hay que quitar el del campo.
+- **Errores chat Supabase** 🔴 — `ollin_chat` y `ollin_chat_moderacion` no se encuentran en schema cache. Chat no persiste mensajes.
 
 ### Completados sesión vespertina (referencia)
 - **OLLIN-21** ✅ Completado (14/06/2026) — LineupsTab rediseño alineaciones
