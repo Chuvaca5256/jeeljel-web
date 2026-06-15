@@ -64,6 +64,8 @@ async function main() {
 
   await connectRedis()
   const redis = getClient()
+  await redis.del('ollin:polling:paused')
+  await redis.del('ollin:api:requests:today')
   startPolling(redis)
 
   server.listen(config.port, () => {
