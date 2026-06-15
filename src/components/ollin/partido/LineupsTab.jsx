@@ -68,28 +68,30 @@ function FormationPitch({ lineup, side, eventMap }) {
   // ── Tabla fallback (sin grid) ──────────────────────────────────────────
   if (!hasGrid) {
     return (
-      <div style={{ padding: '0 8px' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', marginBottom: '8px' }}>
-          <thead>
-            <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
-              <th style={{ textAlign: 'left', padding: '6px 8px', color: '#aaa', fontWeight: 600, width: '36px' }}>#</th>
-              <th style={{ textAlign: 'left', padding: '6px 8px', color: '#aaa', fontWeight: 600 }}>Jugador</th>
-              <th style={{ textAlign: 'right', padding: '6px 8px', color: '#aaa', fontWeight: 600, width: '36px' }}>Pos</th>
-            </tr>
-          </thead>
-          <tbody>
-            {players.map((p, i) => {
-              const badges = eventMap[normalizeForMatch(p.name)] || []
-              return (
-                <tr key={p.id || p.number} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', background: i % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'transparent' }}>
-                  <td style={{ padding: '7px 8px', color: '#f0c030', fontWeight: 700 }}>{p.number ?? '—'}</td>
-                  <td style={{ padding: '7px 8px', color: '#fff' }}>{p.name}<EventBadges badges={badges} /></td>
-                  <td style={{ padding: '7px 8px', color: '#aaa', textAlign: 'right' }}>{p.pos}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', padding: '0 8px', flexWrap: 'wrap' }}>
+        <div style={{ flex: '1 1 240px', minWidth: 0 }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                <th style={{ textAlign: 'left', padding: '6px 8px', color: '#aaa', fontWeight: 600, width: '36px' }}>#</th>
+                <th style={{ textAlign: 'left', padding: '6px 8px', color: '#aaa', fontWeight: 600 }}>Jugador</th>
+                <th style={{ textAlign: 'right', padding: '6px 8px', color: '#aaa', fontWeight: 600, width: '36px' }}>Pos</th>
+              </tr>
+            </thead>
+            <tbody>
+              {players.map((p, i) => {
+                const badges = eventMap[normalizeForMatch(p.name)] || []
+                return (
+                  <tr key={p.id || p.number} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', background: i % 2 === 0 ? 'rgba(255,255,255,0.03)' : 'transparent' }}>
+                    <td style={{ padding: '7px 8px', color: '#f0c030', fontWeight: 700 }}>{p.number ?? '—'}</td>
+                    <td style={{ padding: '7px 8px', color: '#fff' }}>{p.name}<EventBadges badges={badges} /></td>
+                    <td style={{ padding: '7px 8px', color: '#aaa', textAlign: 'right' }}>{p.pos}</td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        </div>
         <BancaTable subs={subs} eventMap={eventMap} />
       </div>
     )
@@ -130,8 +132,9 @@ function FormationPitch({ lineup, side, eventMap }) {
   })
 
   return (
-    <div>
-      <svg viewBox={`0 0 ${VW} ${VH}`} style={{ width: '100%', maxWidth: '340px', display: 'block', margin: '0 auto' }}>
+    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', padding: '0 8px', flexWrap: 'wrap' }}>
+      <div style={{ flex: '0 1 340px', minWidth: '220px', maxWidth: '340px' }}>
+        <svg viewBox={`0 0 ${VW} ${VH}`} style={{ width: '100%', display: 'block' }}>
         <rect x="0" y="0" width={VW} height={VH} fill="#2d6a4f" rx="6" />
         {Array.from({ length: 6 }).map((_, i) => (
           <rect key={i} x={PAD} y={PAD + i * ((VH - PAD * 2) / 6)} width={VW - PAD * 2} height={(VH - PAD * 2) / 12} fill="rgba(0,0,0,0.07)" />
@@ -169,6 +172,7 @@ function FormationPitch({ lineup, side, eventMap }) {
           )
         })}
       </svg>
+      </div>
       <BancaTable subs={subs} eventMap={eventMap} />
     </div>
   )
@@ -177,26 +181,31 @@ function FormationPitch({ lineup, side, eventMap }) {
 function BancaTable({ subs, eventMap }) {
   if (!subs || subs.length === 0) return null
   return (
-    <div style={{ marginTop: '10px', padding: '0 8px' }}>
+    <div style={{
+      flex: '1 1 180px',
+      minWidth: '160px',
+      maxWidth: '280px',
+      paddingLeft: '4px',
+      borderLeft: '1px solid rgba(255,255,255,0.08)',
+    }}>
       <p style={{
         color: '#888',
         fontSize: '0.72rem',
         fontWeight: 700,
         letterSpacing: '0.08em',
         textTransform: 'uppercase',
-        borderTop: '1px solid rgba(255,255,255,0.08)',
-        paddingTop: '8px',
-        marginBottom: '4px'
+        marginBottom: '8px',
       }}>
         Banca
       </p>
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px 12px' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
         {subs.map((p) => {
           const badges = eventMap[normalizeForMatch(p.name)] || []
           return (
-            <div key={p.id || p.number} style={{ display: 'flex', alignItems: 'center', gap: '4px', fontSize: '0.78rem', color: '#b0b0b0', minWidth: '120px' }}>
-              <span style={{ color: '#f0c030', fontWeight: 700, minWidth: '22px' }}>{p.number}</span>
-              <span>{p.name}</span>
+            <div key={p.id || p.number} style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.78rem', color: '#b0b0b0', lineHeight: 1.3 }}>
+              <span style={{ color: '#f0c030', fontWeight: 700, minWidth: '22px', flexShrink: 0 }}>{p.number}</span>
+              <span style={{ flex: 1, minWidth: 0 }}>{p.name}</span>
+              {p.pos && <span style={{ color: '#666', fontSize: '0.7rem', flexShrink: 0 }}>{p.pos}</span>}
               <EventBadges badges={badges} />
             </div>
           )
