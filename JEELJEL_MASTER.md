@@ -770,7 +770,7 @@ Estas decisiones no se revisan — son arquitectura de negocio:
 | **LINEUPS-PARCIAL** | — | SVG campo por `grid`; tabla fallback sin grid | Ollin Deportes | 🟡 Parcial (14/06/2026) |
 | **OLLIN-21** | 🟡 | ALINEACIONES — rediseño campo horizontal estilo Sofascore: ambos equipos + suplentes + iconos gol/sustitución | Ollin Deportes | ⏳ Pendiente |
 | **INFRA-4** | — | `pasadosService.js` en repo pero no llega al VPS con `git pull` — investigar con Cursor, NO adivinar en terminal | Infra | ✅ Completado (15/06/2026) — VPS sincronizado con main, MD5 verificado |
-| **INFRA-6** | 🟡 | Cada restart PM2 vacía Redis — warm-up al arrancar sin depender de ciclo IDLE 3 min | Infra | ⏳ Pendiente |
+| **INFRA-6** | — | Cada restart PM2 vacía Redis — warm-up al arrancar sin depender de ciclo IDLE 3 min | Infra | ✅ Completado (15/06/2026) — TTL desacoplado, fijo 1h, commit 7cd9348 |
 | **OLLIN-19** | — | `formatEventLabel` + `getEventKind` + `KIND_META` expandidos — eventos completos campo y backend | Ollin Deportes | ✅ Completado (15/06/2026) |
 | **OLLIN-20** | — | Navbar active link — `NavLink` con `style` función `isActive` | Ollin Deportes | ✅ Completado (15/06/2026) |
 | **CHAT-1** | — | `ChatPartido.jsx` conectado a backend real — socket, batch, modal SSO, pick pinned | Ollin Deportes | ✅ Completado (15/06/2026) |

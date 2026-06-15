@@ -1,5 +1,5 @@
 # SNAPSHOT — JeelJel Kaanab
-**Versión:** v19 — 15/06/2026
+**Versión:** v20 — 15/06/2026
 **Autor:** Carlos García Anaya + Claude
 
 ## ESTADO ACTUAL DEL SISTEMA
@@ -110,11 +110,11 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 
 ### Infraestructura
 - **INFRA-4** ✅ RESUELTO — Diagnóstico vía SSH confirmó que `pasadosService.js` en el VPS coincide con `origin/main` (MD5 `1a6f2974cd17043211b8e81cae893979`) y la rama está `up to date`. La desincronización reportada en SNAPSHOT v11 ya no aplica. Se eliminaron dos archivos vacíos basura (`0` y `1`, 0 bytes) de la raíz del repo en el VPS; `git status` quedó `working tree clean`.
+- **INFRA-6** ✅ RESUELTO — Diagnóstico confirmó que Redis NO se vacía con restart de PM2; el problema real era el TTL de caché corto (`cacheTtlMs = pollingIntervalMs * 2` = 6 min). Se desacopló el TTL del intervalo de polling: ahora `cacheTtlMs` lee la nueva env `CACHE_TTL_MS` con default fijo de 1h (3,600,000 ms). Verificado en VPS: TTL de `hoy`/`proximos` pasó de ~322s a ~3,590s. Sin consumo extra de API (el TTL es independiente del polling). Commit `7cd9348`.
 
 ## PENDIENTES (prioridad)
-1. **INFRA-6** 🟡 — Cada restart de PM2 vacía Redis (PASADOS, HOY, PRÓXIMOS) — necesita estrategia de warm-up al arrancar sin depender de ciclo de 3 minutos
-2. **SEC** 🟡 — Re-habilitar RLS en tabla `users` post-torneo
-3. **SSO-5** 🔴 — Confirmar registro end-to-end jeeljel.com/registro
+1. **SEC** 🟡 — Re-habilitar RLS en tabla `users` post-torneo
+2. **SSO-5** 🔴 — Confirmar registro end-to-end jeeljel.com/registro
 
 ### Completados sesión 15/06/2026
 - **INFRA-4** ✅ Completado (15/06/2026) — VPS sincronizado con main, MD5 verificado, archivos basura eliminados
