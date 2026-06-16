@@ -143,6 +143,37 @@ Resultado real hoy 14/06: current=260, limit_day=7500.
 - **CHAT-UI-3** 🟢 — `userMessage` del caso `spam_duplicate` usa texto genérico de moderación en lugar de mensaje específico de duplicado. Corregir en `chatService.js`.
 - **SEC-2** 🟡 POST-LANZAMIENTO — Security Advisor: alertas *Auth RLS Initialization Plan* en `subscriptions`, `planificaciones`, `vc_credits`, `chat_history`.
 
+## SESIÓN 15/06/2026 — CIERRE: SEPARACIÓN OLLIN A REPO PROPIO
+
+### Decisión arquitectónica — 15/06/2026
+
+**Ollin Deportes migra a repositorio independiente.**
+
+- **Repo nuevo:** https://github.com/Chuvaca5256/ollin-deportes
+- **Motivo:** el acoplamiento dentro de `jeeljel-web` causaba que cada cambio en Nginx o en el deploy del frontend rompiera toda la web. Separar Ollin elimina ese riesgo.
+- **URL pública:** sin cambio — `https://jeeljel.com/ollin-deportes` (Nginx sirve la subruta desde el nuevo build)
+- **Build nuevo:** `/var/www/ollin-app/dist` (en lugar de incluirse en `/var/www/jeeljel-web/dist`)
+- **Backend:** PM2 `ollin-deportes` puerto 10001 — **no se mueve**, la app nueva lo consume igual vía `/api/ollin/`
+- **Supabase:** proyecto `ikan-nat-prod` — **no se mueve**
+- **Base de datos:** tablas `ollin_chat`, `ollin_chat_moderacion`, `users` — **sin cambios**
+- **Reglas de compliance y sanitize:** se copian al repo nuevo, no se modifican
+
+**Fases de la migración:**
+
+| Fase | Descripción | Estado |
+|------|-------------|--------|
+| **0 — Auditoría** | Inventario completo de archivos Ollin en `jeeljel-web` (`_review.md`) | ✅ Completado (15/06/2026) |
+| **1 — Scaffold** | Vite + React + Tailwind con `base: '/ollin-deportes/'` en `vite.config.js` | ⏳ Pendiente |
+| **2 — Migración de código** | Copiar 25 componentes, 6 hooks, 8 utils, 2 assets, CSS según inventario | ⏳ Pendiente |
+| **3 — Deploy VPS + Nginx** | Build en `/var/www/ollin-app/dist`; bloque Nginx `location /ollin-deportes` | ⏳ Pendiente |
+| **4 — Retiro de jeeljel-web** | Eliminar Ollin de `jeeljel-web` solo cuando el repo nuevo sirva en producción; nunca dejar Ollin caído | ⏳ Pendiente — última fase |
+
+**Diseño nuevo planeado para el repo separado:**
+- Barra de navegación propia: logo JeelJel de regreso + selector de deportes Fútbol / Béisbol / NBA / NFL / NHL / F1 + pestañas EN VIVO / HOY / PRÓXIMOS / PASADOS / TABLA
+- Barra de posesión de balón animada tipo llamas con el color de cada equipo
+
+---
+
 ## SESIÓN 16/06/2026
 
 ### Infraestructura y SSO

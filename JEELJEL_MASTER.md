@@ -414,6 +414,25 @@ DLOCAL_WEBHOOK_SECRET=...
 
 # PARTE II — ARQUITECTURA OLLIN DEPORTES
 
+> **⚠️ DECISIÓN ARQUITECTÓNICA — 15/06/2026**
+>
+> A partir de esta fecha, **Ollin Deportes migra a repositorio independiente.**
+>
+> | Concepto | Valor |
+> |----------|-------|
+> | Repo nuevo | https://github.com/Chuvaca5256/ollin-deportes |
+> | URL pública | Sin cambio — `https://jeeljel.com/ollin-deportes` |
+> | Build | `/var/www/ollin-app/dist` (antes parte de `/var/www/jeeljel-web/dist`) |
+> | Nginx | Bloque `location /ollin-deportes` sirve el build separado con `try_files` |
+> | Backend `ollin-deportes` | Sin cambio — PM2 puerto **10001**, `/var/www/jeeljel-repo/ollin-backend` |
+> | Supabase | Sin cambio — proyecto `ikan-nat-prod` |
+> | Redis / API-Sports | Sin cambio |
+> | Compliance y sanitize | Se copian al repo nuevo sin modificar |
+>
+> **Motivo:** el acoplamiento dentro de `jeeljel-web` causaba que cambios en Nginx o en el deploy del frontend rompieran toda la web. El repo separado elimina esa dependencia.
+>
+> El contenido de esta PARTE II sigue siendo la referencia técnica de Ollin Deportes independientemente del repositorio donde viva el código frontend.
+
 ## 20. QUÉ ES OLLIN DEPORTES
 
 Ollin Deportes es el hub deportivo en tiempo real de JeelJel Kaanab. Vive en `jeeljel.com/ollin-deportes`. Es un producto **independiente** de Ikan Naat IA — no es un agente dentro de Ikan Naat. El Agente de Apuestas dentro de Ikan Naat (slug `telarana`) es un producto **separado** — Ollin Deportes no lo reemplaza.

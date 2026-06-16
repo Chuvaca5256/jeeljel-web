@@ -390,12 +390,34 @@ Sistema de tarjetas expandibles (Apps.jsx). Una fila por app:
 - [x] **SESION-1** (15/06/2026) — `onAuthStateChange` ChatPartido + cerrar sesión navbar, commit `20c000f`
 - [x] **OLLIN-CHAT-BACKEND** (15/06/2026) — tablas Supabase + fix `ws` Node 20, commit `152c4a9`
 
+## 🔴 MIGRACIÓN OLLIN A REPO PROPIO — Alta prioridad (15/06/2026)
+
+**Repo nuevo:** https://github.com/Chuvaca5256/ollin-deportes
+**Motivo:** desacoplar el frontend de Ollin de `jeeljel-web` para que cambios en Nginx o el deploy del sitio principal no rompan Ollin.
+**URL pública:** sin cambio — `jeeljel.com/ollin-deportes` servido desde `/var/www/ollin-app/dist`.
+**Lo que NO se mueve:** backend PM2 `:10001`, Supabase `ikan-nat-prod`, Redis, reglas de compliance.
+
+| Fase | Descripción | Estado |
+|------|-------------|--------|
+| **Fase 0 — Auditoría** | Inventario archivos en `_review.md` | ✅ Completado (15/06/2026) |
+| **Fase 1 — Scaffold** | `git init ollin-deportes` · Vite + React + Tailwind · `base: '/ollin-deportes/'` · proxy `/api/ollin` y `/socket.io` → `:10001` | ⏳ Pendiente |
+| **Fase 2 — Migración código** | Copiar 25 componentes · 6 hooks · 8 utils · 2 assets · `OllinDeportes.css` · `supabaseClient.js` → migrar a `VITE_SUPABASE_*` | ⏳ Pendiente |
+| **Fase 3 — Deploy VPS + Nginx** | `npm run build` en VPS · rsync a `/var/www/ollin-app/dist` · bloque Nginx `location /ollin-deportes` con `try_files` | ⏳ Pendiente |
+| **Fase 4 — Retiro de jeeljel-web** | Eliminar Ollin de `jeeljel-web` **solo** cuando el nuevo repo sirva en producción — nunca dejar Ollin caído | ⏳ Pendiente — última fase |
+
+**Diseño planeado para el repo separado:**
+- Navbar propia: logo JeelJel + selector deportes (Fútbol / Béisbol / NBA / NFL / NHL / F1) + pestañas EN VIVO / HOY / PRÓXIMOS / PASADOS / TABLA
+- Barra de posesión animada tipo llamas con color de cada equipo
+
+---
+
 ## Pendientes activos — orden pre-lanzamiento
 
-1. **CHAT-WS-1** 🔴 — Nginx WebSocket + carga histórica (sin esto chat invisible)
-2. **SSO-7** 🟡 — `origenParam` en signUp (funnel torneo)
-3. **CHAT-UI-2** / **CHAT-UI-3** 🟢 — pulido UX modal y mensaje spam duplicado
-4. **SEC-2** 🟡 — optimización políticas RLS (post-lanzamiento)
+1. **MIGRACIÓN-OLLIN Fase 1–4** 🔴 — repo ollin-deportes separado (ver tabla arriba)
+2. **CHAT-WS-1** 🔴 — Nginx WebSocket + carga histórica (sin esto chat invisible)
+3. **SSO-7** 🟡 — `origenParam` en signUp (funnel torneo)
+4. **CHAT-UI-2** / **CHAT-UI-3** 🟢 — pulido UX modal y mensaje spam duplicado
+5. **SEC-2** 🟡 — optimización políticas RLS (post-lanzamiento)
 
 - [x] **SMTP-1** (16/06/2026) — Resend SMTP activo; Site URL jeeljel.com; emailRedirectTo corregido commit 0643b08
 - [x] **SSO-6** (16/06/2026) — RLS public.users activado; 4 políticas verificadas
