@@ -1,271 +1,358 @@
-# Review dump — CHAT-WS-1
-
-## (A) `/etc/nginx/sites-enabled/jeeljel-landing` (VPS)
-
-**Estado:** no se pudo leer en esta sesión.
-
-Intento: `ssh root@187.77.196.169` → `Permission denied (publickey,password)` (BatchMode / sin clave SSH local / sin `sshpass` para contraseña).
-
-Para obtener el archivo completo en el VPS:
-
-```bash
-ssh root@187.77.196.169
-cat /etc/nginx/sites-enabled/jeeljel-landing
-```
-
-**Fragmento documentado en repo** (`JEELJEL_MASTER.md` §28 — no sustituye el archivo completo):
-
-```nginx
-location /api/ollin/ {
-    proxy_pass http://localhost:10001/;
-    proxy_http_version 1.1;
-    proxy_set_header Upgrade $http_upgrade;
-    proxy_set_header Connection 'upgrade';
-    proxy_cache_bypass $http_upgrade;
-}
-```
-
-**Nota CHAT-WS-1:** no hay `location /socket.io/` documentado en el repo; el proxy WebSocket para Socket.io sigue pendiente en `jeeljel-landing`.
+# Inventario Ollin Deportes — Migración a repo separado
+**Generado:** 15/06/2026 | **Repo origen:** `jeeljel-web`
 
 ---
 
-## (B) `src/components/ollin/partido/ChatPartido.jsx` — completo (231 líneas)
+## 1. Componentes — `src/components/ollin/`
+
+| Archivo | Imports directos |
+|---------|-----------------|
+| `src/components/ollin/OllinLayout.jsx` | `./OllinLegalDisclaimer`, `../../ollin/compliance` (`sanitizeOllinText`) |
+| `src/components/ollin/OllinLegalDisclaimer.jsx` | `../../ollin/compliance` (`OLLIN_LEGAL_DISCLAIMER`) |
+| `src/components/ollin/OllinChat.jsx` | `react-router-dom` (`Link`, `useLocation`), `../../lib/supabaseClient` (`supabase`) |
+| `src/components/ollin/LeagueSidebar.jsx` | `../../ollin/leagueCatalog` (`getLeagueLabel`, `getLeaguesByRegion`, `PREMIUM_LOCK_MESSAGE`, `SPORTS_NAV`), `./PremiumLockNotice` |
+| `src/components/ollin/PremiumLockNotice.jsx` | `../../ollin/leagueCatalog` (`PREMIUM_LOCK_MESSAGE`) |
+| `src/components/ollin/StandingsView.jsx` | `./PremiumLockNotice`, `../../ollin/standingsLabels` (`formatStandingsGroupTitle`), `../../ollin/teamDisplay` (`translateTeamName`) |
+| `src/components/ollin/MatchCardCompact.jsx` | `react-router-dom` (`Link`), `../../ollin/matchUtils` (`formatMatchDateTime`), `../../ollin/teamDisplay` (`translateTeamName`), `./TeamDisplay` |
+| `src/components/ollin/MatchCard.jsx` | `react-router-dom` (`Link`), `../../ollin/matchUtils` (`formatMatchDateTime`), `../../ollin/teamDisplay` (`translateTeamName`), `./TeamDisplay` |
+| `src/components/ollin/MatchGroupList.jsx` | `./MatchCardCompact` |
+| `src/components/ollin/MatchColumn.jsx` | `./MatchCard` |
+| `src/components/ollin/TeamDisplay.jsx` | `../../ollin/teamDisplay` (`buildTeamDisplay`) |
+| `src/components/ollin/tabs/TabEnVivo.jsx` | `react-router-dom` (`Link`), `../../../hooks/useTabData`, `../../../hooks/useSocketUpdate`, `../TeamDisplay`, `../../../ollin/matchUtils` (varias funciones) |
+| `src/components/ollin/tabs/TabHoy.jsx` | `../../../hooks/useTabData`, `../MatchGroupList`, `../../../ollin/matchUtils` (`normalizeFootballFixture`, `filterBySport`, `filterByLeague`, `filterBySearch`, `groupMatchesByLeague`) |
+| `src/components/ollin/tabs/TabProximos.jsx` | `../../../hooks/useTabData`, `../MatchGroupList`, `../../../ollin/matchUtils` (mismas 5 funciones) |
+| `src/components/ollin/tabs/TabPasados.jsx` | `../../../hooks/useTabData`, `../MatchGroupList`, `../../../ollin/matchUtils` (mismas 5 funciones) |
+| `src/components/ollin/partido/FootballFieldLive.jsx` | `../../../hooks/useTickerEvents`, `./LiveTicker` — **sin imports externos adicionales** |
+| `src/components/ollin/partido/PartidoHeader.jsx` | Solo `react` hooks — **sin imports externos** |
+| `src/components/ollin/partido/LiveTicker.jsx` | Solo `react` hooks — **sin imports externos** |
+| `src/components/ollin/partido/ChatPartido.jsx` | `socket.io-client` (`io`), `../../../lib/supabaseClient` (`supabase`) |
+| `src/components/ollin/partido/PlayersTab.jsx` | Solo `react` hooks — **sin imports externos** |
+| `src/components/ollin/partido/LineupsTab.jsx` | Solo `react` hooks — **sin imports externos** |
+| `src/components/ollin/partido/StatsTab.jsx` | Sin imports — **puro JSX** |
+| `src/components/ollin/partido/H2HTab.jsx` | Sin imports — **puro JSX** |
+| `src/components/ollin/partido/BaseballDiamondLive.jsx` | Sin imports — **puro JSX SVG** |
+| `src/components/ollin/partido/PartidoSkeleton.jsx` | Sin imports — **puro JSX** |
+
+---
+
+## 2. Páginas — `src/pages/`
+
+| Archivo | Imports directos |
+|---------|-----------------|
+| `src/pages/OllinDeportes.jsx` | `./OllinDeportes.css`, `../components/ollin/LeagueSidebar`, `../components/ollin/StandingsView`, `../components/ollin/OllinLayout`, `../components/ollin/tabs/TabEnVivo`, `../components/ollin/tabs/TabHoy`, `../components/ollin/tabs/TabProximos`, `../components/ollin/tabs/TabPasados`, `../hooks/useStandings`, `../ollin/leagueCatalog` (`CENTRAL_TABS`, `getLeagueMeta`), `../assets/Logo_JeelJel_Kanaabcon_balon_sin_fondo.png`, `../assets/mosaicos/Macuilxochitl.png` |
+| `src/pages/OllinPartido.jsx` | `react-router-dom` (`Link`, `useParams`), `../components/ollin/OllinLayout`, `../components/ollin/partido/PartidoHeader`, `../components/ollin/partido/PartidoSkeleton`, `../components/ollin/partido/FootballFieldLive`, `../components/ollin/partido/BaseballDiamondLive`, `../components/ollin/partido/StatsTab`, `../components/ollin/partido/PlayersTab`, `../components/ollin/partido/LineupsTab`, `../components/ollin/partido/H2HTab`, `../hooks/usePartido`, `../components/ollin/partido/ChatPartido`, `../ollin/partidoMock` (`resolveSport`), `../assets/mosaicos/Macuilxochitl.png`, `./OllinDeportes.css` |
+| `src/pages/OllinDeportes.css` | CSS global de todos los componentes Ollin — **requerido por ambas páginas** |
+
+---
+
+## 3. Hooks — `src/hooks/` — uso exclusivo Ollin
+
+| Hook | Imports directos | ¿Exclusivo Ollin? |
+|------|-----------------|-------------------|
+| `src/hooks/useOllinData.js` | `socket.io-client` (`io`), `../ollin/mockData` (`MOCK_MATCHES`), `../ollin/matchUtils` (`categorizeApiData`) | ✅ Sí |
+| `src/hooks/usePartido.js` | `socket.io-client` (`io`) | ✅ Sí |
+| `src/hooks/useTabData.js` | Solo `react` hooks | ✅ Sí |
+| `src/hooks/useSocketUpdate.js` | `socket.io-client` (`io`) | ✅ Sí |
+| `src/hooks/useStandings.js` | `../ollin/mockData` (`MOCK_STANDINGS`, `MOCK_SCORERS`) | ✅ Sí |
+| `src/hooks/useTickerEvents.js` | `socket.io-client` (`io`) | ✅ Sí |
+| `src/hooks/useTypewriter.js` | Solo `react` hooks | ⚠️ Compartido — también usado en `Home.jsx`, `Mision.jsx`, etc. |
+
+---
+
+## 4. Utils / lib / config — `src/ollin/` y `src/lib/`
+
+| Archivo | Imports directos | Notas |
+|---------|-----------------|-------|
+| `src/ollin/leagueCatalog.js` | `./compliance` (`getLeagueDisplayName`) | Catálogo ~50 ligas, SPORTS_NAV, CENTRAL_TABS, PREMIUM_LOCK_MESSAGE |
+| `src/ollin/teamDisplay.js` | Sin imports externos | Mapas de nombres, banderas (flagcdn CDN), colores de clubs |
+| `src/ollin/matchUtils.js` | `./compliance` (`getLeagueDisplayName`), `./teamDisplay` (`translateTeamName`) | normalizeFootballFixture, categorizeApiData, formatMatchDateTime, groupMatchesByLeague, filtros |
+| `src/ollin/compliance.js` | Sin imports | OLLIN_LEGAL_DISCLAIMER, sanitizeOllinText, BANNED_REPLACEMENTS, getLeagueDisplayName |
+| `src/ollin/standingsLabels.js` | Sin imports | Traducciones grupos standings (EN → ES) |
+| `src/ollin/mockData.js` | Sin imports | Datos demo cuando backend no disponible |
+| `src/ollin/partidoMock.js` | Sin imports | Demo partido individual; exporta `resolveSport` |
+| `src/lib/supabaseClient.js` | `@supabase/supabase-js` (`createClient`) | ⚠️ **Compartido con el resto del sitio** (`Registro.jsx`, `Navbar.jsx`). Contiene URL + anon key hardcodeada. En el repo nuevo deberá usar variables de entorno. |
+
+---
+
+## 5. Assets / Imágenes
+
+### Usados directamente por Ollin
+
+| Asset | Usado en | Descripción |
+|-------|----------|-------------|
+| `src/assets/Logo_JeelJel_Kanaabcon_balon_sin_fondo.png` | `OllinDeportes.jsx` | Logo header Ollin |
+| `src/assets/mosaicos/Macuilxochitl.png` | `OllinDeportes.jsx`, `OllinPartido.jsx` | Fondo mosaico de ambas páginas Ollin |
+
+### Todos los assets disponibles (para referencia)
+
+```
+src/assets/
+├── ajolote_final.webm
+├── hero.png
+├── Logo_Ika_Naat_sin_fondo_sin_letras.png
+├── Logo_inkognito_sin_fondo.png
+├── Logo_Izydra_OS_Sin_fondo.png
+├── Logo_JeelJel_con_balon.png
+├── Logo_JeelJel_Kanaabcon_balon_sin_fondo.png   ← MIGRAR
+├── Logo_JeelJel_sin_fondo.png
+├── Logo_virtyou_sin_fondo.png
+├── react.svg
+├── vite.svg
+└── mosaicos/
+    ├── Cuculcan.png
+    ├── Dios.png
+    ├── Dios_2.png
+    ├── Dios_3.png
+    ├── Dios_Tupa.png
+    ├── Macuilxochitl.png                         ← MIGRAR
+    ├── Tlaloc.png
+    └── Viracoch.png
+```
+
+> **Nota:** El banner en `OllinPartido.jsx` enlaza a `https://ikannaat.jeeljel.com` como URL externa (no importa asset).
+
+---
+
+## 6. Registro de rutas — `src/App.jsx`
 
 ```jsx
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { io } from 'socket.io-client'
-import { supabase } from '../../../lib/supabaseClient'
+// src/App.jsx — líneas 26-29
+<Route path="/ollin-deportes"                  element={<OllinDeportes />} />
+<Route path="/ollin-deportes/partido/:id"      element={<OllinPartido />} />
+<Route path="/mundial-2026"                    element={<Navigate to="/ollin-deportes" replace />} />
+<Route path="/mundial-2026/*"                  element={<Navigate to="/ollin-deportes" replace />} />
+```
 
-const MAX_MESSAGES = 200
-const FLUSH_MS = 500
-const COOLDOWN_MS = 4000
+Los componentes `Navbar` y `Footer` del sitio jeeljel.com envuelven las páginas.
+En el repo nuevo habrá que crear su propio `App.jsx` / router raíz.
 
-function msgMatchId(msg) {
-  return msg?.matchId ?? msg?.match_id
-}
+---
 
-function msgDisplayName(msg) {
-  return msg?.displayName ?? msg?.display_name ?? 'Anónimo'
-}
+## 7. `package.json` — Frontend (`jeeljel-web`)
 
-export default function ChatPartido({ partidoId, summary }) {
-  const [messages, setMessages] = useState([])
-  const [pinnedMessage, setPinnedMessage] = useState(null)
-  const [message, setMessage] = useState('')
-  const [sending, setSending] = useState(false)
-  const [cooldown, setCooldown] = useState(false)
-  const [user, setUser] = useState(null)
-  const [showModal, setShowModal] = useState(false)
-  const [blockError, setBlockError] = useState(null)
-
-  const bodyRef = useRef(null)
-  const pendingRef = useRef([])
-
-  const home = summary?.homeTeam?.name ?? 'Local'
-  const away = summary?.awayTeam?.name ?? 'Visitante'
-
-  useEffect(() => {
-    let mounted = true
-    supabase.auth.getSession().then(({ data }) => {
-      if (mounted) setUser(data.session?.user ?? null)
-    })
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      if (mounted) setUser(session?.user ?? null)
-    })
-    return () => {
-      mounted = false
-      subscription.unsubscribe()
-    }
-  }, [])
-
-  useEffect(() => {
-    let mounted = true
-    let socket
-    let flushInterval
-
-    async function init() {
-      try {
-        const { data } = await supabase.auth.getSession()
-        const sessionUser = data.session?.user ?? null
-        const q = sessionUser?.id ? `?userId=${encodeURIComponent(sessionUser.id)}` : ''
-        const statusRes = await fetch(`/api/ollin/chat/status${q}`)
-        if (statusRes.ok) {
-          const status = await statusRes.json()
-          if (!status.canSend && status.userMessage) {
-            setBlockError(status.userMessage)
-          }
-        }
-      } catch {
-        /* status opcional */
-      }
-
-      try {
-        socket = io(window.location.origin, {
-          path: '/socket.io',
-          transports: ['websocket', 'polling'],
-        })
-
-        socket.on('ollin:chat:message', (msg) => {
-          if (String(msgMatchId(msg)) !== String(partidoId)) return
-          if (msg.tipo === 'bot' || msg.tipo === 'telarana') {
-            setPinnedMessage(msg)
-          }
-          pendingRef.current.push(msg)
-        })
-      } catch {
-        /* socket opcional */
-      }
-
-      flushInterval = setInterval(() => {
-        if (pendingRef.current.length === 0) return
-        const batch = pendingRef.current.splice(0)
-        setMessages((prev) => {
-          const next = [...prev, ...batch]
-          return next.length > MAX_MESSAGES ? next.slice(-MAX_MESSAGES) : next
-        })
-      }, FLUSH_MS)
-    }
-
-    init()
-
-    return () => {
-      mounted = false
-      clearInterval(flushInterval)
-      socket?.disconnect()
-    }
-  }, [partidoId])
-
-  useEffect(() => {
-    bodyRef.current?.scrollTo({
-      top: bodyRef.current.scrollHeight,
-      behavior: 'smooth',
-    })
-  }, [messages])
-
-  const handleSend = useCallback(async (e) => {
-    e.preventDefault()
-    if (!user) {
-      setShowModal(true)
-      return
-    }
-    if (cooldown || sending) return
-
-    const trimmed = message.trim()
-    const words = trimmed.split(/\s+/).filter(Boolean)
-    if (words.length > 50) {
-      setBlockError('Máximo 50 palabras por mensaje')
-      setTimeout(() => setBlockError(null), 5000)
-      return
-    }
-    if (!trimmed) return
-
-    setSending(true)
-    try {
-      const res = await fetch('/api/ollin/chat/messages', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          matchId: partidoId,
-          message: trimmed,
-          userId: user.id,
-          displayName: user.user_metadata?.nombre || user.email,
-        }),
-      })
-      const result = await res.json()
-
-      if (result.ok) {
-        setMessage('')
-        setCooldown(true)
-        setTimeout(() => setCooldown(false), COOLDOWN_MS)
-      } else if (result.userMessage) {
-        setBlockError(result.userMessage)
-        setTimeout(() => setBlockError(null), 5000)
-      }
-    } catch {
-      setBlockError('No se pudo enviar el mensaje')
-      setTimeout(() => setBlockError(null), 5000)
-    } finally {
-      setSending(false)
-    }
-  }, [user, cooldown, sending, message, partidoId])
-
-  return (
-    <div className="ollin-chat-partido">
-      {pinnedMessage && (
-        <div className="ollin-chat-partido__pinned">
-          <span>📌 Telaraña</span>
-          <p>{pinnedMessage.message}</p>
-        </div>
-      )}
-
-      <div className="ollin-chat-partido__header">
-        <span>Chat en vivo</span>
-        <span>{home} vs {away}</span>
-      </div>
-
-      {blockError && (
-        <div className="ollin-chat-partido__error">{blockError}</div>
-      )}
-
-      <div className="ollin-chat-partido__body" ref={bodyRef}>
-        {messages.map((msg, i) => (
-          <div
-            key={msg.id || i}
-            className={`ollin-chat-msg${msg.tipo === 'bot' ? ' ollin-chat-msg--bot' : ''}`}
-          >
-            <span className="ollin-chat-msg__name">{msgDisplayName(msg)}</span>
-            <span className="ollin-chat-msg__text">{msg.message}</span>
-          </div>
-        ))}
-      </div>
-
-      <form className="ollin-chat-partido__form" onSubmit={handleSend}>
-        <input
-          type="text"
-          className="ollin-chat-partido__input"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-          placeholder={user ? 'Escribe un mensaje...' : 'Regístrate para participar'}
-          disabled={sending || cooldown}
-          onClick={() => !user && setShowModal(true)}
-          readOnly={!user}
-        />
-        <button type="submit" disabled={sending || cooldown || !user}>
-          {sending ? '...' : 'Enviar'}
-        </button>
-      </form>
-
-      {showModal && (
-        <div className="ollin-chat-partido__modal" onClick={() => setShowModal(false)}>
-          <div className="ollin-chat-partido__modal-inner" onClick={(e) => e.stopPropagation()}>
-            <button
-              type="button"
-              className="ollin-chat-partido__modal-close"
-              onClick={() => setShowModal(false)}
-            >✕</button>
-            <p>Únete al chat en vivo</p>
-            <a
-              href={`/registro?origen=ollin_deportes&return=/ollin-deportes/partido/${partidoId}`}
-              className="ollin-chat-partido__modal-btn ollin-chat-partido__modal-btn--primary"
-            >
-              Crear cuenta gratis
-            </a>
-            <a
-              href={`/login?return=/ollin-deportes/partido/${partidoId}`}
-              className="ollin-chat-partido__modal-btn ollin-chat-partido__modal-btn--secondary"
-            >
-              Ya tengo cuenta — Iniciar sesión
-            </a>
-          </div>
-        </div>
-      )}
-    </div>
-  )
+```json
+{
+  "name": "jeeljel-web",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.108.1",
+    "animejs": "^4.4.1",
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "react-router-dom": "^7.15.1",
+    "socket.io-client": "^4.8.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "autoprefixer": "^10.5.0",
+    "eslint": "^10.3.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "globals": "^17.6.0",
+    "postcss": "^8.5.15",
+    "tailwindcss": "^3.4.19",
+    "vite": "^8.0.12"
+  }
 }
 ```
 
-### Observaciones CHAT-WS-1 (ChatPartido)
+> **Dependencias mínimas para Ollin:** `react`, `react-dom`, `react-router-dom`, `socket.io-client`, `@supabase/supabase-js`.
+> `animejs` no es usada por Ollin directamente — revisar si se puede omitir en el repo nuevo.
 
-- Conecta socket `ollin:chat:message` en montaje.
-- Llama `GET /api/ollin/chat/status` — **no** hay `GET` de mensajes históricos al montar.
-- Socket usa `path: '/socket.io'` contra `window.location.origin` (requiere proxy Nginx WebSocket).
+### `package.json` — Backend (`ollin-backend/`)
+
+```json
+{
+  "name": "ollin-backend",
+  "version": "1.0.0",
+  "main": "src/server.js",
+  "engines": { "node": ">=18" },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.8",
+    "axios": "^1.9.0",
+    "dotenv": "^16.5.0",
+    "express": "^4.21.2",
+    "ioredis": "^5.6.1",
+    "socket.io": "^4.8.1",
+    "ws": "^8.21.0"
+  }
+}
+```
+
+---
+
+## 8. Variables de entorno
+
+### Frontend (`src/`)
+
+**No se usa `import.meta.env` en ningún componente Ollin.**
+Las credenciales están hardcodeadas en `src/lib/supabaseClient.js`:
+
+```js
+// src/lib/supabaseClient.js
+export const supabase = createClient(
+  'https://uttyhtgevtoaaivefcor.supabase.co',  // ← hardcoded
+  'sb_publishable_Raqzheiq6W9DTSv8A79Deg_srSX1XzB'  // ← hardcoded (anon/publishable key)
+)
+```
+
+⚠️ **Acción requerida al migrar:** mover a `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` en `.env`.
+
+El proxy dev server está configurado en `vite.config.js`:
+
+```js
+// vite.config.js — proxy dev local
+'/api/ollin' → 'http://localhost:10001'   (rewrite: quita /api/ollin del path)
+'/socket.io' → 'http://localhost:10001'   (ws: true)
+```
+
+En producción, Nginx redirige `/api/ollin/` y `/socket.io/` al backend `:10001`.
+
+### Backend (`ollin-backend/.env.example`)
+
+```bash
+API_SPORTS_KEY=          # API-Sports — plan PRO activo, 7500 req/día
+REDIS_URL=redis://localhost:6379
+POLLING_INTERVAL_MS=600000   # fallback idle; polling inteligente 15s live en código
+OLLIN_PORT=10001             # NUNCA 10000 (Ikan Naat)
+SUPABASE_URL=               # proyecto ikan-nat-prod
+SUPABASE_SERVICE_KEY=       # service role (solo backend)
+```
+
+---
+
+## Resumen para migración
+
+### Árbol completo a mover al nuevo repo
+
+```
+ollin-deportes-web/
+├── package.json                         (nuevo, basado en jeeljel-web)
+├── vite.config.js                       (copiar con proxy /api/ollin y /socket.io)
+├── tailwind.config.js                   (copiar del repo actual)
+├── postcss.config.js                    (copiar)
+├── index.html                           (nuevo, apuntar a main.jsx)
+├── .env                                 (nuevo — VITE_SUPABASE_URL, VITE_SUPABASE_ANON_KEY)
+└── src/
+    ├── main.jsx                         (nuevo)
+    ├── App.jsx                          (nuevo — solo rutas /ollin-deportes)
+    ├── lib/
+    │   └── supabaseClient.js            (copiar — migrar a import.meta.env)
+    ├── ollin/
+    │   ├── compliance.js
+    │   ├── leagueCatalog.js
+    │   ├── matchUtils.js
+    │   ├── mockData.js
+    │   ├── partidoMock.js
+    │   ├── standingsLabels.js
+    │   └── teamDisplay.js
+    ├── hooks/
+    │   ├── useOllinData.js
+    │   ├── usePartido.js
+    │   ├── useSocketUpdate.js
+    │   ├── useStandings.js
+    │   ├── useTabData.js
+    │   └── useTickerEvents.js
+    │   (useTypewriter.js — evaluar si se necesita)
+    ├── pages/
+    │   ├── OllinDeportes.jsx
+    │   ├── OllinDeportes.css            (CSS global de todos los componentes Ollin)
+    │   └── OllinPartido.jsx
+    ├── components/ollin/
+    │   ├── LeagueSidebar.jsx
+    │   ├── MatchCard.jsx
+    │   ├── MatchCardCompact.jsx
+    │   ├── MatchColumn.jsx
+    │   ├── MatchGroupList.jsx
+    │   ├── OllinChat.jsx
+    │   ├── OllinLayout.jsx
+    │   ├── OllinLegalDisclaimer.jsx
+    │   ├── PremiumLockNotice.jsx
+    │   ├── StandingsView.jsx
+    │   ├── TeamDisplay.jsx
+    │   ├── tabs/
+    │   │   ├── TabEnVivo.jsx
+    │   │   ├── TabHoy.jsx
+    │   │   ├── TabPasados.jsx
+    │   │   └── TabProximos.jsx
+    │   └── partido/
+    │       ├── BaseballDiamondLive.jsx
+    │       ├── ChatPartido.jsx
+    │       ├── FootballFieldLive.jsx
+    │       ├── H2HTab.jsx
+    │       ├── LineupsTab.jsx
+    │       ├── LiveTicker.jsx
+    │       ├── PartidoHeader.jsx
+    │       ├── PartidoSkeleton.jsx
+    │       ├── PlayersTab.jsx
+    │       └── StatsTab.jsx
+    └── assets/
+        ├── Logo_JeelJel_Kanaabcon_balon_sin_fondo.png
+        └── mosaicos/
+            └── Macuilxochitl.png
+
+ollin-backend/                           (mover íntegro — ya es carpeta independiente)
+├── package.json
+├── .env.example
+├── docs/
+│   └── chat-schema.sql
+└── src/
+    ├── server.js
+    ├── config/
+    │   ├── env.js
+    │   └── leagues.js
+    ├── lib/
+    │   ├── chatFilter.js
+    │   ├── chatFilter.terms.js
+    │   ├── chatModeration.js
+    │   ├── compliance.js
+    │   ├── dates.js
+    │   ├── redis.js
+    │   ├── requestCounter.js
+    │   └── sanitize.js
+    ├── routes/
+    │   ├── chat.js
+    │   ├── fixtures.js
+    │   ├── partido.js
+    │   └── standings.js
+    └── services/
+        ├── apiClient.js
+        ├── baseballPolling.js
+        ├── chatService.js
+        ├── footballPolling.js
+        ├── partidoService.js
+        ├── pasadosService.js
+        ├── polling.js
+        ├── standingsService.js
+        ├── statsDiffService.js
+        └── supabaseClient.js
+```
+
+### Dependencias cruzadas con jeeljel.com que hay que resolver
+
+| Dependencia | Tipo | Acción al migrar |
+|-------------|------|-----------------|
+| `src/lib/supabaseClient.js` | Compartida con `Registro.jsx`, `Navbar.jsx` | Copiar al repo nuevo; migrar credenciales a `import.meta.env` |
+| `src/hooks/useTypewriter.js` | También usado en `Home.jsx`, `Mision.jsx` | Copiar si se necesita en Ollin (no evidente en el inventario) |
+| `Navbar` / `Footer` de jeeljel.com | Componentes del sitio principal | Crear navbar/footer propios para el repo Ollin |
+| `react-router-dom` `<Link>` | Dentro de `MatchCardCompact`, `MatchCard`, `TabEnVivo` | Las rutas apuntan a `/ollin-deportes/partido/:id` — funcionan igual en el repo nuevo |
+| `OllinDeportes.css` | Importado tanto por `OllinDeportes.jsx` como por `OllinPartido.jsx` | Copiar una sola vez; ambas páginas lo importan |
+
+### Lo que NO hay que migrar (queda en jeeljel.com)
+
+- `src/components/Navbar.jsx`, `Footer.jsx`, `ScrollToTop.jsx`
+- `src/pages/Home.jsx`, `Apps.jsx`, `Mision.jsx`, `Organizaciones.jsx`, etc.
+- `src/assets/mosaicos/` (excepto `Macuilxochitl.png`)
+- `src/assets/Logo_*.png` (excepto `Logo_JeelJel_Kanaabcon_balon_sin_fondo.png`)
+- Rutas `/`, `/apps`, `/mision`, `/organizaciones`, `/registro`, `/login`, etc.
