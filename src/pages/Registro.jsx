@@ -71,6 +71,7 @@ export default function Registro() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
+  const [needsEmailConfirmation, setNeedsEmailConfirmation] = useState(false)
 
   useEffect(() => {
     document.body.classList.add('page-auth')
@@ -118,13 +119,15 @@ export default function Registro() {
       }
 
       const user = authData.user
-      if (!user) {
-        setError('Registro iniciado. Revisa tu correo para confirmar la cuenta.')
-        setSuccess(true)
+      const needsConfirm = !authData.session
+      if (!user && !needsConfirm) {
+        setError('No pudimos completar el registro. Intenta de nuevo.')
         return
       }
 
+      setNeedsEmailConfirmation(needsConfirm)
       setSuccess(true)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     } catch (err) {
       setError(formatAuthError(err?.message))
     } finally {
@@ -142,6 +145,21 @@ export default function Registro() {
 
       <div className="auth-page__content">
         {success ? (
+          needsEmailConfirmation ? (
+            <div className="registro-success registro-success--pending">
+              <h2>Revisa tu correo</h2>
+              <p>
+                Enviamos un enlace de confirmación a <strong>{email.trim()}</strong>.
+                Ábrelo y confirma tu cuenta antes de iniciar sesión en cualquier app del ecosistema.
+              </p>
+              <p className="registro-success__hint">
+                Si no llega en unos minutos, revisa la carpeta de spam o correo no deseado.
+              </p>
+              <Link to="/login" className="registro-success__volver">
+                Ir a iniciar sesión
+              </Link>
+            </div>
+          ) : (
           <div className="registro-success">
             <h2>¡Bienvenido a JeelJel Kaanab!</h2>
             <p>Tu cuenta ha sido creada. Ya puedes explorar el ecosistema.</p>
@@ -216,6 +234,7 @@ export default function Registro() {
               </a>
             )}
           </div>
+          )
         ) : (
           <>
             <h1 className="auth-page__title">CREAR CUENTA</h1>

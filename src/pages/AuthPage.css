@@ -234,6 +234,27 @@
   margin-bottom: 2rem;
 }
 
+.registro-success--pending {
+  max-width: 420px;
+  margin: 0 auto;
+}
+
+.registro-success--pending h2 {
+  color: #7ab8ff;
+}
+
+.registro-success--pending p {
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.55;
+  margin-bottom: 1rem;
+}
+
+.registro-success__hint {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.55) !important;
+  margin-bottom: 1.5rem !important;
+}
+
 .registro-success__apps {
   display: flex;
   flex-direction: column;
